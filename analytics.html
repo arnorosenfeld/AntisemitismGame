@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission Critical — Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Merriweather+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1c1c1e;
+  --paper: #f7f3eb;
+  --aged: #ede7d4;
+  --navy: #1b2a4a;
+  --gold: #c9a227;
+  --muted: #6b6560;
+  --good: #2d6a4f;
+  --warn: #e07b39;
+  --danger: #c0392b;
+  --white: #fff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Merriweather Sans', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+}
+#app { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+
+/* ── HEADER ── */
+.dash-header {
+  text-align: center;
+  padding: 1.8rem 0 1.5rem;
+  border-bottom: 3px solid var(--ink);
+  margin-bottom: 2.5rem;
+}
+.dash-header h1 {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+.dash-header h1 span { color: var(--gold); }
+.dash-header p {
+  color: var(--muted);
+  font-style: italic;
+  font-size: .9rem;
+  margin-top: .5rem;
+}
+.dash-meta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: .9rem;
+  flex-wrap: wrap;
+}
+.dash-meta-pill {
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  background: var(--navy);
+  color: var(--paper);
+  padding: .22rem .75rem;
+}
+.btn-clear {
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  background: none;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  padding: .22rem .75rem;
+  cursor: pointer;
+  font-family: 'Merriweather Sans', sans-serif;
+  transition: all .15s;
+}
+.btn-clear:hover { background: var(--danger); color: white; }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center;
+  padding: 5rem 2rem;
+  color: var(--muted);
+}
+.empty-state h2 {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1.4rem;
+  margin-bottom: .6rem;
+  color: var(--ink);
+}
+.empty-state p { font-size: .9rem; line-height: 1.7; max-width: 420px; margin: 0 auto; }
+
+/* ── GRID LAYOUT ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; margin-bottom: 1.5rem; }
+@media (max-width: 800px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* ── STAT CARDS ── */
+.stat-card {
+  border: 2px solid var(--ink);
+  background: white;
+  padding: 1.3rem 1.4rem;
+  text-align: center;
+}
+.stat-card .big {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 2.6rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--navy);
+}
+.stat-card .big.gold { color: var(--gold); }
+.stat-card .big.good { color: var(--good); }
+.stat-card .big.danger { color: var(--danger); }
+.stat-card .label {
+  font-size: .68rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  margin-top: .45rem;
+}
+.stat-card .sublabel {
+  font-size: .78rem;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: .25rem;
+}
+
+/* ── SECTION CARDS ── */
+.section-card {
+  border: 2px solid var(--ink);
+  background: white;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+.section-head {
+  background: var(--navy);
+  color: var(--paper);
+  padding: .75rem 1.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.section-head h2 {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.section-head span {
+  font-size: .72rem;
+  color: #99aabb;
+  font-style: italic;
+}
+.section-body { padding: 1.3rem; }
+
+/* ── BAR CHARTS ── */
+.bar-list { display: flex; flex-direction: column; gap: .75rem; }
+.bar-row { display: grid; grid-template-columns: 160px 1fr 48px; gap: .75rem; align-items: center; }
+.bar-row .bar-label { font-size: .82rem; color: var(--ink); text-align: right; }
+.bar-track { background: var(--aged); height: 22px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; transition: width .6s ease; display: flex; align-items: center; }
+.bar-row .bar-val { font-size: .82rem; font-weight: 700; color: var(--ink); text-align: right; }
+
+/* ── DONUT CHART ── */
+.donut-wrap { display: flex; gap: 2rem; align-items: center; flex-wrap: wrap; }
+.donut-legend { flex: 1; min-width: 160px; }
+.legend-item { display: flex; align-items: center; gap: .55rem; margin-bottom: .55rem; font-size: .82rem; }
+.legend-dot { width: 12px; height: 12px; flex-shrink: 0; }
+
+/* ── ROUND FUNNEL ── */
+.funnel-row {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: .65rem;
+}
+.funnel-label { font-size: .8rem; width: 80px; flex-shrink: 0; text-align: right; color: var(--muted); }
+.funnel-bar-wrap { flex: 1; background: var(--aged); height: 28px; overflow: hidden; }
+.funnel-bar { height: 100%; background: var(--navy); display: flex; align-items: center; padding: 0 .55rem; }
+.funnel-bar span { font-size: .75rem; color: white; font-weight: 700; white-space: nowrap; }
+.funnel-pct { font-size: .8rem; color: var(--muted); width: 44px; text-align: right; flex-shrink: 0; }
+
+/* ── STAT AVERAGES ── */
+.stat-avg-row {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: .7rem;
+}
+.stat-avg-label { font-size: .8rem; width: 140px; flex-shrink: 0; text-align: right; }
+.stat-avg-track { flex: 1; background: var(--aged); height: 18px; overflow: hidden; }
+.stat-avg-fill { height: 100%; }
+.stat-avg-val { font-size: .8rem; font-weight: 700; width: 32px; text-align: right; flex-shrink: 0; }
+
+/* ── TRAIT TABLE ── */
+.trait-table { width: 100%; border-collapse: collapse; font-size: .83rem; }
+.trait-table th {
+  background: var(--aged);
+  padding: .45rem .75rem;
+  text-align: left;
+  font-size: .68rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--ink);
+}
+.trait-table td { padding: .5rem .75rem; border-bottom: 1px solid var(--aged); }
+.trait-table tr:last-child td { border-bottom: none; }
+.trait-table .pct-cell { font-weight: 700; color: var(--navy); }
+
+/* ── SESSION TABLE ── */
+.session-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+.session-table th {
+  background: var(--aged);
+  padding: .4rem .7rem;
+  text-align: left;
+  font-size: .65rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--ink);
+  white-space: nowrap;
+}
+.session-table td { padding: .45rem .7rem; border-bottom: 1px solid var(--aged); vertical-align: middle; }
+.session-table tr:last-child td { border-bottom: none; }
+.session-table tr:hover td { background: #faf8f3; }
+.outcome-badge {
+  font-size: .65rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: .15rem .45rem;
+  font-weight: 700;
+  display: inline-block;
+}
+.outcome-win { background: #d4edda; color: #155724; }
+.outcome-loss { background: #f8d7da; color: #721c24; }
+
+/* ── CHOICES ANALYSIS ── */
+.choice-analysis { margin-bottom: .5rem; }
+.choice-q { font-size: .85rem; font-weight: 700; margin-bottom: .4rem; }
+.choice-q .scenario-label { font-size: .7rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 400; margin-right: .4rem; font-family: 'Merriweather', serif; }
+
+/* ── MISC ── */
+.section-divider { border: none; border-top: 1px solid var(--aged); margin: 1.2rem 0; }
+.refresh-note { text-align: center; font-size: .75rem; color: var(--muted); font-style: italic; margin-top: 2rem; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="dash-header">
+    <h1>Mission <span>Critical</span> — <span style="color:var(--navy)">Analytics</span></h1>
+    <p>Player data stored locally in this browser</p>
+    <div class="dash-meta">
+      <span class="dash-meta-pill" id="last-updated">Loading…</span>
+      <button class="btn-clear" onclick="clearData()">Clear All Data</button>
+    </div>
+  </div>
+  <div id="dashboard"></div>
+</div>
+
+<script>
+const ANALYTICS_KEY = 'missioncritical_analytics_v1';
+
+// ── PALETTE for charts ──
+const PALETTE = ['#1b2a4a','#c9a227','#2d6a4f','#e07b39','#7b4f9e','#c0392b','#1a7a7a','#8b6914'];
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(ANALYTICS_KEY)) || []; }
+  catch(e) { return []; }
+}
+
+function clearData() {
+  if (!confirm('Clear all analytics data? This cannot be undone.')) return;
+  localStorage.removeItem(ANALYTICS_KEY);
+  location.reload();
+}
+
+// ── DERIVED DATA ──
+function derive(events) {
+  const starts   = events.filter(e => e.event === 'game_start');
+  const ends     = events.filter(e => e.event === 'game_end');
+  const rounds   = events.filter(e => e.event === 'round_complete');
+
+  const wins     = ends.filter(e => e.outcome === 'win');
+  const losses   = ends.filter(e => e.outcome === 'loss');
+
+  // Sessions — pair starts with ends by sessionId
+  const sessions = starts.map(s => {
+    const end = ends.find(e => e.sessionId === s.sessionId);
+    const roundEvents = rounds.filter(r => r.sessionId === s.sessionId);
+    return {
+      sessionId: s.sessionId,
+      ts: s.ts,
+      org: s.org,
+      orgName: s.orgName,
+      traits: s.traits || [],
+      outcome: end?.outcome || 'incomplete',
+      roundReached: end?.roundReached || (roundEvents.length > 0 ? Math.max(...roundEvents.map(r=>r.round)) : 1),
+      scenariosDone: end?.scenariosDone || 0,
+      totalScenarios: end?.totalScenarios || 0,
+      durationMs: end?.durationMs || null,
+      finalStats: end?.finalStats || s.stats || {},
+      lossReason: end?.reason || null,
+    };
+  });
+
+  // Org counts
+  const orgCounts = {};
+  starts.forEach(s => { orgCounts[s.orgName || s.org] = (orgCounts[s.orgName || s.org] || 0) + 1; });
+
+  // Trait counts (from completed sessions)
+  const traitCounts = {};
+  starts.forEach(s => {
+    (s.traits || []).forEach(t => { traitCounts[t] = (traitCounts[t] || 0) + 1; });
+  });
+
+  // Round survival funnel — how many sessions reached each round
+  const maxRound = Math.max(...sessions.map(s => s.roundReached), 1);
+  const roundFunnel = [];
+  for (let r = 1; r <= maxRound; r++) {
+    roundFunnel.push({ round: r, count: sessions.filter(s => s.roundReached >= r).length });
+  }
+  // Also count wins (reached beyond last round)
+  roundFunnel.push({ round: 'Win', count: wins.length });
+
+  // Avg final stats across completed games
+  const statKeys = ends.length > 0 && ends[0].finalStats ? Object.keys(ends[0].finalStats) : [];
+  const avgFinalStats = {};
+  statKeys.forEach(k => {
+    const vals = ends.map(e => e.finalStats?.[k]).filter(v => v !== undefined);
+    avgFinalStats[k] = vals.length ? Math.round(vals.reduce((a,b)=>a+b,0)/vals.length) : 0;
+  });
+
+  // Avg duration
+  const durations = ends.map(e=>e.durationMs).filter(Boolean);
+  const avgDuration = durations.length ? Math.round(durations.reduce((a,b)=>a+b,0)/durations.length) : null;
+
+  // Avg scenarios done
+  const avgScenarios = ends.length
+    ? Math.round(ends.map(e=>e.scenariosDone).reduce((a,b)=>a+b,0)/ends.length)
+    : 0;
+
+  // Win rate by org
+  const orgWinRate = {};
+  Object.keys(orgCounts).forEach(org => {
+    const orgEnds = ends.filter(e => (e.orgName||e.org) === org);
+    const orgWins = orgEnds.filter(e => e.outcome === 'win');
+    orgWinRate[org] = orgEnds.length ? Math.round(orgWins.length / orgEnds.length * 100) : null;
+  });
+
+  // Loss reasons
+  const lossReasons = {};
+  losses.forEach(e => {
+    const r = e.reason || 'Unknown';
+    lossReasons[r] = (lossReasons[r]||0)+1;
+  });
+
+  // Play volume by day (last 30 days)
+  const dayVolume = {};
+  const now = Date.now();
+  starts.filter(e => now - e.ts < 30*24*60*60*1000).forEach(e => {
+    const day = new Date(e.ts).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    dayVolume[day] = (dayVolume[day]||0)+1;
+  });
+
+  return {
+    totalPlays: starts.length,
+    completedGames: ends.length,
+    wins: wins.length,
+    losses: losses.length,
+    incomplete: starts.length - ends.length,
+    winRate: ends.length ? Math.round(wins.length/ends.length*100) : 0,
+    avgScenarios,
+    avgDuration,
+    orgCounts,
+    traitCounts,
+    roundFunnel,
+    avgFinalStats,
+    statKeys,
+    orgWinRate,
+    lossReasons,
+    dayVolume,
+    sessions: sessions.sort((a,b) => b.ts - a.ts),
+    maxRound,
+  };
+}
+
+// ── RENDER HELPERS ──
+function fmtDuration(ms) {
+  if (!ms) return '—';
+  const m = Math.floor(ms/60000);
+  const s = Math.round((ms%60000)/1000);
+  return m > 0 ? `${m}m ${s}s` : `${s}s`;
+}
+function fmtDate(ts) {
+  return new Date(ts).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+function statColor(val) {
+  if (val < 25) return '#c0392b';
+  if (val < 40) return '#e07b39';
+  if (val < 60) return '#1b2a4a';
+  if (val < 80) return '#2d6a4f';
+  return '#c9a227';
+}
+
+// ── SVG DONUT ──
+function donut(slices, size=120, stroke=22) {
+  const total = slices.reduce((s,x)=>s+x.value,0);
+  if (total === 0) return '<svg></svg>';
+  const r = (size-stroke)/2;
+  const cx = size/2, cy = size/2;
+  const circ = 2*Math.PI*r;
+  let offset = 0;
+  let paths = '';
+  slices.forEach(sl => {
+    const pct = sl.value/total;
+    const dash = pct*circ;
+    const gap = circ-dash;
+    paths += `<circle cx="${cx}" cy="${cy}" r="${r}"
+      fill="none" stroke="${sl.color}" stroke-width="${stroke}"
+      stroke-dasharray="${dash.toFixed(2)} ${gap.toFixed(2)}"
+      stroke-dashoffset="${(-offset*circ/total).toFixed(2)}"
+      transform="rotate(-90 ${cx} ${cy})"/>`;
+    offset += sl.value;
+  });
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${paths}</svg>`;
+}
+
+// ── MAIN RENDER ──
+function render() {
+  const events = load();
+  const dash = document.getElementById('dashboard');
+
+  if (events.length === 0) {
+    dash.innerHTML = `<div class="empty-state">
+      <h2>No data yet</h2>
+      <p>Play <strong>Mission Critical</strong> in the same browser to start collecting analytics. Data is stored locally and will appear here automatically after your first game.</p>
+    </div>`;
+    document.getElementById('last-updated').textContent = 'No data';
+    return;
+  }
+
+  const d = derive(events);
+  const lastTs = Math.max(...events.map(e=>e.ts));
+  document.getElementById('last-updated').textContent = 'Last updated ' + fmtDate(lastTs);
+
+  // ── KPI ROW ──
+  const winRateColor = d.winRate >= 60 ? 'good' : d.winRate >= 35 ? 'gold' : 'danger';
+  let html = `<div class="grid-4">
+    <div class="stat-card">
+      <div class="big">${d.totalPlays}</div>
+      <div class="label">Total Plays Started</div>
+    </div>
+    <div class="stat-card">
+      <div class="big">${d.completedGames}</div>
+      <div class="label">Games Completed</div>
+      <div class="sublabel">${d.incomplete} incomplete / abandoned</div>
+    </div>
+    <div class="stat-card">
+      <div class="big ${winRateColor}">${d.winRate}%</div>
+      <div class="label">Win Rate</div>
+      <div class="sublabel">${d.wins} wins · ${d.losses} losses</div>
+    </div>
+    <div class="stat-card">
+      <div class="big gold">${fmtDuration(d.avgDuration)}</div>
+      <div class="label">Avg Play Time</div>
+      <div class="sublabel">${d.avgScenarios} scenarios avg</div>
+    </div>
+  </div>`;
+
+  // ── ORG + OUTCOMES ROW ──
+  const orgEntries = Object.entries(d.orgCounts).sort((a,b)=>b[1]-a[1]);
+  const maxOrgCount = Math.max(...orgEntries.map(e=>e[1]),1);
+  const orgBars = orgEntries.map(([name, count], i) => {
+    const pct = Math.round(count/d.totalPlays*100);
+    const winRate = d.orgWinRate[name];
+    const winStr = winRate !== null ? ` · ${winRate}% win rate` : '';
+    return `<div class="bar-row">
+      <div class="bar-label">${name}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${count/maxOrgCount*100}%;background:${PALETTE[i%PALETTE.length]}">
+        </div>
+      </div>
+      <div class="bar-val">${count}</div>
+    </div>
+    <div style="font-size:.72rem;color:var(--muted);text-align:right;margin-top:-.3rem;margin-bottom:.4rem;padding-right:0">${pct}% of plays${winStr}</div>`;
+  }).join('');
+
+  // Outcome donut
+  const outcomeSlices = [
+    { label: 'Wins',       value: d.wins,       color: '#2d6a4f' },
+    { label: 'Losses',     value: d.losses,     color: '#c0392b' },
+    { label: 'Incomplete', value: d.incomplete, color: '#ccc' },
+  ].filter(s => s.value > 0);
+  const legendHTML = outcomeSlices.map(s =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${s.color}"></div><span>${s.label}: <strong>${s.value}</strong></span></div>`
+  ).join('');
+
+  html += `<div class="grid-2">
+    <div class="section-card">
+      <div class="section-head"><h2>Organization Choice</h2><span>Which org players choose</span></div>
+      <div class="section-body"><div class="bar-list">${orgBars}</div></div>
+    </div>
+    <div class="section-card">
+      <div class="section-head"><h2>Game Outcomes</h2><span>Win, loss, or abandoned</span></div>
+      <div class="section-body">
+        <div class="donut-wrap">
+          ${donut(outcomeSlices, 130, 26)}
+          <div class="donut-legend">${legendHTML}</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  // ── ROUND FUNNEL ──
+  const funnelMax = d.sessions.length || 1;
+  const funnelHTML = d.roundFunnel.map((row, i) => {
+    const pct = Math.round(row.count/funnelMax*100);
+    const fillColor = row.round === 'Win' ? '#2d6a4f' : PALETTE[i % (PALETTE.length-1)];
+    return `<div class="funnel-row">
+      <div class="funnel-label">${row.round === 'Win' ? '🏆 Win' : 'Round '+row.round}</div>
+      <div class="funnel-bar-wrap">
+        <div class="funnel-bar" style="width:${Math.max(pct,2)}%;background:${fillColor}">
+          ${row.count > 0 ? `<span>${row.count} player${row.count!==1?'s':''}</span>` : ''}
+        </div>
+      </div>
+      <div class="funnel-pct">${pct}%</div>
+    </div>`;
+  }).join('');
+
+  // ── AVG FINAL STATS ──
+  let statAvgHTML = '';
+  if (d.statKeys.length > 0) {
+    statAvgHTML = d.statKeys.map(k => {
+      const val = d.avgFinalStats[k] || 0;
+      const color = statColor(val);
+      return `<div class="stat-avg-row">
+        <div class="stat-avg-label">${k}</div>
+        <div class="stat-avg-track">
+          <div class="stat-avg-fill" style="width:${val}%;background:${color}"></div>
+        </div>
+        <div class="stat-avg-val" style="color:${color}">${val}</div>
+      </div>`;
+    }).join('');
+  } else {
+    statAvgHTML = '<div style="color:var(--muted);font-style:italic;font-size:.85rem">Complete a game to see final stat averages.</div>';
+  }
+
+  html += `<div class="grid-2">
+    <div class="section-card">
+      <div class="section-head"><h2>Round Survival Funnel</h2><span>How far players make it</span></div>
+      <div class="section-body">${funnelHTML || '<div style="color:var(--muted);font-style:italic;font-size:.85rem">No completed rounds yet.</div>'}</div>
+    </div>
+    <div class="section-card">
+      <div class="section-head"><h2>Avg Final Stats</h2><span>Across all completed games</span></div>
+      <div class="section-body">${statAvgHTML}</div>
+    </div>
+  </div>`;
+
+  // ── TRAITS + LOSS REASONS ──
+  const traitEntries = Object.entries(d.traitCounts).sort((a,b)=>b[1]-a[1]);
+  const traitRows = traitEntries.map(([name, count]) => {
+    const pct = d.totalPlays > 0 ? Math.round(count/d.totalPlays*100) : 0;
+    return `<tr>
+      <td>${name}</td>
+      <td>${count}</td>
+      <td class="pct-cell">${pct}%</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="3" style="color:var(--muted);font-style:italic">No trait data yet</td></tr>';
+
+  const lossEntries = Object.entries(d.lossReasons).sort((a,b)=>b[1]-a[1]);
+  const maxLoss = Math.max(...lossEntries.map(e=>e[1]),1);
+  const lossHTML = lossEntries.length > 0
+    ? lossEntries.map(([reason, count],i) => `
+        <div class="bar-row" style="grid-template-columns:1fr 1fr 40px">
+          <div class="bar-label" style="text-align:left;font-size:.78rem">${reason}</div>
+          <div class="bar-track" style="height:18px">
+            <div class="bar-fill" style="width:${count/maxLoss*100}%;background:${PALETTE[(i+2)%PALETTE.length]}"></div>
+          </div>
+          <div class="bar-val">${count}</div>
+        </div>`).join('')
+    : '<div style="color:var(--muted);font-style:italic;font-size:.85rem">No losses recorded yet.</div>';
+
+  html += `<div class="grid-2">
+    <div class="section-card">
+      <div class="section-head"><h2>Trait Popularity</h2><span>How often each trait is chosen</span></div>
+      <div class="section-body">
+        <table class="trait-table">
+          <thead><tr><th>Trait</th><th>Times Chosen</th><th>% of Plays</th></tr></thead>
+          <tbody>${traitRows}</tbody>
+        </table>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-head"><h2>Loss Causes</h2><span>Which stat or condition ended runs</span></div>
+      <div class="section-body"><div class="bar-list">${lossHTML}</div></div>
+    </div>
+  </div>`;
+
+  // ── RECENT SESSIONS ──
+  const sessionRows = d.sessions.slice(0, 30).map(s => {
+    const badge = s.outcome === 'win'
+      ? '<span class="outcome-badge outcome-win">Win</span>'
+      : s.outcome === 'loss'
+      ? '<span class="outcome-badge outcome-loss">Loss</span>'
+      : '<span class="outcome-badge" style="background:#e8e8e8;color:#555">Incomplete</span>';
+    const traits = (s.traits||[]).join(', ') || '—';
+    const progress = s.totalScenarios > 0
+      ? `${s.scenariosDone}/${s.totalScenarios}`
+      : `${s.scenariosDone}`;
+    return `<tr>
+      <td>${fmtDate(s.ts)}</td>
+      <td>${s.orgName || s.org || '—'}</td>
+      <td style="font-size:.75rem;color:var(--muted)">${traits}</td>
+      <td>Round ${s.roundReached}</td>
+      <td>${progress}</td>
+      <td>${badge}</td>
+      <td>${fmtDuration(s.durationMs)}</td>
+    </tr>`;
+  }).join('');
+
+  html += `<div class="section-card">
+    <div class="section-head"><h2>Recent Sessions</h2><span>Last ${Math.min(d.sessions.length,30)} of ${d.sessions.length} recorded</span></div>
+    <div class="section-body" style="overflow-x:auto">
+      <table class="session-table">
+        <thead>
+          <tr>
+            <th>Date / Time</th>
+            <th>Organization</th>
+            <th>Traits</th>
+            <th>Round Reached</th>
+            <th>Scenarios</th>
+            <th>Outcome</th>
+            <th>Duration</th>
+          </tr>
+        </thead>
+        <tbody>${sessionRows}</tbody>
+      </table>
+    </div>
+  </div>`;
+
+  html += `<p class="refresh-note">Data is stored locally in this browser's localStorage. Refresh this page to see the latest data. Analytics are not shared across devices or browsers.</p>`;
+
+  dash.innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>
