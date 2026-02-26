@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Mission Critical</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Merriweather+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1c1c1e;
+  --paper: #f7f3eb;
+  --aged: #ede7d4;
+  --navy: #1b2a4a;
+  --gold: #c9a227;
+  --muted: #6b6560;
+  --good: #2d6a4f;
+  --danger: #c0392b;
+  --white: #ffffff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Merriweather',Georgia,serif;
+  background:var(--paper);
+  color:var(--ink);
+  min-height:100vh;
+}
+#app{max-width:900px;margin:0 auto;padding:0 1.5rem 5rem}
+
+/* ── SCREENS ── */
+.screen{display:none}
+.screen.active{display:block;animation:fadeUp .45s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PERSISTENT HEADER ── */
+#game-header{
+  text-align:center;
+  padding:1.4rem 0 1.5rem;
+  border-bottom:3px solid var(--ink);
+  margin-bottom:2.5rem;
+  position:relative;
+  display:none;
+}
+
+#header-title{
+  font-family:'Merriweather',Georgia,serif;
+  font-size:clamp(2.2rem,5.5vw,3.6rem);
+  font-weight:900;
+  line-height:1;
+  letter-spacing:-1px;
+}
+#header-title .accent{color:var(--gold)}
+#header-tagline{
+  color:var(--muted);
+  font-style:italic;
+  margin-top:.6rem;
+  font-size:1rem;
+}
+.round-pill{font-family:'Merriweather Sans',sans-serif;
+  display:inline-block;
+  background:var(--navy);
+  color:var(--paper);
+  font-family:'Merriweather',Georgia,serif;
+  font-size:.75rem;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  padding:.28rem .9rem;
+  margin-top:.9rem;
+}
+
+/* ── PROGRESS BAR ── */
+#progress-wrap{height:4px;background:var(--aged);border:1px solid var(--navy);margin-bottom:2rem;display:none}
+#progress-fill{height:100%;background:var(--gold);transition:width .5s ease;width:0%}
+
+/* ── STATS PANEL ── */
+#stats-wrap{display:none;margin-bottom:1.8rem}
+.stats-panel{
+  border:2px solid var(--ink);
+  padding:1.1rem 1.4rem;
+  background:var(--aged);
+}
+.stats-panel-label{font-family:'Merriweather Sans',sans-serif;
+  font-family:'Merriweather',Georgia,serif;
+  font-size:.75rem;
+  text-transform:uppercase;
+  letter-spacing:2px;
+  color:var(--muted);
+  margin-bottom:.9rem;
+}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.9rem}
+.stat-item label{font-family:'Merriweather Sans',sans-serif;
+  display:flex;justify-content:space-between;
+  font-size:.72rem;text-transform:uppercase;letter-spacing:1px;
+  color:var(--muted);margin-bottom:.25rem;
+}
+.stat-item label strong{color:var(--ink);font-style:italic;font-size:.85rem;text-transform:none;letter-spacing:0}
+.stat-bar{height:7px;background:#ccc;overflow:hidden}
+.stat-fill{height:100%;transition:width .55s ease,background .4s}
+
+/* ── SECTION HEADINGS ── */
+.sect-title{font-family:'Merriweather',Georgia,serif;font-size:1.55rem;font-weight:700;margin-bottom:.3rem}
+.sect-sub{font-family:'Merriweather Sans',sans-serif;color:var(--muted);font-style:italic;font-size:.92rem;margin-bottom:1.8rem;line-height:1.6}
+
+/* ── CARDS GRID ── */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.3rem;margin-bottom:1.8rem}
+.sel-card{
+  border:2px solid var(--ink);
+  padding:1.6rem 1.3rem;
+  cursor:pointer;
+  transition:all .18s;
+  background:var(--paper);
+  position:relative;
+}
+.sel-card:hover{background:var(--aged);transform:translateY(-2px);box-shadow:3px 5px 0 var(--navy)}
+.sel-card.selected{background:var(--navy);color:var(--paper);box-shadow:5px 6px 0 var(--gold)}
+.sel-card.selected .card-role{font-family:'Merriweather Sans',sans-serif;color:var(--gold)}
+.sel-card.selected .card-desc{font-family:'Merriweather Sans',sans-serif;color:#b0bbc8}
+.sel-card.selected .tag-chip{font-family:'Merriweather Sans',sans-serif;background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.card-icon{font-size:2.4rem;margin-bottom:.7rem}
+.card-name{font-family:'Merriweather',Georgia,serif;font-size:1.2rem;font-weight:700;margin-bottom:.2rem}
+.card-role{color:var(--gold);font-size:.72rem;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.5rem}
+.card-desc{color:var(--muted);font-size:.85rem;line-height:1.5;margin-bottom:.9rem}
+.tag-chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.tag-chip{background:var(--aged);font-size:.72rem;padding:.18rem .55rem;border:1px solid var(--ink);font-style:italic}
+
+/* ── TRAIT BUILDER ── */
+.trait-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem;margin-bottom:1.5rem}
+.trait-card{
+  border:2px solid var(--ink);
+  padding:.9rem 1rem;
+  cursor:pointer;
+  transition:all .15s;
+  background:var(--paper);
+}
+.trait-card:hover{background:var(--aged)}
+.trait-card.selected{background:var(--navy);color:var(--paper);border-color:var(--navy)}
+.trait-card.selected .trait-effect{font-family:'Merriweather Sans',sans-serif;color:#b0bbc8}
+.trait-card.dimmed{opacity:.4;pointer-events:none}
+.trait-name{font-family:'Merriweather',Georgia,serif;font-size:1rem;font-weight:700;margin-bottom:.2rem}
+.trait-effect{font-size:.78rem;color:var(--muted);font-style:italic}
+
+/* ── FORM ── */
+.form-group{margin-bottom:1.2rem}
+.form-group label{
+  display:block;font-size:.72rem;text-transform:uppercase;
+  letter-spacing:1.5px;color:var(--muted);margin-bottom:.35rem;
+}
+.form-group input{
+  width:100%;border:2px solid var(--ink);background:white;
+  padding:.6rem .85rem;font-family:'Merriweather',Georgia,serif;font-size:1rem;
+  color:var(--ink);outline:none;transition:border-color .15s;max-width:380px;
+}
+.form-group input:focus{border-color:var(--gold)}
+
+/* ── SCENARIO BOX ── */
+.scenario-box{
+  border:2px solid var(--ink);
+  padding:1.8rem;
+  margin-bottom:1.4rem;
+  background:white;
+  position:relative;
+}
+.scenario-box::before{
+  content:attr(data-label);
+  position:absolute;top:-11px;left:18px;
+  background:var(--navy);color:var(--paper);
+  font-size:.68rem;padding:.18rem .65rem;
+  text-transform:uppercase;letter-spacing:1.5px;
+  font-family:'Merriweather',Georgia,serif;
+}
+.sc-meta{display:flex;gap:.8rem;align-items:center;margin-bottom:.6rem;flex-wrap:wrap}
+.sc-tag{font-family:'Merriweather Sans',sans-serif;font-size:.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold);font-family:'Merriweather',Georgia,serif}
+.sc-type-badge{font-family:'Merriweather Sans',sans-serif;
+  font-size:.68rem;padding:.15rem .5rem;
+  border:1px solid var(--navy);color:var(--navy);
+  text-transform:uppercase;letter-spacing:1px;
+  font-family:'Merriweather',Georgia,serif;
+}
+.sc-title{font-family:'Merriweather',Georgia,serif;font-size:1.4rem;font-weight:700;margin-bottom:.9rem;line-height:1.3}
+.sc-body{font-size:.97rem;line-height:1.75;color:#333;border-top:1px solid var(--aged);padding-top:.9rem}
+
+/* ── TYPE SELECTOR ── */
+.type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.8rem}
+.type-card{
+  border:2px solid var(--ink);
+  padding:1.3rem 1rem;
+  cursor:pointer;
+  text-align:center;
+  transition:all .18s;
+  background:var(--paper);
+}
+.type-card:hover{background:var(--aged);box-shadow:3px 4px 0 var(--navy)}
+.type-card.unavailable{opacity:.35;cursor:not-allowed;pointer-events:none}
+.type-icon{font-size:2rem;margin-bottom:.5rem}
+.type-name{font-family:'Merriweather',Georgia,serif;font-size:1rem;font-weight:700}
+.type-count{font-family:'Merriweather Sans',sans-serif;font-size:.75rem;color:var(--muted);font-style:italic;margin-top:.2rem}
+
+/* ── CHOICES ── */
+.choices{display:grid;gap:.75rem;margin-bottom:1.4rem}
+.choice-btn{
+  border:2px solid var(--ink);background:var(--paper);
+  padding:1rem 1.3rem;text-align:left;cursor:pointer;
+  font-family:'Merriweather',Georgia,serif;font-size:.93rem;line-height:1.5;
+  transition:all .15s;display:flex;gap:.9rem;align-items:flex-start;
+}
+.choice-btn:hover{background:var(--navy);color:var(--paper)}
+.choice-btn:hover .choice-letter{color:var(--gold)}
+.choice-btn:disabled{opacity:.6;cursor:default}
+.choice-letter{
+  font-family:'Merriweather',Georgia,serif;font-size:1.05rem;font-weight:700;
+  color:var(--gold);min-width:18px;margin-top:-1px;
+}
+
+/* ── FEEDBACK ── */
+.feedback-box{
+  border-left:4px solid var(--gold);background:var(--aged);
+  padding:.95rem 1.1rem;margin-bottom:1.4rem;
+  font-style:italic;display:none;animation:fadeUp .3s ease;
+}
+.feedback-box.show{display:block}
+.deltas{margin-top:.5rem;display:flex;flex-wrap:wrap;gap:.35rem}
+.delta{font-family:'Merriweather Sans',sans-serif;font-size:.74rem;padding:.12rem .45rem;border:1px solid;font-style:normal;font-family:'Merriweather',Georgia,serif}
+.delta.pos{color:var(--good);border-color:var(--good)}
+.delta.neg{color:var(--danger);border-color:var(--danger)}
+
+/* ── ROUND SUMMARY ── */
+.round-summary{text-align:center;padding:2rem 0}
+.rs-round{
+  font-family:'Merriweather',Georgia,serif;font-size:.8rem;
+  text-transform:uppercase;letter-spacing:3px;color:var(--muted);margin-bottom:.5rem;
+}
+.rs-title{font-family:'Merriweather',Georgia,serif;font-size:2.4rem;font-weight:900;margin-bottom:.4rem}
+.rs-sub{font-family:'Merriweather Sans',sans-serif;color:var(--muted);font-style:italic;font-size:.97rem;margin-bottom:2rem}
+.rs-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1rem;max-width:600px;margin:0 auto 2rem;
+}
+.rs-stat{
+  border:2px solid var(--ink);padding:1rem;background:white;text-align:center;
+}
+.rs-stat-val{font-family:'Merriweather',Georgia,serif;font-size:2rem;font-weight:900}
+.rs-stat-delta{font-family:'Merriweather Sans',sans-serif;font-size:.8rem;font-style:italic;margin-top:.2rem}
+.rs-stat-label{font-family:'Merriweather Sans',sans-serif;font-size:.72rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-top:.3rem}
+.rs-warning{
+  background:#f7f0d8;border:2px solid var(--gold);
+  padding:.85rem 1.2rem;max-width:480px;margin:0 auto 1.5rem;
+  font-style:italic;color:#7a5f00;font-size:.9rem;
+}
+
+/* ── END SCREENS ── */
+.result-screen{text-align:center;padding:3rem 0}
+.result-icon{font-size:4rem;margin-bottom:.9rem}
+.result-title{font-family:'Merriweather',Georgia,serif;font-size:2.4rem;font-weight:900;margin-bottom:.4rem}
+.result-sub{font-family:'Merriweather Sans',sans-serif;color:var(--muted);font-style:italic;margin-bottom:2rem;font-size:1rem}
+.summary-table{max-width:420px;margin:0 auto 2rem;border:2px solid var(--ink)}
+.summary-table .row{
+  display:flex;justify-content:space-between;
+  padding:.55rem .95rem;border-bottom:1px solid var(--aged);font-size:.92rem;
+}
+.summary-table .row:last-child{border-bottom:none}
+.loss-note{
+  background:#f7f0d8;border:2px solid var(--gold);
+  padding:.95rem 1.4rem;max-width:480px;margin:0 auto 2rem;
+  font-style:italic;color:#7a5f00;
+}
+
+/* ── LANDING PAGE ── */
+.landing-hero{
+  text-align:center;
+  padding:2.2rem 0 2rem;
+  border-bottom:3px solid var(--ink);
+  margin-bottom:3rem;
+}
+
+#landing-game-title{
+  font-family:'Merriweather',Georgia,serif;
+  font-size:clamp(2.8rem,7vw,4.8rem);
+  font-weight:900;line-height:1;letter-spacing:-1.5px;
+  margin-bottom:.7rem;
+}
+#landing-game-title .accent{color:var(--gold)}
+#landing-tagline{color:var(--muted);font-style:italic;font-size:1.1rem;margin-bottom:1.5rem}
+.landing-intro{font-family:'Merriweather Sans',sans-serif;
+  max-width:620px;margin:0 auto;
+  font-size:1.02rem;line-height:1.85;color:#333;
+  text-align:left;
+}
+.landing-intro p{margin-bottom:1rem}
+.landing-intro p:last-child{margin-bottom:0}
+.landing-divider{
+  border:none;border-top:1px solid var(--aged);
+  margin:2.5rem 0;
+}
+.how-to-play{
+  max-width:620px;margin:0 auto;
+}
+.how-to-play h3{
+  font-family:'Merriweather',Georgia,serif;font-size:1.15rem;font-weight:700;
+  margin-bottom:1rem;text-align:center;
+}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;margin-bottom:2.5rem}
+.step{text-align:center;padding:.8rem .5rem}
+.step-num{
+  font-family:'Merriweather',Georgia,serif;font-size:1.8rem;font-weight:900;
+  color:var(--gold);margin-bottom:.3rem;
+}
+.step-label{font-family:'Merriweather Sans',sans-serif;font-size:.82rem;line-height:1.45;color:var(--muted);font-style:italic}
+.landing-cta{text-align:center;margin-top:1rem}
+
+/* ── BUTTONS ── */
+.btn{
+  display:inline-block;background:var(--ink);color:var(--paper);
+  font-family:'Merriweather',Georgia,serif;font-size:1rem;font-weight:700;
+  padding:.8rem 2rem;border:2px solid var(--ink);cursor:pointer;
+  letter-spacing:1px;transition:all .15s;text-transform:uppercase;
+}
+.btn:hover{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-navy{background:var(--navy);border-color:var(--navy)}
+.btn-navy:hover{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+
+/* ── ORG SUMMARY BAR ── */
+#org-bar{
+  display:none;
+  border:2px solid var(--ink);
+  padding:.6rem 1.2rem;
+  margin-bottom:1.5rem;
+  background:var(--navy);
+  color:var(--paper);
+  font-size:.82rem;
+  display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center;
+}
+#org-bar span{font-style:italic;color:#b0bbc8}
+#org-bar strong{color:var(--gold);font-style:normal}
+
+footer{font-family:'Merriweather Sans',sans-serif;
+  text-align:center;color:var(--muted);font-size:.78rem;font-style:italic;
+  margin-top:3rem;padding-top:1rem;border-top:1px solid var(--aged);
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="game-header">
+    <div id="header-title"></div>
+    <div id="header-tagline"></div>
+    <div id="round-pill-wrap"></div>
+  </div>
+  <div id="progress-wrap"><div id="progress-fill"></div></div>
+  <div id="stats-wrap"></div>
+  <div id="org-bar-wrap"></div>
+
+  <!-- LANDING -->
+  <div class="screen active" id="screen-landing">
+    <div class="landing-hero">
+      <div id="landing-game-title"></div>
+      <div id="landing-tagline"></div>
+    </div>
+    <div class="landing-intro" id="landing-intro-text"></div>
+    <hr class="landing-divider">
+    <div class="how-to-play">
+      <h3>How to Play</h3>
+      <div class="steps" id="landing-steps"></div>
+    </div>
+    <div class="landing-cta">
+      <button class="btn btn-navy" onclick="showGameUI('setup');showScreen('screen-org')">Begin →</button>
+    </div>
+  </div>
+
+  <!-- ORG SELECT -->
+  <div class="screen" id="screen-org">
+    <div class="sect-title" id="org-select-title"></div>
+    <div class="sect-sub" id="org-select-sub"></div>
+    <div class="card-grid" id="org-grid"></div>
+    <button class="btn" id="org-next-btn" disabled onclick="confirmOrg()">Continue →</button>
+  </div>
+
+  <!-- CHARACTER BUILD -->
+  <div class="screen" id="screen-char">
+    <div class="sect-title" id="char-build-title"></div>
+    <div class="sect-sub" id="char-build-sub"></div>
+
+    <div class="form-group">
+      <label id="char-name-label">Your Name</label>
+      <input type="text" id="char-name-input" placeholder="Enter your name…" oninput="checkCharReady()">
+    </div>
+
+    <div id="char-traits-section">
+      <div class="sect-title" style="font-size:1.1rem;margin-bottom:.3rem" id="trait-select-title"></div>
+      <div class="sect-sub" style="margin-bottom:1rem" id="trait-select-sub"></div>
+      <div class="trait-grid" id="trait-grid"></div>
+    </div>
+
+    <button class="btn" id="char-next-btn" disabled onclick="confirmChar()">Start Game →</button>
+  </div>
+
+  <!-- TYPE SELECT (per scenario) -->
+  <div class="screen" id="screen-type">
+    <div class="sect-title" id="type-select-title"></div>
+    <div class="sect-sub" id="type-select-sub"></div>
+    <div class="type-grid" id="type-grid"></div>
+  </div>
+
+  <!-- SCENARIO -->
+  <div class="screen" id="screen-scenario">
+    <div id="scenario-container"></div>
+    <div class="feedback-box" id="feedback-box"></div>
+    <div class="choices" id="choices"></div>
+    <button class="btn" id="next-btn" style="display:none" onclick="afterScenario()">Continue →</button>
+  </div>
+
+  <!-- ROUND SUMMARY -->
+  <div class="screen" id="screen-round-summary">
+    <div class="round-summary" id="round-summary-content"></div>
+  </div>
+
+  <!-- GAME OVER -->
+  <div class="screen" id="screen-over">
+    <div class="result-screen">
+      <div class="result-icon">📉</div>
+      <div class="result-title" id="over-title">Mission Failed</div>
+      <div class="result-sub" id="over-sub"></div>
+      <div class="loss-note" id="over-reason"></div>
+      <div class="summary-table" id="over-summary"></div>
+      <button class="btn" onclick="restartGame()">Try Again</button>
+    </div>
+  </div>
+
+  <!-- WIN -->
+  <div class="screen" id="screen-win">
+    <div class="result-screen">
+      <div class="result-icon">🏆</div>
+      <div class="result-title" id="win-title">Mission Accomplished</div>
+      <div class="result-sub" id="win-sub"></div>
+      <div class="summary-table" id="win-summary"></div>
+      <button class="btn" onclick="restartGame()">Play Again</button>
+    </div>
+  </div>
+
+  <footer id="game-footer"></footer>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  GAME CONFIG  — replace this block via the editor
+// ══════════════════════════════════════════════════════
+const CONFIG = {
+  gameTitle: "Mission Critical",
+  gameTitleAccent: "Critical",
+  tagline: "A nonprofit leadership simulation",
+  landingIntro: "<p>You've just been named Executive Director of a struggling nonprofit. The board is watching. Your staff is hopeful. The community is counting on you.</p><p>Over the course of several rounds, you'll face real decisions that leaders like you make every day — managing staff, courting donors, navigating crises, and fighting for your mission. Every choice has consequences.</p><p>Can you keep your organization alive and thriving?</p>",
+  howToPlaySteps: [
+    { num: "1", label: "Choose your organization type" },
+    { num: "2", label: "Build your character & pick traits" },
+    { num: "3", label: "Select what type of situation to handle" },
+    { num: "4", label: "Make decisions and manage your stats" },
+    { num: "5", label: "Survive each round & reach the end" },
+  ],
+  orgSelectTitle: "Choose Your Organization",
+  orgSelectSub: "Each org type comes with different strengths and challenges that shape your starting stats.",
+  charBuildTitle: "Meet Your Director",
+  charBuildSub: "Give yourself a name, then choose up to 2 traits that reflect your leadership style. Each trait gives you a small stat boost.",
+  charNameLabel: "Your name",
+  traitSelectTitle: "Choose Your Leadership Traits",
+  traitSelectSub: "Pick up to 2 traits. Each one gives you a starting advantage in a particular area.",
+  typeSelectTitle: "What's on your desk?",
+  typeSelectSub: "Choose the type of situation you want to handle next. You'll be presented with a scenario that matches your choice.",
+  numRounds: 4,
+  scenariosPerRound: 4,
+  lossThreshold: 20,
+  avgLossThreshold: 0,
+  footerText: "Mission Critical · A nonprofit leadership simulation",
+  stats: [
+    { key: "revenue",   label: "Revenue",          color: "#2d6a4f", orgs: ["all"] },
+    { key: "community", label: "Community Support", color: "#1b2a4a", orgs: ["all"] },
+    { key: "morale",    label: "Staff Morale",      color: "#c9a227", orgs: ["all"] },
+    { key: "coalition", label: "Coalitions",        color: "#6b5b00", orgs: ["all"] },
+  ],
+  startingStats: { revenue: 50, community: 50, morale: 50, coalition: 50 },
+};
+
+const ORG_TYPES = [
+  {
+    id: "community_center",
+    icon: "🏘️",
+    name: "Community Center",
+    desc: "Deep roots, loyal constituents, and a permanent home. But funding is always tight.",
+    bonuses: { community: 15, morale: 10, revenue: -10, coalition: 0 },
+    tags: ["Local", "Service-Oriented"],
+  },
+  {
+    id: "advocacy_group",
+    icon: "📣",
+    name: "Local Advocacy Group",
+    desc: "Scrappy and passionate. You punch above your weight on policy but struggle to diversify funding.",
+    bonuses: { coalition: 15, community: 10, revenue: -10, morale: 0 },
+    tags: ["Grassroots", "Issue-Focused"],
+  },
+  {
+    id: "national_coalition",
+    icon: "🌐",
+    name: "National Coalition",
+    desc: "High visibility and major donors. But distance from community can breed distrust.",
+    bonuses: { revenue: 20, coalition: 10, community: -15, morale: 0 },
+    tags: ["National", "Policy-Focused"],
+  },
+];
+
+const TRAITS = [
+  { id: "connector",   name: "The Connector",   effect: "+10 Coalition",      bonus: { coalition: 10 } },
+  { id: "storyteller", name: "The Storyteller",  effect: "+10 Community",      bonus: { community: 10 } },
+  { id: "numbers",     name: "The Analyst",      effect: "+10 Revenue",        bonus: { revenue: 10 } },
+  { id: "coach",       name: "The Coach",        effect: "+10 Staff Morale",   bonus: { morale: 10 } },
+  { id: "visionary",   name: "The Visionary",    effect: "+6 Community, +6 Coalition", bonus: { community: 6, coalition: 6 } },
+  { id: "operator",    name: "The Operator",     effect: "+6 Revenue, +6 Morale",      bonus: { revenue: 6, morale: 6 } },
+];
+
+const SCENARIO_TYPES = [
+  { id: "email",     icon: "✉️",  label: "Email" },
+  { id: "phone",     icon: "📞", label: "Phone Call" },
+  { id: "inperson",  icon: "🤝", label: "In-Person" },
+  { id: "social",    icon: "📱", label: "Social Media" },
+];
+
+const SCENARIOS = [
+  // ─── EMAIL ───
+  {
+    id:"s1", round:1, type:"email", tag:"Fundraising",
+    orgs:["all"],
+    title:"The Donor Email",
+    body:"A major donor emails asking why your overhead costs are so high compared to peer organizations. They hint they may redirect their gift.",
+    choices:[
+      {text:"Send a detailed breakdown defending your overhead as mission-critical investment.",delta:{revenue:10,community:0,morale:5,coalition:0},result:"The donor appreciates the transparency and keeps their gift. Staff feel seen."},
+      {text:"Apologize and promise to cut overhead — including staff training.",delta:{revenue:5,morale:-15,community:0,coalition:0},result:"The donor stays, but morale takes a hit when staff hear about the promised cuts."},
+      {text:"Invite them to a site visit to see the work in action before making a decision.",delta:{revenue:5,community:10,morale:5,coalition:0},result:"The visit changes their perspective. They increase their gift. Slow but effective."},
+    ]
+  },
+  {
+    id:"s2", round:1, type:"email", tag:"Staffing",
+    orgs:["all"],
+    title:"The Resignation Email",
+    body:"Your communications director sends a terse resignation email with two weeks notice. No explanation. The rest of the team is rattled.",
+    choices:[
+      {text:"Reply immediately asking to meet and understand the reason.",delta:{morale:10,revenue:0,community:0,coalition:0},result:"They meet with you. It's a fixable issue — compensation. You can't match the offer but you offer flexibility. They stay."},
+      {text:"Accept gracefully, announce the search process promptly to staff.",delta:{morale:5,community:0,revenue:0,coalition:0},result:"Staff respect the transparency. A reasonable transition begins."},
+      {text:"Forward the email to the board without responding first.",delta:{morale:-15,coalition:-5,revenue:0,community:0},result:"Staff find out. They're furious about the breach of trust. Resentment spreads."},
+    ]
+  },
+  {
+    id:"s3", round:2, type:"email", tag:"Coalition",
+    orgs:["advocacy_group","national_coalition"],
+    title:"The Ally's Ultimatum",
+    body:"A key coalition partner emails demanding you take a public stance on a contentious ballot measure, or they'll remove you from the coalition.",
+    choices:[
+      {text:"Take the stance they want. The coalition matters too much.",delta:{coalition:15,community:-10,revenue:-5,morale:0},result:"Coalition intact. But your community members feel you caved to outside pressure."},
+      {text:"Decline and explain your org needs to remain officially neutral.",delta:{coalition:-15,morale:5,community:5,revenue:0},result:"You're removed from the coalition. It stings, but your community respects the principle."},
+      {text:"Propose a joint educational event instead of a formal endorsement.",delta:{coalition:5,community:5,morale:5,revenue:0},result:"Creative compromise. The partner accepts. Not ideal for either side, but workable."},
+    ]
+  },
+  {
+    id:"s4", round:3, type:"email", tag:"Fundraising",
+    orgs:["all"],
+    title:"The Foundation Decline",
+    body:"A foundation emails to decline your renewal grant — citing 'shifting priorities.' This was 30% of your operating budget.",
+    choices:[
+      {text:"Send a detailed response asking for feedback and requesting a call.",delta:{revenue:5,coalition:5,morale:0,community:0},result:"They agree to a call. The feedback is useful. They hint at a smaller bridge grant."},
+      {text:"Launch an emergency individual donor campaign immediately.",delta:{revenue:10,morale:-5,community:10,coalition:0},result:"The campaign raises enough to partially cover the gap. Community engagement spikes."},
+      {text:"Email your board chair immediately to convene an emergency finance meeting.",delta:{morale:5,revenue:0,coalition:0,community:0},result:"Smart move. The board mobilizes quickly. Not a fix, but a solid crisis response."},
+    ]
+  },
+  {
+    id:"s5", round:2, type:"email", tag:"Community",
+    orgs:["community_center","advocacy_group"],
+    title:"The Complaint Email",
+    body:"A longtime community member sends a long email accusing your org of ignoring the needs of elderly residents in favor of younger demographics.",
+    choices:[
+      {text:"Reply with a detailed email outlining all programs serving seniors.",delta:{community:-5,morale:0,revenue:0,coalition:0},result:"They're unimpressed. Data without listening feels dismissive. The complaint circulates."},
+      {text:"Call them directly to listen fully before responding.",delta:{community:15,morale:5,revenue:0,coalition:0},result:"They're disarmed by the personal outreach. They become an unexpected advocate."},
+      {text:"Invite them to join an advisory committee on senior programming.",delta:{community:20,coalition:5,morale:5,revenue:0},result:"They accept and bring five friends. A community asset is born from a complaint."},
+    ]
+  },
+
+  // ─── PHONE ───
+  {
+    id:"s6", round:1, type:"phone", tag:"Fundraising",
+    orgs:["all"],
+    title:"The Cold Call Donor",
+    body:"A prospective major donor calls out of nowhere. They love your mission but want to know your 'exit strategy' — they want to fund work that eventually makes itself unnecessary.",
+    choices:[
+      {text:"Explain your theory of change and how success would look in 10 years.",delta:{revenue:15,coalition:5,morale:5,community:0},result:"They're impressed by the clarity. They schedule a follow-up. A promising lead."},
+      {text:"Push back gently — your work addresses structural issues that won't disappear.",delta:{revenue:-5,morale:10,community:5,coalition:0},result:"They respect the pushback. No gift yet, but they say they'll think about it."},
+      {text:"Agree enthusiastically with their framing to keep the conversation warm.",delta:{revenue:5,morale:-10,community:0,coalition:0},result:"Staff overhear and are troubled by the 'make ourselves obsolete' framing. Trust dips."},
+    ]
+  },
+  {
+    id:"s7", round:2, type:"phone", tag:"Staffing",
+    orgs:["all"],
+    title:"The Late-Night Call",
+    body:"A program manager calls you at 9pm in tears. A staff member made a discriminatory comment to a client today, and leadership didn't address it. She's thinking of leaving.",
+    choices:[
+      {text:"Listen fully, validate her experience, and commit to action by end of week.",delta:{morale:15,community:5,revenue:0,coalition:0},result:"She feels heard. She stays. The incident becomes a catalyst for a real HR review."},
+      {text:"Tell her you'll look into it and follow up — but don't set a timeline.",delta:{morale:-10,community:-5,revenue:0,coalition:0},result:"The vagueness reads as dismissal. She updates her résumé. Two others follow."},
+      {text:"Ask her to document the incident in writing and send it to HR.",delta:{morale:-5,community:0,revenue:0,coalition:0},result:"Technically correct but emotionally cold. She complies but disengages. A loss of trust."},
+    ]
+  },
+  {
+    id:"s8", round:1, type:"phone", tag:"Coalition",
+    orgs:["advocacy_group","national_coalition"],
+    title:"The Press Call",
+    body:"A reporter calls for comment on a controversial statement made by your board chair at a fundraiser last night. You're caught off guard.",
+    choices:[
+      {text:"Say 'no comment' and hang up.",delta:{community:-10,coalition:-10,morale:0,revenue:0},result:"The story runs without your voice. The void is filled by critics. Damage amplified."},
+      {text:"Ask for 30 minutes and call back with a prepared statement.",delta:{community:5,coalition:5,morale:5,revenue:0},result:"Smart. The statement is quoted fairly. The story is smaller than it could have been."},
+      {text:"Answer candidly, distancing yourself from the board chair's remarks.",delta:{community:10,coalition:-5,morale:5,revenue:-5},result:"Community applauds the candor. But the board chair is furious. Internal tension spikes."},
+    ]
+  },
+  {
+    id:"s9", round:3, type:"phone", tag:"Funding",
+    orgs:["all"],
+    title:"The Government Grant Call",
+    body:"A program officer from a government agency calls to say your grant application advanced, but they want you to remove an advocacy component to be eligible for funding.",
+    choices:[
+      {text:"Agree to remove the advocacy component. The funding is critical.",delta:{revenue:20,coalition:-10,morale:-10,community:-5},result:"The money comes through. But staff who joined for the advocacy work feel betrayed."},
+      {text:"Decline the funding and keep the program intact.",delta:{revenue:-15,morale:15,coalition:10,community:10},result:"Hard financially. But staff morale soars. Peer orgs take notice of your principled stand."},
+      {text:"Ask if the advocacy work can be funded separately through private dollars.",delta:{revenue:10,morale:5,coalition:5,community:5},result:"They agree to a workaround. More complex administratively, but mission stays intact."},
+    ]
+  },
+
+  // ─── IN-PERSON ───
+  {
+    id:"s10", round:1, type:"inperson", tag:"Community",
+    orgs:["community_center","advocacy_group"],
+    title:"The Town Hall",
+    body:"You show up to a packed community town hall. Residents are angry about a proposed development that will displace families your org serves. They want you to lead a fight.",
+    choices:[
+      {text:"Step to the mic and commit your org to leading the opposition.",delta:{community:20,coalition:10,revenue:-10,morale:5},result:"The crowd erupts. You've just become the face of the fight. Funding risk is real, but trust soars."},
+      {text:"Listen all night, then announce a community working group rather than a commitment.",delta:{community:10,morale:5,coalition:5,revenue:0},result:"Measured but credible. Residents feel heard. The working group gets real traction."},
+      {text:"Sit in the back. This isn't your org's lane.",delta:{community:-15,morale:-5,coalition:0,revenue:0},result:"Community members notice your absence from the front. A key partner calls to ask why you stayed silent."},
+    ]
+  },
+  {
+    id:"s11", round:2, type:"inperson", tag:"Staffing",
+    orgs:["all"],
+    title:"The All-Staff Meeting",
+    body:"At your all-staff meeting, an employee asks directly: 'Are layoffs coming?' The room goes silent. You have been quietly exploring budget scenarios that include staff reductions.",
+    choices:[
+      {text:"Be fully transparent: yes, you're exploring scenarios, no decisions made yet.",delta:{morale:15,revenue:0,community:0,coalition:0},result:"Staff respect the honesty. Some are anxious, but trust in leadership grows."},
+      {text:"Deflect: 'Our focus is on the mission. Let's stay positive.'",delta:{morale:-20,community:0,revenue:5,coalition:0},result:"Everyone in the room knows you dodged. The rumor mill goes into overdrive by noon."},
+      {text:"Answer privately after the meeting rather than in front of everyone.",delta:{morale:5,revenue:0,community:0,coalition:0},result:"The individual feels heard. But the room is left in suspense. Anxiety lingers."},
+    ]
+  },
+  {
+    id:"s12", round:1, type:"inperson", tag:"Fundraising",
+    orgs:["national_coalition","community_center"],
+    title:"The Gala Table",
+    body:"At your annual gala, you're seated next to a billionaire philanthropist who knows nothing about your work. You have 90 minutes.",
+    choices:[
+      {text:"Tell your most compelling story about a community member you've served.",delta:{revenue:15,community:10,coalition:5,morale:5},result:"They're moved. They ask for a follow-up meeting. Staff at your table beam with pride."},
+      {text:"Walk them through your impact data and outcomes reports.",delta:{revenue:10,coalition:5,morale:0,community:0},result:"They're impressed by the numbers but didn't feel an emotional connection. A lukewarm lead."},
+      {text:"Spend most of the time asking about their interests and listening.",delta:{revenue:10,coalition:10,morale:0,community:0},result:"They leave feeling understood. The follow-up meeting is warm. A relationship begins."},
+    ]
+  },
+  {
+    id:"s13", round:3, type:"inperson", tag:"Coalition",
+    orgs:["all"],
+    title:"The Coalition Meeting",
+    body:"At a multi-org coalition meeting, a peer organization publicly challenges your strategy in front of everyone, implying your approach is harmful to the community.",
+    choices:[
+      {text:"Respond calmly and directly in the room, disagreeing with evidence.",delta:{coalition:10,community:5,morale:10,revenue:0},result:"Other partners respect the composure. The challenger backs down. You earn credibility."},
+      {text:"Stay quiet and address it one-on-one after the meeting.",delta:{coalition:5,morale:-5,community:0,revenue:0},result:"The moment passes, but others wonder if you agree with the critique. Perception damage lingers."},
+      {text:"Escalate — demand the facilitator intervene.",delta:{coalition:-15,morale:0,community:-5,revenue:0},result:"It reads as defensive and fragile. Several partners reach out after to express concern."},
+    ]
+  },
+  {
+    id:"s14", round:4, type:"inperson", tag:"Community",
+    orgs:["all"],
+    title:"The Listening Session",
+    body:"You host a community listening session and hear consistent, pointed criticism of a program your board loves and funders have praised.",
+    choices:[
+      {text:"Commit publicly on the spot to redesigning the program with community input.",delta:{community:20,coalition:10,revenue:-5,morale:10},result:"The room shifts. You've just earned enormous trust. The redesign process generates real energy."},
+      {text:"Thank everyone and promise to 'take it back to the team.'",delta:{community:-5,morale:0,revenue:0,coalition:0},result:"'Take it back to the team' lands as a brush-off. Attendance at the next session is half."},
+      {text:"Explain the program's origins and defend it with data.",delta:{community:-15,morale:-5,revenue:5,coalition:-5},result:"You've just told the community their experience is wrong. It goes badly."},
+    ]
+  },
+
+  // ─── SOCIAL MEDIA ───
+  {
+    id:"s15", round:1, type:"social", tag:"Communications",
+    orgs:["all"],
+    title:"The Viral Criticism",
+    body:"A community member posts a thread criticizing your org for 'performative' programming that centers donor optics over real need. It has 8,000 shares.",
+    choices:[
+      {text:"Post a sincere public acknowledgment and announce a community listening tour.",delta:{community:15,morale:10,coalition:5,revenue:-5},result:"The response is praised. The poster shares it approvingly. A crisis becomes a credibility moment."},
+      {text:"Reply with a list of your impact stats and program awards.",delta:{community:-15,morale:-10,coalition:-5,revenue:0},result:"The defensive response goes viral. Staff of color at your org quietly agree with the critique."},
+      {text:"Reach out privately to the poster before responding publicly.",delta:{community:20,morale:5,coalition:5,revenue:0},result:"The poster is disarmed. They post a follow-up praising your response. A surprising turnaround."},
+    ]
+  },
+  {
+    id:"s16", round:2, type:"social", tag:"Fundraising",
+    orgs:["all"],
+    title:"The Fundraising Campaign",
+    body:"Your year-end social media fundraising campaign is underperforming by 40%. You have 5 days left. Staff are demoralized.",
+    choices:[
+      {text:"Launch a bold, honest '5 days left' campaign with real stakes — if we don't hit it, we cut a program.",delta:{revenue:15,community:10,morale:-5,coalition:0},result:"The honesty works. Donations flood in. Community rallies. You hit 110% of the goal."},
+      {text:"Ask board members to personally match donations and post on their networks.",delta:{revenue:15,coalition:10,morale:5,community:0},result:"Board engagement lifts the campaign. Staff feel the board is finally pulling their weight."},
+      {text:"Run paid social ads targeting prior donors.",delta:{revenue:10,morale:0,community:0,coalition:0},result:"The ads help but it's an expensive solution. You hit 85% of goal. Acceptable, not great."},
+    ]
+  },
+  {
+    id:"s17", round:3, type:"social", tag:"Community",
+    orgs:["community_center","advocacy_group"],
+    title:"The Staff Post",
+    body:"A staff member posts about workplace burnout — without naming your org, but followers quickly identify it. It gets significant traction.",
+    choices:[
+      {text:"Reach out privately and compassionately. Don't ask them to take it down.",delta:{morale:15,community:5,revenue:0,coalition:0},result:"The staff member feels supported. They post a brief follow-up noting the situation is being addressed."},
+      {text:"Ask them quietly to delete the post before it spreads further.",delta:{morale:-15,community:-5,revenue:0,coalition:0},result:"They refuse. The request leaks. Two more staff members post in solidarity."},
+      {text:"Address burnout publicly in an org-wide post acknowledging the challenge.",delta:{morale:10,community:10,coalition:5,revenue:-5},result:"A bold move. It resonates widely. Donors actually respond positively to the transparency."},
+    ]
+  },
+  {
+    id:"s18", round:4, type:"social", tag:"Coalition",
+    orgs:["national_coalition","advocacy_group"],
+    title:"The Repost Dilemma",
+    body:"A peer org shares a contentious policy statement on social media and tags you, implicitly asking for your amplification. Your community is split on the issue.",
+    choices:[
+      {text:"Repost with a note of support — solidarity with coalition partners matters.",delta:{coalition:15,community:-10,revenue:-5,morale:0},result:"Some community members are upset. But coalition partners rally around you. A trade-off."},
+      {text:"Reply publicly: 'We're listening and learning on this issue.'",delta:{coalition:-5,community:5,morale:5,revenue:0},result:"Soft, but honest. Some partners are frustrated. Community members appreciate the nuance."},
+      {text:"Ignore it entirely.",delta:{coalition:-10,community:0,morale:0,revenue:0},result:"The org that tagged you reaches out to ask why you went silent. A relationship strains."},
+    ]
+  },
+  {
+    id:"s19", round:2, type:"social", tag:"Community",
+    orgs:["community_center"],
+    title:"The Photo Policy Backlash",
+    body:"A community member posts that a photo in your newsletter shows their child without consent, violating trust. The post is spreading among parents in the community.",
+    choices:[
+      {text:"Immediately remove the photo, apologize publicly, and audit your consent processes.",delta:{community:15,morale:5,revenue:0,coalition:0},result:"Swift accountability. The community appreciates the response. A policy overhaul follows."},
+      {text:"Post that all photos are taken with consent, defending your process.",delta:{community:-20,morale:-10,revenue:0,coalition:-5},result:"The parent posts the consent form — it's vague and outdated. The situation worsens significantly."},
+      {text:"Reach out privately to the parent before making any public statement.",delta:{community:10,morale:5,revenue:0,coalition:0},result:"The parent feels respected. They accept the apology privately. The public post comes down."},
+    ]
+  },
+];
+// ══════════════════════════════════════════════════════
+//  END CONFIG
+// ══════════════════════════════════════════════════════
+
+// ── STATE ──
+let state = {
+  org: null,
+  charName: '',
+  traits: [],
+  stats: {},
+  round: 1,
+  roundScenariosLeft: 0,
+  roundStatsStart: {},
+  scenarioPool: [],
+  usedScenarios: new Set(),
+  currentScenario: null,
+  selectedType: null,
+  totalScenariosDone: 0,
+  totalScenariosInGame: 0,
+  sessionId: null,
+  startTime: null,
+};
+
+// ── HELPERS ──
+function statLabel(key) {
+  const s = CONFIG.stats.find(s => s.key === key);
+  return s ? s.label : key;
+}
+function clamp(v) { return Math.min(100, Math.max(0, v)); }
+function getStatColor(val) {
+  if (val < 25)  return '#c0392b';        // red
+  if (val < 40)  return '#e07b39';        // orange
+  if (val < 60)  return '#1b2a4a';        // navy
+  if (val < 80)  return '#2d6a4f';        // green
+  return '#c9a227';                        // gold
+}
+
+
+// ══════════════════════════════════════════
+//  AIRTABLE CONFIG  — fill in to enable cross-player analytics
+// ══════════════════════════════════════════
+const AIRTABLE = {
+  apiKey:  '',          // Personal Access Token from airtable.com/create/tokens
+  baseId:  '',          // From your base URL: airtable.com/[baseId]/...
+  table:   'Sessions',  // Table name in your base
+};
+
+// ══════════════════════════════════════════
+//  ANALYTICS  — stores play session data in localStorage
+// ══════════════════════════════════════════
+const ANALYTICS_KEY = 'missioncritical_analytics_v1';
+
+function analyticsLoad() {
+  try { return JSON.parse(localStorage.getItem(ANALYTICS_KEY)) || []; }
+  catch(e) { return []; }
+}
+function analyticsSave(sessions) {
+  try { localStorage.setItem(ANALYTICS_KEY, JSON.stringify(sessions)); }
+  catch(e) { console.warn('Analytics save failed:', e); }
+}
+function analyticsTrack(event, data) {
+  const sessions = analyticsLoad();
+  sessions.push({ event, ts: Date.now(), ...data });
+  analyticsSave(sessions);
+}
+
+function analyticsStartGame() {
+  analyticsTrack('game_start', {
+    org: state.org.id,
+    orgName: state.org.name,
+    traits: state.traits,
+    stats: {...state.stats},
+    sessionId: state.sessionId,
+  });
+}
+function analyticsRoundComplete(round) {
+  analyticsTrack('round_complete', {
+    sessionId: state.sessionId,
+    round,
+    stats: {...state.stats},
+    scenariosDone: state.totalScenariosDone,
+  });
+}
+function analyticsEndGame(outcome, reason) {
+  const payload = {
+    sessionId: state.sessionId,
+    outcome,
+    reason: reason || null,
+    roundReached: state.round,
+    scenariosDone: state.totalScenariosDone,
+    totalScenarios: state.totalScenariosInGame,
+    finalStats: {...state.stats},
+    org: state.org?.id,
+    orgName: state.org?.name,
+    traits: state.traits,
+    durationMs: Date.now() - state.startTime,
+  };
+  analyticsTrack('game_end', payload);
+  airtableSendSession(payload);
+}
+
+async function airtableSendSession(data) {
+  if (!AIRTABLE.apiKey || !AIRTABLE.baseId) return; // not configured
+  const fields = {
+    'Session ID':     data.sessionId,
+    'Date':           new Date().toISOString(),
+    'Outcome':        data.outcome,
+    'Organization':   data.orgName || data.org || '',
+    'Traits':         (data.traits || []).join(', '),
+    'Round Reached':  data.roundReached,
+    'Scenarios Done': data.scenariosDone,
+    'Total Scenarios':data.totalScenarios,
+    'Duration (s)':   data.durationMs ? Math.round(data.durationMs / 1000) : null,
+    'Loss Reason':    data.reason || '',
+    'Final Stats':    JSON.stringify(data.finalStats || {}),
+  };
+  // Remove null values — Airtable rejects them
+  Object.keys(fields).forEach(k => { if (fields[k] === null || fields[k] === undefined) delete fields[k]; });
+  try {
+    await fetch(`https://api.airtable.com/v0/${AIRTABLE.baseId}/${encodeURIComponent(AIRTABLE.table)}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${AIRTABLE.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ fields }),
+    });
+  } catch(e) {
+    console.warn('Airtable sync failed (offline or config error):', e.message);
+  }
+}
+
+// Returns only the stats applicable to the current player's org
+function activeStats() {
+  if (!state.org) return CONFIG.stats;
+  return CONFIG.stats.filter(s =>
+    !s.orgs || s.orgs.includes('all') || s.orgs.includes(state.org.id)
+  );
+}
+
+// ── INIT ──
+function init() {
+  document.title = CONFIG.gameTitle;
+  // Landing
+  const titleParts = CONFIG.gameTitle.split(CONFIG.gameTitleAccent);
+  document.getElementById('landing-game-title').innerHTML =
+    titleParts[0] + `<span class="accent">${CONFIG.gameTitleAccent}</span>` + (titleParts[1]||'');
+  document.getElementById('landing-tagline').textContent = CONFIG.tagline;
+  document.getElementById('landing-intro-text').innerHTML = CONFIG.landingIntro;
+  const stepsEl = document.getElementById('landing-steps');
+  stepsEl.innerHTML = CONFIG.howToPlaySteps.map(s =>
+    `<div class="step"><div class="step-num">${s.num}</div><div class="step-label">${s.label}</div></div>`
+  ).join('');
+  document.getElementById('game-footer').textContent = CONFIG.footerText;
+  // Org screen
+  document.getElementById('org-select-title').textContent = CONFIG.orgSelectTitle;
+  document.getElementById('org-select-sub').textContent = CONFIG.orgSelectSub;
+  renderOrgGrid();
+  // Char screen
+  document.getElementById('char-build-title').textContent = CONFIG.charBuildTitle;
+  document.getElementById('char-build-sub').textContent = CONFIG.charBuildSub;
+  document.getElementById('char-name-label').textContent = CONFIG.charNameLabel;
+  document.getElementById('trait-select-title').textContent = CONFIG.traitSelectTitle;
+  document.getElementById('trait-select-sub').textContent = CONFIG.traitSelectSub;
+  renderTraitGrid();
+  // Type screen
+  document.getElementById('type-select-title').textContent = CONFIG.typeSelectTitle;
+  document.getElementById('type-select-sub').textContent = CONFIG.typeSelectSub;
+  // Header
+  const h = CONFIG.gameTitle.split(CONFIG.gameTitleAccent);
+  document.getElementById('header-title').innerHTML =
+    `${h[0]}<span class="accent">${CONFIG.gameTitleAccent}</span>${h[1]||''}`;
+  document.getElementById('header-tagline').textContent = CONFIG.tagline;
+
+  // Count total playable scenarios
+  const totalRounds = CONFIG.numRounds;
+  state.totalScenariosInGame = totalRounds * CONFIG.scenariosPerRound;
+}
+
+// ── ORG GRID ──
+function renderOrgGrid() {
+  const grid = document.getElementById('org-grid');
+  grid.innerHTML = ORG_TYPES.map(o => `
+    <div class="sel-card" id="org-${o.id}" onclick="selectOrg('${o.id}')">
+      <div class="card-icon">${o.icon}</div>
+      <div class="card-name">${o.name}</div>
+      <div class="card-desc">${o.desc}</div>
+      <div class="tag-chips">${o.tags.map(t=>`<span class="tag-chip">${t}</span>`).join('')}</div>
+      <div style="margin-top:.8rem;font-size:.75rem;color:var(--muted);font-style:italic">${
+        Object.entries(o.bonuses).filter(([k,v])=>v!==0).map(([k,v])=>`${statLabel(k)}: ${v>0?'+':''}${v}`).join(' · ')
+      }</div>
+    </div>
+  `).join('');
+}
+
+function selectOrg(id) {
+  state.org = ORG_TYPES.find(o=>o.id===id);
+  document.querySelectorAll('.sel-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('org-'+id).classList.add('selected');
+  document.getElementById('org-next-btn').disabled = false;
+}
+function confirmOrg() {
+  if (!state.org) return;
+  showGameUI('setup');
+  showScreen('screen-char');
+}
+
+// ── TRAIT GRID ──
+function renderTraitGrid() {
+  const grid = document.getElementById('trait-grid');
+  grid.innerHTML = TRAITS.map(t => `
+    <div class="trait-card" id="trait-${t.id}" onclick="toggleTrait('${t.id}')">
+      <div class="trait-name">${t.name}</div>
+      <div class="trait-effect">${t.effect}</div>
+    </div>
+  `).join('');
+}
+function toggleTrait(id) {
+  const idx = state.traits.indexOf(id);
+  if (idx > -1) {
+    state.traits.splice(idx,1);
+    document.getElementById('trait-'+id).classList.remove('selected');
+  } else {
+    if (state.traits.length >= 2) return;
+    state.traits.push(id);
+    document.getElementById('trait-'+id).classList.add('selected');
+  }
+  // dim unchosen if 2 selected
+  TRAITS.forEach(t => {
+    const el = document.getElementById('trait-'+t.id);
+    el.classList.toggle('dimmed', state.traits.length >= 2 && !state.traits.includes(t.id));
+  });
+  checkCharReady();
+}
+function checkCharReady() {
+  const name = document.getElementById('char-name-input').value.trim();
+  document.getElementById('char-next-btn').disabled = !name;
+  state.charName = name;
+}
+function confirmChar() {
+  state.charName = document.getElementById('char-name-input').value.trim();
+  if (!state.charName) return;
+  startGame();
+}
+
+// ── START GAME ──
+function startGame() {
+  // Build starting stats — only include stats that apply to this org
+  state.stats = {};
+  CONFIG.stats.forEach(s => {
+    if (!s.orgs || s.orgs.includes('all') || s.orgs.includes(state.org.id)) {
+      state.stats[s.key] = CONFIG.startingStats[s.key] ?? 50;
+    }
+  });
+  // Org bonuses
+  Object.entries(state.org.bonuses).forEach(([k,v]) => { if(state.stats[k]!==undefined) state.stats[k] = clamp(state.stats[k]+v); });
+  // Trait bonuses
+  state.traits.forEach(tid => {
+    const t = TRAITS.find(x=>x.id===tid);
+    if(t) Object.entries(t.bonus).forEach(([k,v]) => { if(state.stats[k]!==undefined) state.stats[k] = clamp(state.stats[k]+v); });
+  });
+  state.round = 1;
+  state.usedScenarios = new Set();
+  state.totalScenariosDone = 0;
+  state.sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+  state.startTime = Date.now();
+  analyticsStartGame();
+  beginRound();
+}
+
+// ── ROUND ──
+function beginRound() {
+  state.roundScenariosLeft = CONFIG.scenariosPerRound;
+  state.roundStatsStart = {...state.stats};
+  showGameUI('playing');
+  updateProgress();
+  showTypeSelector();
+}
+
+// mode: 'pregame' | 'playing' | 'summary'
+function showGameUI(mode) {
+  const header = document.getElementById('game-header');
+  const progress = document.getElementById('progress-wrap');
+  const statsWrap = document.getElementById('stats-wrap');
+  if (mode === 'pregame') {
+    // Landing page only — hide everything
+    header.style.display = 'none';
+    progress.style.display = 'none';
+    statsWrap.style.display = 'none';
+  } else if (mode === 'setup') {
+    // Org select + character build — show header, hide stats/progress
+    header.style.display = 'block';
+    progress.style.display = 'none';
+    statsWrap.style.display = 'none';
+    document.getElementById('round-pill-wrap').innerHTML = '';
+  } else if (mode === 'playing') {
+    header.style.display = 'block';
+    progress.style.display = 'block';
+    statsWrap.style.display = 'block';
+    renderStats();
+    updateRoundPill();
+  } else if (mode === 'summary') {
+    header.style.display = 'block';
+    progress.style.display = 'block';
+    statsWrap.style.display = 'none';
+    updateRoundPill();
+  }
+  renderOrgBar();
+}
+
+function renderOrgBar() {
+  let bar = document.getElementById('org-bar-wrap');
+  if (!state.org) { bar.innerHTML=''; return; }
+  const traitNames = state.traits.map(tid => TRAITS.find(t=>t.id===tid)?.name||'').filter(Boolean);
+  bar.innerHTML = `<div style="border:2px solid var(--ink);padding:.55rem 1.2rem;margin-bottom:1.5rem;background:var(--navy);color:var(--paper);font-size:.82rem;display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center">
+    <span>Org: <strong>${state.org.name}</strong></span>
+    <span>Director: <strong>${state.charName}</strong></span>
+    ${traitNames.length ? `<span>Traits: <strong>${traitNames.join(', ')}</strong></span>` : ''}
+  </div>`;
+}
+
+function updateRoundPill() {
+  const totalRounds = CONFIG.numRounds;
+  const pill = document.getElementById('round-pill-wrap');
+  pill.innerHTML = `<span class="round-pill">Round ${state.round} of ${totalRounds}</span>`;
+}
+
+function renderStats() {
+  const wrap = document.getElementById('stats-wrap');
+  wrap.innerHTML = `<div class="stats-panel">
+    <div class="stats-panel-label">Organizational Health</div>
+    <div class="stats-grid">${activeStats().map(s => {
+      const val = state.stats[s.key] ?? 50;
+      const color = getStatColor(val);
+      return `<div class="stat-item">
+        <label>${s.label} <strong>${val}</strong></label>
+        <div class="stat-bar"><div class="stat-fill" style="width:${val}%;background:${color}"></div></div>
+      </div>`;
+    }).join('')}</div>
+  </div>`;
+}
+
+function updateProgress() {
+  const total = state.totalScenariosInGame;
+  const done = state.totalScenariosDone;
+  document.getElementById('progress-fill').style.width = (done/total*100)+'%';
+}
+
+// ── TYPE SELECTOR ──
+function showTypeSelector() {
+  showGameUI('playing');
+  // Count available scenarios per type for this round / org
+  const typeGrid = document.getElementById('type-grid');
+  typeGrid.innerHTML = SCENARIO_TYPES.map(t => {
+    const available = SCENARIOS.filter(sc =>
+      (sc.round === state.round || sc.round === 'any') &&
+      sc.type === t.id &&
+      !state.usedScenarios.has(sc.id) &&
+      (sc.orgs.includes('all') || sc.orgs.includes(state.org.id))
+    );
+    const cls = available.length === 0 ? 'type-card unavailable' : 'type-card';
+    return `<div class="${cls}" onclick="selectType('${t.id}')">
+      <div class="type-icon">${t.icon}</div>
+      <div class="type-name">${t.label}</div>
+      <div class="type-count">${available.length} available</div>
+    </div>`;
+  }).join('');
+  // If every type has 0 available scenarios, the game is over
+  const anyAvailable = SCENARIO_TYPES.some(t =>
+    SCENARIOS.some(sc =>
+      (sc.round === state.round || sc.round === 'any') &&
+      sc.type === t.id &&
+      !state.usedScenarios.has(sc.id) &&
+      (sc.orgs.includes('all') || sc.orgs.includes(state.org.id))
+    )
+  );
+  if (!anyAvailable) {
+    // No scenarios left at all — end the game gracefully
+    showRoundSummary(true);
+    return;
+  }
+  showScreen('screen-type');
+}
+
+function selectType(typeId) {
+  // Get matching scenarios
+  const pool = SCENARIOS.filter(sc =>
+    (sc.round === state.round || sc.round === 'any') &&
+    sc.type === typeId &&
+    !state.usedScenarios.has(sc.id) &&
+    (sc.orgs.includes('all') || sc.orgs.includes(state.org.id))
+  );
+  if (pool.length === 0) return;
+  // Pick random
+  state.currentScenario = pool[Math.floor(Math.random()*pool.length)];
+  state.selectedType = typeId;
+  showScenario();
+}
+
+// ── SCENARIO ──
+function showScenario() {
+  const sc = state.currentScenario;
+  const typeInfo = SCENARIO_TYPES.find(t=>t.id===sc.type);
+  const scenarioNum = CONFIG.scenariosPerRound - state.roundScenariosLeft + 1;
+  const container = document.getElementById('scenario-container');
+  container.innerHTML = `<div class="scenario-box" data-label="Round ${state.round} · Scenario ${scenarioNum} of ${CONFIG.scenariosPerRound}">
+    <div class="sc-meta">
+      <div class="sc-tag">${sc.tag}</div>
+      <div class="sc-type-badge">${typeInfo?.icon||''} ${typeInfo?.label||sc.type}</div>
+    </div>
+    <div class="sc-title">${sc.title}</div>
+    <div class="sc-body">${sc.body}</div>
+  </div>`;
+
+  const fb = document.getElementById('feedback-box');
+  fb.classList.remove('show');
+  document.getElementById('next-btn').style.display='none';
+
+  const letters=['A','B','C','D'];
+  document.getElementById('choices').innerHTML = sc.choices.map((ch,i)=>`
+    <button class="choice-btn" onclick="makeChoice(${i})">
+      <span class="choice-letter">${letters[i]}.</span>
+      <span>${ch.text}</span>
+    </button>
+  `).join('');
+
+  showGameUI('playing');
+  showScreen('screen-scenario');
+}
+
+function resolveOutcome(ch) {
+  // Support both legacy single-outcome {result,delta} and new multi-outcome {outcomes:[]}
+  if (!ch.outcomes || ch.outcomes.length === 0) {
+    return { result: ch.result || '', delta: ch.delta || {} };
+  }
+  if (ch.outcomes.length === 1) return ch.outcomes[0];
+  // Weighted random selection
+  const total = ch.outcomes.reduce((s, o) => s + (o.weight ?? 1), 0);
+  let r = Math.random() * total;
+  for (const o of ch.outcomes) {
+    r -= (o.weight ?? 1);
+    if (r <= 0) return o;
+  }
+  return ch.outcomes[ch.outcomes.length - 1];
+}
+
+function makeChoice(idx) {
+  const sc = state.currentScenario;
+  const ch = sc.choices[idx];
+  const outcome = resolveOutcome(ch);
+  const deltas = [];
+  activeStats().forEach(s => {
+    const d = (outcome.delta || {})[s.key] || 0;
+    if (d !== 0) {
+      state.stats[s.key] = clamp(state.stats[s.key] + d);
+      deltas.push(`<span class="delta ${d>0?'pos':'neg'}">${s.label} ${d>0?'+':''}${d}</span>`);
+    }
+  });
+  state.usedScenarios.add(sc.id);
+  state.roundScenariosLeft--;
+  state.totalScenariosDone++;
+
+  const fb = document.getElementById('feedback-box');
+  fb.innerHTML = `<strong>Outcome:</strong> ${outcome.result}<div class="deltas">${deltas.join('')}</div>`;
+  fb.classList.add('show');
+  document.querySelectorAll('.choice-btn').forEach(b=>b.disabled=true);
+  renderStats();
+
+  // Check loss
+  // Check hard per-stat threshold
+  const lostStat = CONFIG.lossThreshold > 0
+    ? activeStats().find(s => (state.stats[s.key]??50) <= CONFIG.lossThreshold)
+    : null;
+  // Check average threshold
+  const activeS = activeStats();
+  const avgVal = activeS.reduce((sum,s) => sum + (state.stats[s.key]??50), 0) / activeS.length;
+  const avgFailed = CONFIG.avgLossThreshold > 0 && avgVal <= CONFIG.avgLossThreshold;
+  if (lostStat || avgFailed) {
+    const reason = avgFailed && !lostStat
+      ? { label: 'overall organization health (average)', isAvg: true, avg: Math.round(avgVal) }
+      : lostStat;
+    setTimeout(() => showLoss(reason), 1400);
+    return;
+  }
+  document.getElementById('next-btn').style.display='inline-block';
+}
+
+function afterScenario() {
+  if (state.roundScenariosLeft <= 0) {
+    showRoundSummary();
+  } else {
+    showTypeSelector();
+  }
+}
+
+// ── ROUND SUMMARY ──
+function showRoundSummary(forceEnd) {
+  analyticsRoundComplete(state.round);
+  showGameUI('summary');
+  document.getElementById('progress-wrap').style.display='block';
+  updateProgress();
+
+  const totalRounds = CONFIG.numRounds;
+  const isLast = forceEnd || state.round >= totalRounds;
+  const content = document.getElementById('round-summary-content');
+
+  const statRows = activeStats().map(s => {
+    const cur = state.stats[s.key] ?? 50;
+    const start = state.roundStatsStart[s.key] ?? 50;
+    const delta = cur - start;
+    const color = getStatColor(cur);
+    const deltaStr = delta === 0 ? 'no change' : `${delta>0?'+':''}${delta} this round`;
+    const deltaColor = delta > 0 ? 'var(--good)' : delta < 0 ? 'var(--danger)' : 'var(--muted)';
+    return `<div class="rs-stat">
+      <div class="rs-stat-val" style="color:${color}">${cur}</div>
+      <div class="rs-stat-delta" style="color:${deltaColor}">${delta>0?'▲':''}${delta<0?'▼':''}${deltaStr}</div>
+      <div class="rs-stat-label">${s.label}</div>
+    </div>`;
+  }).join('');
+
+  const warnings = activeStats().filter(s => { const v=state.stats[s.key]??50; return v < 40 && (CONFIG.lossThreshold<=0 || v > CONFIG.lossThreshold); });
+  const warnHTML = warnings.length ? `<div class="rs-warning">⚠️ <strong>Warning:</strong> ${warnings.map(s=>s.label).join(' and ')} ${warnings.length>1?'are':'is'} critically low. One more bad round could end your mission.</div>` : '';
+
+  content.innerHTML = `
+    <div class="rs-round">Round ${state.round} Complete</div>
+    <div class="rs-title">${isLast ? 'Final Report' : 'End of Round'}</div>
+    <div class="rs-sub">Here's how your organization performed.</div>
+    <div class="rs-stats">${statRows}</div>
+    ${warnHTML}
+    ${isLast
+      ? `<button class="btn btn-navy" onclick="showWin()">See Final Results →</button>`
+      : `<button class="btn btn-navy" onclick="advanceRound()">Begin Round ${state.round+1} →</button>`
+    }
+  `;
+  showScreen('screen-round-summary');
+}
+
+function advanceRound() {
+  state.round++;
+  beginRound();
+}
+
+// ── END STATES ──
+function showLoss(reason) {
+  analyticsEndGame('loss', reason.isAvg ? 'avg_threshold' : reason.label);
+  showGameUI('summary');
+  document.getElementById('over-sub').textContent = `${state.charName}'s mission ended in Round ${state.round}.`;
+  const reasonText = reason.isAvg
+    ? `Your overall organizational health averaged ${reason.avg} — below the minimum average threshold. The organization could not sustain operations.`
+    : `Your ${reason.label} collapsed to critical levels. The organization could not continue operations.`;
+  document.getElementById('over-reason').textContent = reasonText;
+  const _las = activeStats();
+  const avgVal = Math.round(_las.reduce((sum,s) => sum + (state.stats[s.key]??50), 0) / _las.length);
+  document.getElementById('over-summary').innerHTML = _las.map(s=>{
+    const val = state.stats[s.key]??50;
+    const bad = (CONFIG.lossThreshold > 0 && val <= CONFIG.lossThreshold);
+    return `<div class="row"><span>${s.label}</span><span style="color:${bad?'var(--danger)':'var(--good)'}">${val}</span></div>`;
+  }).join('') + `<div class="row" style="border-top:2px solid var(--ink);margin-top:.3rem"><span><em>Average</em></span><span style="color:${CONFIG.avgLossThreshold>0&&avgVal<=CONFIG.avgLossThreshold?'var(--danger)':'var(--good)'}">${avgVal}</span></div>`;
+  showScreen('screen-over');
+}
+function showWin() {
+  analyticsEndGame('win', null);
+  showGameUI('summary');
+  document.getElementById('win-sub').textContent = `${state.charName} of ${state.org.name} completed all rounds. Here's your final report.`;
+  document.getElementById('win-summary').innerHTML = activeStats().map(s=>`
+    <div class="row"><span>${s.label}</span><span style="color:var(--good)">${state.stats[s.key]??50}</span></div>
+  `).join('');
+  showScreen('screen-win');
+}
+function restartGame() {
+  state = { org:null, charName:'', traits:[], stats:{}, round:1, roundScenariosLeft:0, roundStatsStart:{}, scenarioPool:[], usedScenarios:new Set(), currentScenario:null, selectedType:null, totalScenariosDone:0, totalScenariosInGame:0, sessionId:null, startTime:null };
+  document.getElementById('char-name-input').value='';
+  document.querySelectorAll('.sel-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelectorAll('.trait-card').forEach(c=>{c.classList.remove('selected','dimmed')});
+  document.getElementById('org-next-btn').disabled=true;
+  document.getElementById('char-next-btn').disabled=true;
+  showGameUI('pregame');
+  showScreen('screen-landing');
+}
+
+// ── SCREEN ROUTING ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+init();
+</script>
+</body>
+</html>
