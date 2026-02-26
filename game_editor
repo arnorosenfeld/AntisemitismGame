@@ -14,6 +14,42 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Merriweather',Georgia,serif;background:var(--paper);color:var(--ink);display:flex;min-height:100vh}
 
+/* ── PASSWORD GATE ── */
+#pw-gate{position:fixed;inset:0;background:var(--navy);display:flex;align-items:center;justify-content:center;z-index:9999}
+#pw-gate.hidden{display:none}
+.pw-box{background:var(--paper);border:3px solid var(--gold);padding:2.5rem 2.8rem;max-width:380px;width:90%;text-align:center}
+.pw-box h2{font-family:'Merriweather',Georgia,serif;font-size:1.4rem;font-weight:900;margin-bottom:.3rem}
+.pw-box h2 span{color:var(--gold)}
+.pw-box p{font-family:'Merriweather Sans',sans-serif;color:var(--muted);font-size:.83rem;margin-bottom:1.2rem;font-style:italic}
+.pw-box input{width:100%;border:2px solid var(--ink);padding:.55rem .75rem;font-size:1rem;font-family:'Merriweather Sans',sans-serif;margin-bottom:.75rem;background:white;letter-spacing:.1em}
+.pw-box input:focus{outline:none;border-color:var(--gold)}
+.pw-box .pw-btn{width:100%;background:var(--navy);color:var(--paper);border:none;padding:.65rem;font-family:'Merriweather',Georgia,serif;font-size:.95rem;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase}
+.pw-box .pw-btn:hover{background:var(--gold);color:var(--navy)}
+.pw-err{font-family:'Merriweather Sans',sans-serif;color:var(--danger);font-size:.8rem;margin-top:.35rem;min-height:1.1em}
+
+/* ── GITHUB PUBLISH ── */
+.gh-panel{background:#0d1117;color:#e6edf3;border:2px solid #30363d;padding:1.2rem 1.4rem;margin-bottom:1.5rem;font-family:'Merriweather Sans',sans-serif}
+.gh-panel h3{font-family:'Merriweather',Georgia,serif;font-size:.95rem;color:#f0d87a;margin-bottom:.9rem;font-weight:700}
+.gh-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.65rem;margin-bottom:.8rem}
+@media(max-width:640px){.gh-grid{grid-template-columns:1fr}}
+.gh-field label{display:block;font-size:.62rem;text-transform:uppercase;letter-spacing:1.2px;color:#8b949e;margin-bottom:.3rem}
+.gh-field input{width:100%;background:#161b22;border:1px solid #30363d;color:#e6edf3;padding:.4rem .6rem;font-family:'Merriweather Sans',sans-serif;font-size:.83rem}
+.gh-field input:focus{outline:none;border-color:#f0d87a}
+.gh-actions{display:flex;gap:.65rem;align-items:center;flex-wrap:wrap}
+.gh-btn{font-size:.75rem;text-transform:uppercase;letter-spacing:1.2px;padding:.35rem .9rem;border:none;cursor:pointer;font-family:'Merriweather Sans',sans-serif;font-weight:700;transition:all .15s}
+.gh-btn-publish{background:#238636;color:white}
+.gh-btn-publish:hover{background:#2ea043}
+.gh-btn-publish:disabled{background:#3d4450;color:#666;cursor:not-allowed}
+.gh-btn-clear{background:none;border:1px solid #30363d;color:#8b949e}
+.gh-btn-clear:hover{border-color:#e6edf3;color:#e6edf3}
+.gh-status{font-size:.78rem;padding:.3rem .6rem;margin-top:.6rem;display:none}
+.gh-status.info{background:#1f2d3d;color:#79c0ff;display:block}
+.gh-status.ok{background:#1b2f1e;color:#56d364;display:block}
+.gh-status.err{background:#2d1b1b;color:#f85149;display:block}
+.gh-note{font-size:.72rem;color:#8b949e;margin-top:.6rem;line-height:1.6}
+.gh-note a{color:#f0d87a}
+.gh-note code{background:#161b22;padding:.1em .3em;font-size:.85em}
+
 /* ── SIDEBAR ── */
 #sidebar{
   width:230px;min-height:100vh;background:var(--navy);color:var(--paper);
@@ -124,6 +160,17 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
 </style>
 </head>
 <body>
+<!-- PASSWORD GATE -->
+<div id="pw-gate">
+  <div class="pw-box">
+    <h2>Mission <span>Critical</span></h2>
+    <p>Content Editor — restricted access</p>
+    <input type="password" id="pw-input" placeholder="Enter password">
+    <button class="pw-btn" id="pw-btn">Enter Editor</button>
+    <div class="pw-err" id="pw-err"></div>
+  </div>
+</div>
+
 
 <!-- SIDEBAR -->
 <div id="sidebar">
@@ -154,17 +201,50 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     <button class="sb-add" onclick="addScenario()">+ Add Scenario</button>
   </div>
   <div class="sb-foot">
-    <button class="export-btn" onclick="openExport()">⬇ Export Game Code</button>
+    <button class="export-btn" onclick="publishToGitHub()" id="publish-btn">🚀 Publish to GitHub</button>
+    <button class="export-btn" onclick="openExport()" style="background:rgba(255,255,255,.08);color:#ccc;margin-top:.4rem;font-size:.75rem;padding:.45rem">⬇ Export Code Only</button>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.7rem">
       <span id="save-status" style="font-size:.65rem;color:#8899bb;font-style:italic;line-height:1.4">No saved data yet</span>
       <span id="save-indicator" style="font-size:.68rem;color:var(--gold);opacity:0;transition:opacity .3s;white-space:nowrap;margin-left:.5rem"></span>
     </div>
-    <button onclick="clearSaved()" style="margin-top:.5rem;width:100%;background:none;border:1px solid rgba(255,255,255,.15);color:#8899bb;font-size:.68rem;padding:.3rem;cursor:pointer;font-family:Merriweather,serif;text-align:center;transition:all .15s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#8899bb'">↺ Reset to defaults</button>
+    <button onclick="toggleGHPanel()" style="margin-top:.5rem;width:100%;background:none;border:1px solid rgba(255,255,255,.15);color:#8899bb;font-size:.68rem;padding:.3rem;cursor:pointer;font-family:Merriweather,serif;text-align:center;transition:all .15s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#8899bb'">⚙ GitHub Settings</button>
+    <button onclick="clearSaved()" style="margin-top:.35rem;width:100%;background:none;border:1px solid rgba(255,255,255,.15);color:#8899bb;font-size:.68rem;padding:.3rem;cursor:pointer;font-family:Merriweather,serif;text-align:center;transition:all .15s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#8899bb'">↺ Reset to defaults</button>
   </div>
 </div>
 
 <!-- MAIN -->
 <div id="main">
+
+  <!-- GITHUB PANEL (shown/hidden via toggle) -->
+  <div class="gh-panel" id="gh-panel" style="display:none">
+    <h3>⚙ GitHub Publish Settings</h3>
+    <div class="gh-grid">
+      <div class="gh-field"><label>GitHub Username</label><input type="text" id="gh-owner" placeholder="your-username"></div>
+      <div class="gh-field"><label>Repository Name</label><input type="text" id="gh-repo" placeholder="mission-critical-game"></div>
+      <div class="gh-field"><label>Personal Access Token</label><input type="password" id="gh-token" placeholder="ghp_…"></div>
+    </div>
+    <div class="gh-actions">
+      <button class="gh-btn gh-btn-publish" onclick="saveGHConfig()">Save Settings</button>
+      <button class="gh-btn gh-btn-clear" onclick="clearGHConfig()">Clear</button>
+    </div>
+    <div id="gh-save-status" class="gh-status"></div>
+    <hr style="border:none;border-top:1px solid #30363d;margin:.9rem 0">
+    <h3 style="margin-bottom:.7rem">🔑 Change Editor Password</h3>
+    <div class="gh-grid" style="grid-template-columns:1fr 1fr">
+      <div class="gh-field"><label>New Password</label><input type="password" id="gh-new-pw" placeholder="Enter new password"></div>
+      <div class="gh-field"><label>Confirm Password</label><input type="password" id="gh-confirm-pw" placeholder="Confirm new password"></div>
+    </div>
+    <div class="gh-actions">
+      <button class="gh-btn gh-btn-publish" onclick="changePassword()">Update Password</button>
+    </div>
+    <div id="gh-pw-status" class="gh-status"></div>
+    <div class="gh-note">
+      Create a token at <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a>
+      → Generate new token (classic) → check <code>repo</code> scope.<br>
+      The game file must be named <code>index.html</code> in the root of your repo.<br>
+      <strong>Security note:</strong> Your token and password are stored in this browser's localStorage only.
+    </div>
+  </div>
 
   <!-- OVERVIEW -->
   <div class="panel active" id="panel-overview">
@@ -915,8 +995,260 @@ document.addEventListener('input', e => {
 });
 document.addEventListener('change', e => { debouncedSave(); });
 
+// ══════════════════════════════════════════
+//  PASSWORD GATE
+// ══════════════════════════════════════════
+const PW_KEY      = 'missioncritical_editor_auth';
+const PW_STORE_KEY = 'missioncritical_editor_pw';
+const DEFAULT_PW   = 'missioncritical2024'; // Change via GitHub Settings panel after deploying
+
+function checkPw() {
+  const input = document.getElementById('pw-input').value;
+  const errEl = document.getElementById('pw-err');
+  errEl.textContent = '';
+  if (!input) { errEl.textContent = 'Please enter the password.'; return; }
+  const correct = localStorage.getItem(PW_STORE_KEY) || DEFAULT_PW;
+  if (input === correct) {
+    sessionStorage.setItem(PW_KEY, '1');
+    document.getElementById('pw-gate').classList.add('hidden');
+  } else {
+    errEl.textContent = 'Incorrect password.';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+
+function checkAuth() {
+  if (sessionStorage.getItem(PW_KEY) === '1') {
+    document.getElementById('pw-gate').classList.add('hidden');
+    return true;
+  }
+  setTimeout(() => document.getElementById('pw-input').focus(), 50);
+  return false;
+}
+
+// ══════════════════════════════════════════
+//  GITHUB CONFIG
+// ══════════════════════════════════════════
+const GH_CFG_KEY = 'missioncritical_gh_cfg';
+
+function loadGHConfig() { try { return JSON.parse(localStorage.getItem(GH_CFG_KEY))||{}; } catch(e){return{};} }
+function saveGHConfig() {
+  const cfg = {
+    owner: document.getElementById('gh-owner').value.trim(),
+    repo:  document.getElementById('gh-repo').value.trim(),
+    token: document.getElementById('gh-token').value.trim(),
+  };
+  if (!cfg.owner || !cfg.repo || !cfg.token) {
+    setGHStatus('err','All three fields are required.');
+    return;
+  }
+  localStorage.setItem(GH_CFG_KEY, JSON.stringify(cfg));
+  setGHStatus('ok','✓ Settings saved.');
+}
+function clearGHConfig() {
+  if (!confirm('Clear GitHub settings from this browser?')) return;
+  localStorage.removeItem(GH_CFG_KEY);
+  ['gh-owner','gh-repo','gh-token'].forEach(id=>{ document.getElementById(id).value=''; });
+  setGHStatus('info','Settings cleared.');
+}
+function setGHStatus(type, msg) {
+  const el = document.getElementById('gh-save-status');
+  el.className = 'gh-status '+type;
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function toggleGHPanel() {
+  const p = document.getElementById('gh-panel');
+  const open = p.style.display !== 'none';
+  p.style.display = open ? 'none' : 'block';
+  if (!open) {
+    const cfg = loadGHConfig();
+    document.getElementById('gh-owner').value = cfg.owner || '';
+    document.getElementById('gh-repo').value  = cfg.repo  || '';
+    document.getElementById('gh-token').value = cfg.token || '';
+    document.getElementById('gh-save-status').style.display = 'none';
+  }
+}
+
+function changePassword() {
+  const np = document.getElementById('gh-new-pw').value;
+  const cp = document.getElementById('gh-confirm-pw').value;
+  const st = document.getElementById('gh-pw-status');
+  st.style.display = 'block';
+  if (!np) { st.className='gh-status err'; st.textContent='Please enter a new password.'; return; }
+  if (np !== cp) { st.className='gh-status err'; st.textContent='Passwords do not match.'; return; }
+  localStorage.setItem(PW_STORE_KEY, np);
+  st.className='gh-status ok'; st.textContent='✓ Password updated. Takes effect on next login.';
+  document.getElementById('gh-new-pw').value = '';
+  document.getElementById('gh-confirm-pw').value = '';
+}
+
+// ══════════════════════════════════════════
+//  GITHUB PUBLISH
+// ══════════════════════════════════════════
+async function githubGetFile(cfg, path) {
+  const res = await fetch(
+    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`,
+    { headers: { Authorization: `Bearer ${cfg.token}`, Accept: 'application/vnd.github+json' } }
+  );
+  if (!res.ok) throw new Error(`GET ${path}: ${res.status} ${res.statusText}`);
+  return res.json(); // { sha, content (base64) }
+}
+
+async function githubPutFile(cfg, path, content, sha, message) {
+  const res = await fetch(
+    `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`,
+    {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${cfg.token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, content: btoa(unescape(encodeURIComponent(content))), sha }),
+    }
+  );
+  if (!res.ok) {
+    const err = await res.json().catch(()=>({}));
+    throw new Error(`PUT ${path}: ${err.message || res.statusText}`);
+  }
+  return res.json();
+}
+
+function setPublishStatus(msg, type='info') {
+  // Show status in the gh-panel and as a toast
+  let toast = document.getElementById('publish-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'publish-toast';
+    toast.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;padding:.7rem 1.1rem;font-family:Merriweather Sans,sans-serif;font-size:.82rem;font-weight:700;z-index:9000;max-width:340px;border:2px solid;transition:opacity .4s';
+    document.body.appendChild(toast);
+  }
+  const colors = { info:['#1f2d3d','#79c0ff','#79c0ff'], ok:['#1b2f1e','#56d364','#56d364'], err:['#2d1b1b','#f85149','#f85149'] };
+  const [bg,col,brd] = colors[type]||colors.info;
+  toast.style.background=bg; toast.style.color=col; toast.style.borderColor=brd;
+  toast.textContent = msg;
+  toast.style.opacity='1';
+  clearTimeout(toast._t);
+  if (type !== 'info') toast._t = setTimeout(()=>{ toast.style.opacity='0'; }, 5000);
+}
+
+async function publishToGitHub() {
+  const cfg = loadGHConfig();
+  if (!cfg.owner || !cfg.repo || !cfg.token) {
+    toggleGHPanel();
+    setPublishStatus('Configure GitHub settings first.', 'err');
+    return;
+  }
+
+  const btn = document.getElementById('publish-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Publishing…';
+  setPublishStatus('Fetching current files from GitHub…', 'info');
+
+  try {
+    // ── Step 1: Get current index.html from GitHub (need its SHA) ──
+    setPublishStatus('Reading index.html from GitHub…', 'info');
+    const gameFile = await githubGetFile(cfg, 'index.html');
+    
+    // ── Step 2: Decode current game content ──
+    const currentGame = decodeURIComponent(escape(atob(gameFile.content.replace(/\n/g,''))));
+
+    // ── Step 3: Generate new data block from editor ──
+    const newDataBlock = generateCode();
+
+    // ── Step 4: Splice new data block into game file between sentinel markers ──
+    const startMarker = '// ██ EDITOR_DATA_START ██ — do not remove this comment';
+    const endMarker   = '// ██ EDITOR_DATA_END ██ — do not remove this comment';
+    const startIdx = currentGame.indexOf(startMarker);
+    const endIdx   = currentGame.indexOf(endMarker);
+    if (startIdx === -1 || endIdx === -1) {
+      throw new Error('Sentinel markers not found in index.html. Make sure you are using the latest game file.');
+    }
+    const updatedGame = currentGame.slice(0, startIdx)
+      + startMarker + '\n'
+      + newDataBlock + '\n\n'
+      + currentGame.slice(endIdx);
+
+    // ── Step 5: Commit index.html ──
+    setPublishStatus('Committing index.html…', 'info');
+    await githubPutFile(cfg, 'index.html', updatedGame, gameFile.sha,
+      `Editor publish: update game content [${new Date().toISOString().slice(0,16)}]`);
+
+    // ── Step 6: Get + update game-editor.html (save current editor state) ──
+    setPublishStatus('Saving editor state to GitHub…', 'info');
+    let editorSha = null;
+    try {
+      const editorFile = await githubGetFile(cfg, 'game-editor.html');
+      editorSha = editorFile.sha;
+    } catch(e) { /* file might not exist yet */ }
+    
+    // Serialize current editor state into the editor's STATS/ORGS/TRAITS/SCENARIOS defaults
+    const editorContent = buildEditorSnapshot();
+    await githubPutFile(cfg, 'game-editor.html', editorContent, editorSha,
+      `Editor publish: save editor snapshot [${new Date().toISOString().slice(0,16)}]`);
+
+    setPublishStatus('✓ Published! GitHub Pages will update in ~1 minute.', 'ok');
+    // Update save status
+    const statusEl = document.getElementById('save-status');
+    if (statusEl) statusEl.textContent = 'Published: ' + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+
+  } catch(e) {
+    console.error('Publish failed:', e);
+    setPublishStatus('Publish failed: ' + e.message, 'err');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🚀 Publish to GitHub';
+  }
+}
+
+// Builds a version of the editor HTML with current data baked into the JS defaults
+function buildEditorSnapshot() {
+  // Get the current editor HTML
+  const currentHTML = document.documentElement.outerHTML;
+  
+  // Replace the JS data arrays with current in-memory state
+  const statsJSON  = JSON.stringify(STATS, null, 2);
+  const orgsJSON   = JSON.stringify(ORGS, null, 2);
+  const traitsJSON = JSON.stringify(TRAITS, null, 2);
+  const scenJSON   = JSON.stringify(SCENARIOS, null, 2);
+  const htpJSON    = JSON.stringify(HTP_STEPS, null, 2);
+  const branding   = collectBrandingState();
+
+  // Replace default data arrays in the editor source
+  let html = currentHTML;
+
+  // Replace STATS
+  html = replaceJSVar(html, 'STATS', statsJSON);
+  html = replaceJSVar(html, 'ORGS', orgsJSON);
+  html = replaceJSVar(html, 'TRAITS', traitsJSON);
+  html = replaceJSVar(html, 'SCENARIOS', scenJSON);
+  html = replaceJSVar(html, 'HTP_STEPS', htpJSON);
+
+  // Inject branding defaults into the input value attributes
+  Object.entries(branding).forEach(([id, val]) => {
+    // Escape for use in HTML attribute
+    const escaped = val.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // Replace value="..." on the element with this id
+    const rx = new RegExp(`(<[^>]+id="${id}"[^>]*\\bvalue=")[^"]*(")`,'s');
+    if (rx.test(html)) html = html.replace(rx, `$1${escaped}$2`);
+  });
+
+  return html;
+}
+
+function replaceJSVar(html, varName, newValue) {
+  // Match: let VARNAME = [...];
+  // Use \\s not \s inside template literal, and a function replacer so $ in JSON is safe
+  const rx = new RegExp(`let ${varName}\\s*=\\s*\\[[\\s\\S]*?\\];`);
+  return html.replace(rx, () => `let ${varName} = ${newValue};`);
+}
+
 // ── INIT ──
 function init() {
+  // Wire password gate listeners now that the script has loaded
+  document.getElementById('pw-btn').addEventListener('click', checkPw);
+  document.getElementById('pw-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkPw();
+  });
+  checkAuth();
   const savedAt = loadSaved();
   renderOrgNav(); renderTraitNav(); renderScenarioNav(); updateCounts();
   renderStatsEditor(); renderHTPEditor();
