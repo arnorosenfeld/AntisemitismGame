@@ -179,13 +179,13 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Game Settings</div>
-    <button class="sb-btn active" onclick="nav('branding',this)">🎨 Branding &amp; Text</button>
+    <button class="sb-btn" onclick="nav('branding',this)">🎨 Branding &amp; Text</button>
     <button class="sb-btn" onclick="nav('stats',this)">📊 Stats &amp; Scoring</button>
     <button class="sb-btn" onclick="nav('howtoplay',this)">❓ How to Play Steps</button>
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Organizations</div>
-    <div id="org-nav"><button class="sb-btn sub" onclick="showOrgPanel('community_center',this)">🌐 The Association of Jewish Communities (Test)</button><button class="sb-btn sub" onclick="showOrgPanel('advocacy_group',this)">🏛️ United Against Disparagement</button><button class="sb-btn sub" onclick="showOrgPanel('national_coalition',this)">✊ Jews for Social Justice</button><button class="sb-btn sub" onclick="showOrgPanel('org_1772215781435',this)">🕊️ Peace for All</button></div>
+    <div id="org-nav"><button class="sb-btn sub " onclick="showOrgPanel('community_center',this)">🌐 The Association of Jewish Communities (Test)</button><button class="sb-btn sub " onclick="showOrgPanel('advocacy_group',this)">🏛️ United Against Disparagement</button><button class="sb-btn sub active" onclick="showOrgPanel('national_coalition',this)">✊ Jews for Social Justice</button><button class="sb-btn sub " onclick="showOrgPanel('org_1772215781435',this)">🕊️ Peace for All</button></div>
     <button class="sb-add" onclick="addOrg()">+ Add Org Type</button>
   </div>
   <div class="sb-sec">
@@ -206,8 +206,8 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     <button class="export-btn" onclick="publishToGitHub()" id="publish-btn" disabled="">⏳ Publishing…</button>
     <button class="export-btn" onclick="openExport()" style="background:rgba(255,255,255,.08);color:#ccc;margin-top:.4rem;font-size:.75rem;padding:.45rem">⬇ Export Code Only</button>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.7rem">
-      <span id="save-status" style="font-size:.65rem;color:#8899bb;font-style:italic;line-height:1.4">Restored: Feb 27 01:47 PM</span>
-      <span id="save-indicator" style="font-size: 0.68rem; color: var(--gold); opacity: 1; transition: opacity 0.3s; white-space: nowrap; margin-left: 0.5rem;">✓ Saved</span>
+      <span id="save-status" style="font-size:.65rem;color:#8899bb;font-style:italic;line-height:1.4">Published: 02:25 PM</span>
+      <span id="save-indicator" style="font-size: 0.68rem; color: var(--gold); opacity: 0; transition: opacity 0.3s; white-space: nowrap; margin-left: 0.5rem;">✓ Saved</span>
     </div>
     <button onclick="toggleGHPanel()" style="margin-top:.5rem;width:100%;background:none;border:1px solid rgba(255,255,255,.15);color:#8899bb;font-size:.68rem;padding:.3rem;cursor:pointer;font-family:Merriweather,serif;text-align:center;transition:all .15s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#8899bb'">⚙ GitHub Settings</button>
     <button onclick="clearSaved()" style="margin-top:.35rem;width:100%;background:none;border:1px solid rgba(255,255,255,.15);color:#8899bb;font-size:.68rem;padding:.3rem;cursor:pointer;font-family:Merriweather,serif;text-align:center;transition:all .15s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#8899bb'">↺ Reset to defaults</button>
@@ -263,7 +263,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
   </div>
 
   <!-- BRANDING -->
-  <div class="panel active" id="panel-branding">
+  <div class="panel" id="panel-branding">
     <div class="ph"><h1>Branding &amp; Text</h1><p>All text that appears in the game interface.</p></div>
     <div class="card">
       <div class="ct">Game Identity</div>
@@ -802,6 +802,42 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     <button onclick="addOutcome('s1',2)" style="font-size:.72rem;padding:.25rem .7rem;border:1px dashed var(--muted);background:none;color:var(--muted);cursor:pointer;font-family:'Merriweather',Georgia,serif;width:100%;margin-top:.3rem;transition:all .13s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--muted)';this.style.color='var(--muted)'">+ Add Outcome</button>
   </div></div>
     <button class="btn btn-danger" onclick="deleteScenario('s1')">Delete This Scenario</button>
+  </div><div class="panel active" id="panel-org_national_coalition">
+    <div class="ph"><h1>Org: Jews for Social Justice</h1><p>Configure this organization type's identity and starting bonuses.</p></div>
+    <div class="card">
+      <div class="ct">Identity</div>
+      <div class="fr">
+        <div class="fg"><label>Emoji / Icon</label><input type="text" value="✊" oninput="updateOrg('national_coalition','icon',this.value)"></div>
+        <div class="fg"><label>Name</label><input type="text" value="Jews for Social Justice" oninput="updateOrg('national_coalition','name',this.value)"></div>
+      </div>
+      <div class="fg"><label>Description</label><textarea oninput="updateOrg('national_coalition','desc',this.value)">A smaller, progressive organization that traces its roots to the 1980s. It was created to serve as a more liberal counterweight to larger national Jewish organizations that were starting to move away from lobbying on domestic issues like abortion, immigration and racial justice. But now young staff and some members are pushing it to move further to the left while other members — including some on your board — want you to remain more moderate.</textarea></div>
+      <div class="fg"><label>Tags (comma-separated)</label><input type="text" value="Progressive, National, Advocacy" oninput="updateOrg('national_coalition','tags',this.value)"></div>
+    </div>
+    <div class="card">
+      <div class="ct">Starting Stat Bonuses <span>Use negative numbers for weaknesses</span></div>
+      <div class="delta-row" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr))">
+    <div class="delta-field">
+      <label>Revenue</label>
+      <input type="number" value="-5" min="-30" max="30" oninput="updateOrgBonus('national_coalition','revenue',this.value)">
+    </div>
+  
+    <div class="delta-field">
+      <label>Community Support</label>
+      <input type="number" value="0" min="-30" max="30" oninput="updateOrgBonus('national_coalition','community',this.value)">
+    </div>
+  
+    <div class="delta-field">
+      <label>Staff Morale</label>
+      <input type="number" value="0" min="-30" max="30" oninput="updateOrgBonus('national_coalition','morale',this.value)">
+    </div>
+  
+    <div class="delta-field">
+      <label>Coalitions</label>
+      <input type="number" value="0" min="-30" max="30" oninput="updateOrgBonus('national_coalition','coalition',this.value)">
+    </div>
+  </div>
+    </div>
+    <button class="btn btn-danger" onclick="deleteOrg('national_coalition')">Delete This Org</button>
   </div></div>
 
 <!-- EXPORT MODAL -->
@@ -915,8 +951,8 @@ let ORGS = [
     "bonuses": {
       "revenue": -5,
       "community": 0,
-      "morale": 0,
-      "coalition": 0
+      "morale": 10,
+      "coalition": 10
     },
     "tags": [
       "Progressive",
