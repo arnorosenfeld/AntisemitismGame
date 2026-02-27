@@ -200,6 +200,10 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     <div id="scenario-nav"></div>
     <button class="sb-add" onclick="addScenario()">+ Add Scenario</button>
   </div>
+  <div class="sb-sec">
+    <div class="sb-sec-lbl">Interaction Types</div>
+    <button class="sb-btn" onclick="nav('interaction-types',this)">🗂 Manage Types</button>
+  </div>
   <div class="sb-foot">
     <button class="export-btn" onclick="publishToGitHub()" id="publish-btn">🚀 Publish to GitHub</button>
     <button class="export-btn" onclick="openExport()" style="background:rgba(255,255,255,.08);color:#ccc;margin-top:.4rem;font-size:.75rem;padding:.45rem">⬇ Export Code Only</button>
@@ -331,6 +335,17 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
 
   <!-- ORG / TRAIT / SCENARIO panels rendered dynamically -->
 
+  <!-- INTERACTION TYPES -->
+  <div class="panel" id="panel-interaction-types">
+    <div class="ph"><h1>Interaction Types</h1><p>These are the scenario categories players choose from each turn (e.g. Email, Phone Call). Each type needs a unique ID, an emoji icon, and a display label.</p></div>
+    <div class="tip">The <strong>ID</strong> is used internally to match scenarios to types — changing an existing ID will break any scenarios already assigned to it. Safe to change labels and icons freely.</div>
+    <div class="card">
+      <div class="ct">Types <span>Shown to players as cards on the "What's on your desk?" screen</span></div>
+      <div id="interaction-types-editor"></div>
+      <button class="btn btn-sm" style="margin-top:.7rem" onclick="addInteractionType()">+ Add Type</button>
+    </div>
+  </div>
+
 </div>
 
 <!-- EXPORT MODAL -->
@@ -395,11 +410,11 @@ let HTP_STEPS = [
   {num:'5',label:'Survive each round & reach the end'},
 ];
 
-const SCENARIO_TYPES = [
-  {id:'email',label:'Email'},
-  {id:'phone',label:'Phone Call'},
-  {id:'inperson',label:'In-Person'},
-  {id:'social',label:'Social Media'},
+let SCENARIO_TYPES = [
+  {id:'email',  icon:'✉️',  label:'Email'},
+  {id:'phone',  icon:'📞', label:'Phone Call'},
+  {id:'inperson',icon:'🤝', label:'In-Person'},
+  {id:'social', icon:'📱', label:'Social Media'},
 ];
 
 let activePanel = 'overview';
@@ -418,6 +433,7 @@ function nav(id, btn) {
   updateCounts();
   if (id === 'stats') renderStatsEditor();
   if (id === 'howtoplay') renderHTPEditor();
+  if (id === 'interaction-types') renderInteractionTypesEditor();
 }
 
 function updateCounts() {
@@ -654,7 +670,7 @@ function buildScenarioPanel(sc) {
     `<option value="all" ${sc.orgs.includes('all')?'selected':''}>All Organizations</option>`,
     ...ORGS.map(o=>`<option value="${o.id}" ${sc.orgs.includes(o.id)?'selected':''}>${o.name}</option>`)
   ].join('');
-  const typeOptions = SCENARIO_TYPES.map(t=>`<option value="${t.id}" ${sc.type===t.id?'selected':''}>${t.label}</option>`).join('');
+  const typeOptions = SCENARIO_TYPES.map(t=>`<option value="${t.id}" ${sc.type===t.id?'selected':''}>${t.icon||''} ${t.label}</option>`).join('');
 
   const choicesHTML = sc.choices.map((ch,ci) => buildChoiceBlock(sc.id, ch, ci)).join('');
 
@@ -833,6 +849,59 @@ function deleteScenario(id) {
 // ══════════════════════════════════════════
 function gv(id) { const el=document.getElementById(id); return el?el.value:''; }
 
+// ══════════════════════════════════════════
+//  INTERACTION TYPES
+// ══════════════════════════════════════════
+function renderInteractionTypesEditor() {
+  const el = document.getElementById('interaction-types-editor');
+  if (!el) return;
+  el.innerHTML = SCENARIO_TYPES.map((t, i) => `
+    <div style="display:grid;grid-template-columns:70px 70px 1fr auto;gap:.65rem;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--aged)">
+      <div class="fg" style="margin:0">
+        <label>Icon</label>
+        <input type="text" value="${t.icon||''}" placeholder="✉️" oninput="SCENARIO_TYPES[${i}].icon=this.value;debouncedSave()" style="text-align:center;font-size:1.2rem">
+      </div>
+      <div class="fg" style="margin:0">
+        <label>ID <span style="font-size:.6rem;font-style:italic;text-transform:none;letter-spacing:0">(no spaces)</span></label>
+        <input type="text" value="${t.id||''}" placeholder="email" oninput="SCENARIO_TYPES[${i}].id=this.value.replace(/\\s+/g,'');debouncedSave();refreshScenarioTypeDropdowns()">
+      </div>
+      <div class="fg" style="margin:0">
+        <label>Label</label>
+        <input type="text" value="${t.label||''}" placeholder="Email" oninput="SCENARIO_TYPES[${i}].label=this.value;debouncedSave();refreshScenarioTypeDropdowns()">
+      </div>
+      <button class="del-btn" onclick="removeInteractionType(${i})" style="margin-top:1.1rem" title="Delete type">✕</button>
+    </div>
+  `).join('') + (SCENARIO_TYPES.length === 0 ? '<p style="color:var(--muted);font-style:italic;font-size:.85rem;padding:.5rem 0">No interaction types yet. Add one below.</p>' : '');
+}
+
+function addInteractionType() {
+  SCENARIO_TYPES.push({id:'type_'+Date.now(), icon:'💬', label:'New Type'});
+  renderInteractionTypesEditor();
+  refreshScenarioTypeDropdowns();
+  debouncedSave();
+}
+
+function removeInteractionType(i) {
+  if (SCENARIO_TYPES.length <= 1) { alert('Need at least one interaction type.'); return; }
+  if (!confirm(`Delete the "${SCENARIO_TYPES[i].label}" type? Scenarios assigned to it will keep the old ID but won't match any type in the game.`)) return;
+  SCENARIO_TYPES.splice(i, 1);
+  renderInteractionTypesEditor();
+  refreshScenarioTypeDropdowns();
+  debouncedSave();
+}
+
+// Re-render the type <select> inside any open scenario panel
+function refreshScenarioTypeDropdowns() {
+  SCENARIOS.forEach(sc => {
+    const sel = document.querySelector(`#panel-sc_${sc.id} select[onchange*="'type'"]`);
+    if (!sel) return;
+    const current = sc.type;
+    sel.innerHTML = SCENARIO_TYPES.map(t =>
+      `<option value="${t.id}" ${current===t.id?'selected':''}>${t.icon||''} ${t.label}</option>`
+    ).join('');
+  });
+}
+
 function generateCode() {
   const title = gv('b-title')||'Mission Critical';
   const accent = gv('b-accent')||'Critical';
@@ -885,12 +954,7 @@ const ORG_TYPES = ${JSON.stringify(orgsClean,null,2)};
 
 const TRAITS = ${JSON.stringify(traitsClean,null,2)};
 
-const SCENARIO_TYPES = [
-  { id:"email",     icon:"✉️",  label:"Email" },
-  { id:"phone",     icon:"📞", label:"Phone Call" },
-  { id:"inperson",  icon:"🤝", label:"In-Person" },
-  { id:"social",    icon:"📱", label:"Social Media" },
-];
+const SCENARIO_TYPES = ${JSON.stringify(SCENARIO_TYPES.map(t=>({id:t.id,icon:t.icon||'',label:t.label})),null,2)};
 
 const SCENARIOS = ${JSON.stringify(scenariosClean,null,2)};`;
 }
@@ -929,7 +993,7 @@ function collectBrandingState() {
 
 function saveAll() {
   const branding = collectBrandingState();
-  const data = { STATS, ORGS, TRAITS, SCENARIOS, HTP_STEPS, branding, savedAt: new Date().toISOString() };
+  const data = { STATS, ORGS, TRAITS, SCENARIOS, HTP_STEPS, SCENARIO_TYPES, branding, savedAt: new Date().toISOString() };
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify(data));
     showSaveIndicator();
@@ -941,11 +1005,12 @@ function loadSaved() {
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return false;
     const data = JSON.parse(raw);
-    if (data.STATS)     STATS     = data.STATS;
-    if (data.ORGS)      ORGS      = data.ORGS;
-    if (data.TRAITS)    TRAITS    = data.TRAITS;
-    if (data.SCENARIOS) SCENARIOS = data.SCENARIOS;
-    if (data.HTP_STEPS) HTP_STEPS = data.HTP_STEPS;
+    if (data.STATS)          STATS          = data.STATS;
+    if (data.ORGS)           ORGS           = data.ORGS;
+    if (data.TRAITS)         TRAITS         = data.TRAITS;
+    if (data.SCENARIOS)      SCENARIOS      = data.SCENARIOS;
+    if (data.HTP_STEPS)      HTP_STEPS      = data.HTP_STEPS;
+    if (data.SCENARIO_TYPES) SCENARIO_TYPES = data.SCENARIO_TYPES;
     if (data.branding) {
       setTimeout(() => {
         Object.entries(data.branding).forEach(([id, val]) => {
@@ -1210,6 +1275,7 @@ function buildEditorSnapshot() {
   const traitsJSON = JSON.stringify(TRAITS, null, 2);
   const scenJSON   = JSON.stringify(SCENARIOS, null, 2);
   const htpJSON    = JSON.stringify(HTP_STEPS, null, 2);
+  const stJSON     = JSON.stringify(SCENARIO_TYPES, null, 2);
   const branding   = collectBrandingState();
 
   // Replace default data arrays in the editor source
@@ -1221,6 +1287,7 @@ function buildEditorSnapshot() {
   html = replaceJSVar(html, 'TRAITS', traitsJSON);
   html = replaceJSVar(html, 'SCENARIOS', scenJSON);
   html = replaceJSVar(html, 'HTP_STEPS', htpJSON);
+  html = replaceJSVar(html, 'SCENARIO_TYPES', stJSON);
 
   // Inject branding defaults into the input value attributes
   Object.entries(branding).forEach(([id, val]) => {
@@ -1251,7 +1318,7 @@ function init() {
   checkAuth();
   const savedAt = loadSaved();
   renderOrgNav(); renderTraitNav(); renderScenarioNav(); updateCounts();
-  renderStatsEditor(); renderHTPEditor();
+  renderStatsEditor(); renderHTPEditor(); renderInteractionTypesEditor();
   const statusEl = document.getElementById('save-status');
   if (statusEl && savedAt) {
     const d = new Date(savedAt);
