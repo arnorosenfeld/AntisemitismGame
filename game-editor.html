@@ -159,7 +159,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
 </head>
 <body>
 <!-- PASSWORD GATE -->
-<div id="pw-gate">
+<div id="pw-gate" class="">
   <div class="pw-box">
     <h2>Mission <span>Critical</span></h2>
     <p>Content Editor — restricted access</p>
@@ -185,7 +185,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Organizations</div>
-    <div id="org-nav"><button class="sb-btn sub " onclick="showOrgPanel('community_center',this)">🌐 The Association of Jewish Communities (Test)</button><button class="sb-btn sub " onclick="showOrgPanel('advocacy_group',this)">🏛️ United Against Disparagement</button><button class="sb-btn sub active" onclick="showOrgPanel('national_coalition',this)">✊ Jews for Social Justice</button><button class="sb-btn sub " onclick="showOrgPanel('org_1772215781435',this)">🕊️ Peace for All</button></div>
+    <div id="org-nav"><button class="sb-btn sub active" onclick="showOrgPanel('community_center',this)">🌐 The Association of Jewish Communities</button><button class="sb-btn sub " onclick="showOrgPanel('advocacy_group',this)">🏛️ United Against Disparagement</button><button class="sb-btn sub " onclick="showOrgPanel('national_coalition',this)">✊ Jews for Social Justice</button><button class="sb-btn sub " onclick="showOrgPanel('org_1772215781435',this)">🕊️ Peace for All</button></div>
     <button class="sb-add" onclick="addOrg()">+ Add Org Type</button>
   </div>
   <div class="sb-sec">
@@ -206,10 +206,10 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     <button class="export-btn" onclick="publishToGitHub()" id="publish-btn">🚀 Publish to GitHub</button>
     <button class="export-btn" onclick="openExport()" style="background:rgba(255,255,255,.08);color:#ccc;margin-top:.4rem;font-size:.75rem;padding:.45rem">⬇ Export Code Only</button>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.7rem">
-      <span id="save-status" style="font-size:.65rem;color:#8899bb;font-style:italic;line-height:1.4">Published: 02:25 PM</span>
+      <span id="save-status" style="font-size:.65rem;color:#8899bb;font-style:italic;line-height:1.4">No saved data yet</span>
       <span id="save-indicator" style="font-size: 0.68rem; color: var(--gold); opacity: 0; transition: opacity 0.3s; white-space: nowrap; margin-left: 0.5rem;">✓ Saved</span>
     </div>
-    <button onclick="toggleGHPanel()" style="margin-top:.5rem;width:100%;background:none;border:1px solid rgba(255,255,255,.15);color:#8899bb;font-size:.68rem;padding:.3rem;cursor:pointer;font-family:Merriweather,serif;text-align:center;transition:all .15s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#8899bb'">⚙ GitHub Settings</button>
+    <button onclick="toggleGHPanel()" style="margin-top: 0.5rem; width: 100%; background: none; border: 1px solid rgba(255, 255, 255, 0.15); color: rgb(136, 153, 187); font-size: 0.68rem; padding: 0.3rem; cursor: pointer; font-family: Merriweather, serif; text-align: center; transition: 0.15s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#8899bb'">⚙ GitHub Settings</button>
     <button onclick="clearSaved()" style="margin-top:.35rem;width:100%;background:none;border:1px solid rgba(255,255,255,.15);color:#8899bb;font-size:.68rem;padding:.3rem;cursor:pointer;font-family:Merriweather,serif;text-align:center;transition:all .15s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#8899bb'">↺ Reset to defaults</button>
   </div>
 </div>
@@ -218,7 +218,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
 <div id="main">
 
   <!-- GITHUB PANEL (shown/hidden via toggle) -->
-  <div class="gh-panel" id="gh-panel" style="display:none">
+  <div class="gh-panel" id="gh-panel" style="display: block;">
     <h3>⚙ GitHub Publish Settings</h3>
     <div class="gh-grid">
       <div class="gh-field"><label>GitHub Username</label><input type="text" id="gh-owner" placeholder="your-username"></div>
@@ -229,7 +229,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
       <button class="gh-btn gh-btn-publish" onclick="saveGHConfig()">Save Settings</button>
       <button class="gh-btn gh-btn-clear" onclick="clearGHConfig()">Clear</button>
     </div>
-    <div id="gh-save-status" class="gh-status"></div>
+    <div id="gh-save-status" class="gh-status" style="display: none;"></div>
     <hr style="border:none;border-top:1px solid #30363d;margin:.9rem 0">
     <h3 style="margin-bottom:.7rem">🔑 Change Editor Password</h3>
     <div class="gh-grid" style="grid-template-columns:1fr 1fr">
@@ -239,7 +239,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     <div class="gh-actions">
       <button class="gh-btn gh-btn-publish" onclick="changePassword()">Update Password</button>
     </div>
-    <div id="gh-pw-status" class="gh-status"></div>
+    <div id="gh-pw-status" class="gh-status ok" style="display: block;">✓ Password updated in GitHub. Reload the editor from GitHub Pages to use the new password.</div>
     <div class="gh-note">
       Create a token at <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a>
       → Generate new token (classic) → check <code>repo</code> scope.<br>
@@ -478,8 +478,8 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     </div>
   </div>
 
-<div class="panel" id="panel-org_community_center">
-    <div class="ph"><h1>Org: The Association of Jewish Communities (Test)</h1><p>Configure this organization type's identity and starting bonuses.</p></div>
+<div class="panel active" id="panel-org_community_center">
+    <div class="ph"><h1>Org: The Association of Jewish Communities</h1><p>Configure this organization type's identity and starting bonuses.</p></div>
     <div class="card">
       <div class="ct">Identity</div>
       <div class="fr">
@@ -802,7 +802,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     <button onclick="addOutcome('s1',2)" style="font-size:.72rem;padding:.25rem .7rem;border:1px dashed var(--muted);background:none;color:var(--muted);cursor:pointer;font-family:'Merriweather',Georgia,serif;width:100%;margin-top:.3rem;transition:all .13s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--muted)';this.style.color='var(--muted)'">+ Add Outcome</button>
   </div></div>
     <button class="btn btn-danger" onclick="deleteScenario('s1')">Delete This Scenario</button>
-  </div><div class="panel active" id="panel-org_national_coalition">
+  </div><div class="panel" id="panel-org_national_coalition">
     <div class="ph"><h1>Org: Jews for Social Justice</h1><p>Configure this organization type's identity and starting bonuses.</p></div>
     <div class="card">
       <div class="ct">Identity</div>
@@ -910,7 +910,7 @@ let ORGS = [
   {
     "id": "community_center",
     "icon": "🌐",
-    "name": "The Association of Jewish Communities (Test)",
+    "name": "The Association of Jewish Communities",
     "desc": "A legacy organization and stalwart of the Jewish establishment, the Association of Jewish Communities helps a network of smaller organizations around the country set policy and raise money. Your priority is keeping big donors happy without alienating the millions of Jews you speak on behalf of or angering outside partners you rely on to support your agenda.",
     "bonuses": {
       "revenue": 0,
@@ -2545,4 +2545,5 @@ init();
 </script>
 
 
-</body></html>
+
+<div id="1p-live-region" role="status" aria-live="polite" aria-atomic="true" aria-relevant="all" style="clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; overflow: hidden; position: fixed; top: 0px; left: 0px; white-space: nowrap; width: 1px; overflow-wrap: normal;"></div><div id="1p-live-region" role="status" aria-live="polite" aria-atomic="true" aria-relevant="all" style="clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; overflow: hidden; position: fixed; top: 0px; left: 0px; white-space: nowrap; width: 1px; overflow-wrap: normal;"></div><div id="1p-live-region" role="status" aria-live="polite" aria-atomic="true" aria-relevant="all" style="clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; overflow: hidden; position: fixed; top: 0px; left: 0px; white-space: nowrap; width: 1px; overflow-wrap: normal;"></div></body></html>
