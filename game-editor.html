@@ -175,7 +175,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
   <div class="sb-logo"><h2>Mission <span>Critical</span></h2><p>Content Editor</p></div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Overview</div>
-    <button class="sb-btn active" onclick="nav('overview',this)">📋 Dashboard</button>
+    <button class="sb-btn" onclick="nav('overview',this)">📋 Dashboard</button>
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Game Settings</div>
@@ -185,17 +185,17 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Organizations</div>
-    <div id="org-nav"><button class="sb-btn sub " onclick="showOrgPanel('community_center',this)">🌐 The Association of Jewish Communities</button><button class="sb-btn sub " onclick="showOrgPanel('advocacy_group',this)">🏛️ United Against Disparagement</button><button class="sb-btn sub " onclick="showOrgPanel('national_coalition',this)">✊ Jews for Social Justice</button><button class="sb-btn sub " onclick="showOrgPanel('org_1772215781435',this)">🕊️ Peace for All</button></div>
+    <div id="org-nav"><button class="sb-btn sub " onclick="showOrgPanel('community_center',this)">🌐 The Association of Jewish Communities (Test)</button><button class="sb-btn sub active" onclick="showOrgPanel('advocacy_group',this)">🏛️ United Against Disparagement</button><button class="sb-btn sub " onclick="showOrgPanel('national_coalition',this)">✊ Jews for Social Justice</button><button class="sb-btn sub " onclick="showOrgPanel('org_1772215781435',this)">🕊️ Peace for All</button></div>
     <button class="sb-add" onclick="addOrg()">+ Add Org Type</button>
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Traits</div>
-    <div id="trait-nav"><button class="sb-btn sub " onclick="showTraitPanel('connector',this)">Macher</button><button class="sb-btn sub " onclick="showTraitPanel('storyteller',this)">Rabbi</button><button class="sb-btn sub " onclick="showTraitPanel('numbers',this)">Disruptor</button><button class="sb-btn sub " onclick="showTraitPanel('coach',this)">Activist</button><button class="sb-btn sub " onclick="showTraitPanel('visionary',this)">Executive</button><button class="sb-btn sub " onclick="showTraitPanel('operator',this)">Visionary</button></div>
+    <div id="trait-nav"><button class="sb-btn sub" onclick="showTraitPanel('connector',this)">Macher</button><button class="sb-btn sub" onclick="showTraitPanel('storyteller',this)">Rabbi</button><button class="sb-btn sub" onclick="showTraitPanel('numbers',this)">Disruptor</button><button class="sb-btn sub" onclick="showTraitPanel('coach',this)">Activist</button><button class="sb-btn sub" onclick="showTraitPanel('visionary',this)">Executive</button><button class="sb-btn sub" onclick="showTraitPanel('operator',this)">Visionary</button></div>
     <button class="sb-add" onclick="addTrait()">+ Add Trait</button>
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Scenarios</div>
-    <div id="scenario-nav"><div style="padding:.25rem 1.1rem;font-size:.62rem;text-transform:uppercase;letter-spacing:1.5px;color:#556;margin-top:.35rem">Round null</div><button class="sb-btn sub " onclick="showScenarioPanel('sc_1772216779456',this)">Tax the Jews</button><div style="padding:.25rem 1.1rem;font-size:.62rem;text-transform:uppercase;letter-spacing:1.5px;color:#556;margin-top:.35rem">Any Round</div><button class="sb-btn sub " onclick="showScenarioPanel('s1',this)">The Deportation Dilemma</button><button class="sb-btn sub " onclick="showScenarioPanel('sc_1772216143596',this)">Ms. Sophie</button><button class="sb-btn sub " onclick="showScenarioPanel('sc_1772216425544',this)">Ms. Sophie</button><button class="sb-btn sub " onclick="showScenarioPanel('sc_1772216588786',this)">Assasination, antisemiti…</button></div>
+    <div id="scenario-nav"><div style="padding:.25rem 1.1rem;font-size:.62rem;text-transform:uppercase;letter-spacing:1.5px;color:#556;margin-top:.35rem">Round null</div><button class="sb-btn sub" onclick="showScenarioPanel('sc_1772216779456',this)">Tax the Jews</button><div style="padding:.25rem 1.1rem;font-size:.62rem;text-transform:uppercase;letter-spacing:1.5px;color:#556;margin-top:.35rem">Any Round</div><button class="sb-btn sub" onclick="showScenarioPanel('s1',this)">The Deportation Dilemma</button><button class="sb-btn sub" onclick="showScenarioPanel('sc_1772216143596',this)">Ms. Sophie</button><button class="sb-btn sub" onclick="showScenarioPanel('sc_1772216425544',this)">Ms. Sophie</button><button class="sb-btn sub" onclick="showScenarioPanel('sc_1772216588786',this)">Assasination, antisemiti…</button></div>
     <button class="sb-add" onclick="addScenario()">+ Add Scenario</button>
   </div>
   <div class="sb-sec">
@@ -206,7 +206,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     <button class="export-btn" onclick="publishToGitHub()" id="publish-btn" disabled="">⏳ Publishing…</button>
     <button class="export-btn" onclick="openExport()" style="background:rgba(255,255,255,.08);color:#ccc;margin-top:.4rem;font-size:.75rem;padding:.45rem">⬇ Export Code Only</button>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.7rem">
-      <span id="save-status" style="font-size:.65rem;color:#8899bb;font-style:italic;line-height:1.4">Restored: Feb 27 01:37 PM</span>
+      <span id="save-status" style="font-size:.65rem;color:#8899bb;font-style:italic;line-height:1.4">Published: 01:47 PM</span>
       <span id="save-indicator" style="font-size: 0.68rem; color: var(--gold); opacity: 0; transition: opacity 0.3s; white-space: nowrap; margin-left: 0.5rem;">✓ Saved</span>
     </div>
     <button onclick="toggleGHPanel()" style="margin-top: 0.5rem; width: 100%; background: none; border: 1px solid rgba(255, 255, 255, 0.15); color: rgb(136, 153, 187); font-size: 0.68rem; padding: 0.3rem; cursor: pointer; font-family: Merriweather, serif; text-align: center; transition: 0.15s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#8899bb'">⚙ GitHub Settings</button>
@@ -218,7 +218,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
 <div id="main">
 
   <!-- GITHUB PANEL (shown/hidden via toggle) -->
-  <div class="gh-panel" id="gh-panel" style="display: block;">
+  <div class="gh-panel" id="gh-panel" style="display: none;">
     <h3>⚙ GitHub Publish Settings</h3>
     <div class="gh-grid">
       <div class="gh-field"><label>GitHub Username</label><input type="text" id="gh-owner" placeholder="your-username"></div>
@@ -249,7 +249,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
   </div>
 
   <!-- OVERVIEW -->
-  <div class="panel active" id="panel-overview">
+  <div class="panel" id="panel-overview">
     <div class="ph"><h1>Content Dashboard</h1><p>Build your game by filling out each section, then export when ready.</p></div>
     <div class="ov-grid">
       <div class="ov-card"><div class="ov-num" id="cnt-orgs">4</div><div class="ov-lbl">Org Types</div></div>
@@ -478,7 +478,79 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     </div>
   </div>
 
-</div>
+<div class="panel" id="panel-org_community_center">
+    <div class="ph"><h1>Org: The Association of Jewish Communities (Test)</h1><p>Configure this organization type's identity and starting bonuses.</p></div>
+    <div class="card">
+      <div class="ct">Identity</div>
+      <div class="fr">
+        <div class="fg"><label>Emoji / Icon</label><input type="text" value="🌐" oninput="updateOrg('community_center','icon',this.value)"></div>
+        <div class="fg"><label>Name</label><input type="text" value="The Association of Jewish Communities" oninput="updateOrg('community_center','name',this.value)"></div>
+      </div>
+      <div class="fg"><label>Description</label><textarea oninput="updateOrg('community_center','desc',this.value)">A legacy organization and stalwart of the Jewish establishment, the Association of Jewish Communities helps a network of smaller organizations around the country set policy and raise money. Your priority is keeping big donors happy without alienating the millions of Jews you speak on behalf of or angering outside partners you rely on to support your agenda.</textarea></div>
+      <div class="fg"><label>Tags (comma-separated)</label><input type="text" value="Establishment, National, Advocacy, Zionist" oninput="updateOrg('community_center','tags',this.value)"></div>
+    </div>
+    <div class="card">
+      <div class="ct">Starting Stat Bonuses <span>Use negative numbers for weaknesses</span></div>
+      <div class="delta-row" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr))">
+    <div class="delta-field">
+      <label>Revenue</label>
+      <input type="number" value="0" min="-30" max="30" oninput="updateOrgBonus('community_center','revenue',this.value)">
+    </div>
+  
+    <div class="delta-field">
+      <label>Community Support</label>
+      <input type="number" value="0" min="-30" max="30" oninput="updateOrgBonus('community_center','community',this.value)">
+    </div>
+  
+    <div class="delta-field">
+      <label>Staff Morale</label>
+      <input type="number" value="0" min="-30" max="30" oninput="updateOrgBonus('community_center','morale',this.value)">
+    </div>
+  
+    <div class="delta-field">
+      <label>Coalitions</label>
+      <input type="number" value="-10" min="-30" max="30" oninput="updateOrgBonus('community_center','coalition',this.value)">
+    </div>
+  </div>
+    </div>
+    <button class="btn btn-danger" onclick="deleteOrg('community_center')">Delete This Org</button>
+  </div><div class="panel active" id="panel-org_advocacy_group">
+    <div class="ph"><h1>Org: United Against Disparagement</h1><p>Configure this organization type's identity and starting bonuses.</p></div>
+    <div class="card">
+      <div class="ct">Identity</div>
+      <div class="fr">
+        <div class="fg"><label>Emoji / Icon</label><input type="text" value="🏛️" oninput="updateOrg('advocacy_group','icon',this.value)"></div>
+        <div class="fg"><label>Name</label><input type="text" value="United Against Disparagement" oninput="updateOrg('advocacy_group','name',this.value)"></div>
+      </div>
+      <div class="fg"><label>Description</label><textarea oninput="updateOrg('advocacy_group','desc',this.value)">A century-old institution with a sterling reputation among American Jews, your mission is to counter antisemitism and other forms of hate. You’re trying to balance maintaining support from American Jews and non-Jewish allies while raising enough money to expand as threats to Jewish safety increase.</textarea></div>
+      <div class="fg"><label>Tags (comma-separated)</label><input type="text" value="Establishment, National, Advocacy, Zionist" oninput="updateOrg('advocacy_group','tags',this.value)"></div>
+    </div>
+    <div class="card">
+      <div class="ct">Starting Stat Bonuses <span>Use negative numbers for weaknesses</span></div>
+      <div class="delta-row" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr))">
+    <div class="delta-field">
+      <label>Revenue</label>
+      <input type="number" value="0" min="-30" max="30" oninput="updateOrgBonus('advocacy_group','revenue',this.value)">
+    </div>
+  
+    <div class="delta-field">
+      <label>Community Support</label>
+      <input type="number" value="15" min="-30" max="30" oninput="updateOrgBonus('advocacy_group','community',this.value)">
+    </div>
+  
+    <div class="delta-field">
+      <label>Staff Morale</label>
+      <input type="number" value="5" min="-30" max="30" oninput="updateOrgBonus('advocacy_group','morale',this.value)">
+    </div>
+  
+    <div class="delta-field">
+      <label>Coalitions</label>
+      <input type="number" value="10" min="-30" max="30" oninput="updateOrgBonus('advocacy_group','coalition',this.value)">
+    </div>
+  </div>
+    </div>
+    <button class="btn btn-danger" onclick="deleteOrg('advocacy_group')">Delete This Org</button>
+  </div></div>
 
 <!-- EXPORT MODAL -->
 <div id="modal">
@@ -550,7 +622,7 @@ let ORGS = [
   {
     "id": "community_center",
     "icon": "🌐",
-    "name": "The Association of Jewish Communities",
+    "name": "The Association of Jewish Communities (Test)",
     "desc": "A legacy organization and stalwart of the Jewish establishment, the Association of Jewish Communities helps a network of smaller organizations around the country set policy and raise money. Your priority is keeping big donors happy without alienating the millions of Jews you speak on behalf of or angering outside partners you rely on to support your agenda.",
     "bonuses": {
       "revenue": 0,
