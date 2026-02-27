@@ -179,13 +179,13 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Game Settings</div>
-    <button class="sb-btn" onclick="nav('branding',this)">🎨 Branding &amp; Text</button>
+    <button class="sb-btn active" onclick="nav('branding',this)">🎨 Branding &amp; Text</button>
     <button class="sb-btn" onclick="nav('stats',this)">📊 Stats &amp; Scoring</button>
     <button class="sb-btn" onclick="nav('howtoplay',this)">❓ How to Play Steps</button>
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Organizations</div>
-    <div id="org-nav"><button class="sb-btn sub " onclick="showOrgPanel('community_center',this)">🌐 The Association of Jewish Communities (Test)</button><button class="sb-btn sub active" onclick="showOrgPanel('advocacy_group',this)">🏛️ United Against Disparagement</button><button class="sb-btn sub " onclick="showOrgPanel('national_coalition',this)">✊ Jews for Social Justice</button><button class="sb-btn sub " onclick="showOrgPanel('org_1772215781435',this)">🕊️ Peace for All</button></div>
+    <div id="org-nav"><button class="sb-btn sub" onclick="showOrgPanel('community_center',this)">🌐 The Association of Jewish Communities (Test)</button><button class="sb-btn sub" onclick="showOrgPanel('advocacy_group',this)">🏛️ United Against Disparagement</button><button class="sb-btn sub" onclick="showOrgPanel('national_coalition',this)">✊ Jews for Social Justice</button><button class="sb-btn sub" onclick="showOrgPanel('org_1772215781435',this)">🕊️ Peace for All</button></div>
     <button class="sb-add" onclick="addOrg()">+ Add Org Type</button>
   </div>
   <div class="sb-sec">
@@ -206,10 +206,10 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     <button class="export-btn" onclick="publishToGitHub()" id="publish-btn" disabled="">⏳ Publishing…</button>
     <button class="export-btn" onclick="openExport()" style="background:rgba(255,255,255,.08);color:#ccc;margin-top:.4rem;font-size:.75rem;padding:.45rem">⬇ Export Code Only</button>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.7rem">
-      <span id="save-status" style="font-size:.65rem;color:#8899bb;font-style:italic;line-height:1.4">Published: 01:47 PM</span>
-      <span id="save-indicator" style="font-size: 0.68rem; color: var(--gold); opacity: 0; transition: opacity 0.3s; white-space: nowrap; margin-left: 0.5rem;">✓ Saved</span>
+      <span id="save-status" style="font-size:.65rem;color:#8899bb;font-style:italic;line-height:1.4">Restored: Feb 27 01:47 PM</span>
+      <span id="save-indicator" style="font-size: 0.68rem; color: var(--gold); opacity: 1; transition: opacity 0.3s; white-space: nowrap; margin-left: 0.5rem;">✓ Saved</span>
     </div>
-    <button onclick="toggleGHPanel()" style="margin-top: 0.5rem; width: 100%; background: none; border: 1px solid rgba(255, 255, 255, 0.15); color: rgb(136, 153, 187); font-size: 0.68rem; padding: 0.3rem; cursor: pointer; font-family: Merriweather, serif; text-align: center; transition: 0.15s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#8899bb'">⚙ GitHub Settings</button>
+    <button onclick="toggleGHPanel()" style="margin-top:.5rem;width:100%;background:none;border:1px solid rgba(255,255,255,.15);color:#8899bb;font-size:.68rem;padding:.3rem;cursor:pointer;font-family:Merriweather,serif;text-align:center;transition:all .15s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#8899bb'">⚙ GitHub Settings</button>
     <button onclick="clearSaved()" style="margin-top:.35rem;width:100%;background:none;border:1px solid rgba(255,255,255,.15);color:#8899bb;font-size:.68rem;padding:.3rem;cursor:pointer;font-family:Merriweather,serif;text-align:center;transition:all .15s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#8899bb'">↺ Reset to defaults</button>
   </div>
 </div>
@@ -218,7 +218,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
 <div id="main">
 
   <!-- GITHUB PANEL (shown/hidden via toggle) -->
-  <div class="gh-panel" id="gh-panel" style="display: none;">
+  <div class="gh-panel" id="gh-panel" style="display:none">
     <h3>⚙ GitHub Publish Settings</h3>
     <div class="gh-grid">
       <div class="gh-field"><label>GitHub Username</label><input type="text" id="gh-owner" placeholder="your-username"></div>
@@ -229,7 +229,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
       <button class="gh-btn gh-btn-publish" onclick="saveGHConfig()">Save Settings</button>
       <button class="gh-btn gh-btn-clear" onclick="clearGHConfig()">Clear</button>
     </div>
-    <div id="gh-save-status" class="gh-status ok" style="display: block;">✓ Settings saved.</div>
+    <div id="gh-save-status" class="gh-status"></div>
     <hr style="border:none;border-top:1px solid #30363d;margin:.9rem 0">
     <h3 style="margin-bottom:.7rem">🔑 Change Editor Password</h3>
     <div class="gh-grid" style="grid-template-columns:1fr 1fr">
@@ -263,7 +263,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
   </div>
 
   <!-- BRANDING -->
-  <div class="panel" id="panel-branding">
+  <div class="panel active" id="panel-branding">
     <div class="ph"><h1>Branding &amp; Text</h1><p>All text that appears in the game interface.</p></div>
     <div class="card">
       <div class="ct">Game Identity</div>
@@ -323,7 +323,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
       <div class="fg" style="margin:0;width:80px"><label>Color</label><input type="text" value="#2d6a4f" oninput="STATS[0].color=this.value" placeholder="#2d6a4f"></div>
       <div class="fg" style="margin:0;width:64px"><label>Start</label><input type="number" value="50" min="0" max="100" oninput="STATS[0].start=parseInt(this.value)||50"></div>
       <div class="fg" style="margin:0;min-width:160px"><label>Applies To <span style="font-size:.6rem;font-style:italic;text-transform:none;letter-spacing:0">(Ctrl+click for multiple)</span></label>
-        <select multiple="" onchange="updateStatOrgs(0,this)" style="min-height:56px;font-size:.8rem"><option value="all" selected="">All Organizations</option><option value="community_center">The Association of Jewish Communities</option><option value="advocacy_group">United Against Disparagement</option><option value="national_coalition">Jews for Social Justice</option><option value="org_1772215781435">Peace for All</option></select>
+        <select multiple="" onchange="updateStatOrgs(0,this)" style="min-height:56px;font-size:.8rem"><option value="all" selected="">All Organizations</option><option value="community_center">The Association of Jewish Communities (Test)</option><option value="advocacy_group">United Against Disparagement</option><option value="national_coalition">Jews for Social Justice</option><option value="org_1772215781435">Peace for All</option></select>
       </div>
       <button class="del-btn" onclick="removeStat(0)" style="align-self:flex-end;margin-bottom:2px">✕</button>
     </div>
@@ -333,7 +333,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
       <div class="fg" style="margin:0;width:80px"><label>Color</label><input type="text" value="#1b2a4a" oninput="STATS[1].color=this.value" placeholder="#2d6a4f"></div>
       <div class="fg" style="margin:0;width:64px"><label>Start</label><input type="number" value="50" min="0" max="100" oninput="STATS[1].start=parseInt(this.value)||50"></div>
       <div class="fg" style="margin:0;min-width:160px"><label>Applies To <span style="font-size:.6rem;font-style:italic;text-transform:none;letter-spacing:0">(Ctrl+click for multiple)</span></label>
-        <select multiple="" onchange="updateStatOrgs(1,this)" style="min-height:56px;font-size:.8rem"><option value="all" selected="">All Organizations</option><option value="community_center">The Association of Jewish Communities</option><option value="advocacy_group">United Against Disparagement</option><option value="national_coalition">Jews for Social Justice</option><option value="org_1772215781435">Peace for All</option></select>
+        <select multiple="" onchange="updateStatOrgs(1,this)" style="min-height:56px;font-size:.8rem"><option value="all" selected="">All Organizations</option><option value="community_center">The Association of Jewish Communities (Test)</option><option value="advocacy_group">United Against Disparagement</option><option value="national_coalition">Jews for Social Justice</option><option value="org_1772215781435">Peace for All</option></select>
       </div>
       <button class="del-btn" onclick="removeStat(1)" style="align-self:flex-end;margin-bottom:2px">✕</button>
     </div>
@@ -343,7 +343,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
       <div class="fg" style="margin:0;width:80px"><label>Color</label><input type="text" value="#c9a227" oninput="STATS[2].color=this.value" placeholder="#2d6a4f"></div>
       <div class="fg" style="margin:0;width:64px"><label>Start</label><input type="number" value="50" min="0" max="100" oninput="STATS[2].start=parseInt(this.value)||50"></div>
       <div class="fg" style="margin:0;min-width:160px"><label>Applies To <span style="font-size:.6rem;font-style:italic;text-transform:none;letter-spacing:0">(Ctrl+click for multiple)</span></label>
-        <select multiple="" onchange="updateStatOrgs(2,this)" style="min-height:56px;font-size:.8rem"><option value="all" selected="">All Organizations</option><option value="community_center">The Association of Jewish Communities</option><option value="advocacy_group">United Against Disparagement</option><option value="national_coalition">Jews for Social Justice</option><option value="org_1772215781435">Peace for All</option></select>
+        <select multiple="" onchange="updateStatOrgs(2,this)" style="min-height:56px;font-size:.8rem"><option value="all" selected="">All Organizations</option><option value="community_center">The Association of Jewish Communities (Test)</option><option value="advocacy_group">United Against Disparagement</option><option value="national_coalition">Jews for Social Justice</option><option value="org_1772215781435">Peace for All</option></select>
       </div>
       <button class="del-btn" onclick="removeStat(2)" style="align-self:flex-end;margin-bottom:2px">✕</button>
     </div>
@@ -353,7 +353,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
       <div class="fg" style="margin:0;width:80px"><label>Color</label><input type="text" value="#6b5b00" oninput="STATS[3].color=this.value" placeholder="#2d6a4f"></div>
       <div class="fg" style="margin:0;width:64px"><label>Start</label><input type="number" value="50" min="0" max="100" oninput="STATS[3].start=parseInt(this.value)||50"></div>
       <div class="fg" style="margin:0;min-width:160px"><label>Applies To <span style="font-size:.6rem;font-style:italic;text-transform:none;letter-spacing:0">(Ctrl+click for multiple)</span></label>
-        <select multiple="" onchange="updateStatOrgs(3,this)" style="min-height:56px;font-size:.8rem"><option value="all" selected="">All Organizations</option><option value="community_center">The Association of Jewish Communities</option><option value="advocacy_group">United Against Disparagement</option><option value="national_coalition">Jews for Social Justice</option><option value="org_1772215781435">Peace for All</option></select>
+        <select multiple="" onchange="updateStatOrgs(3,this)" style="min-height:56px;font-size:.8rem"><option value="all" selected="">All Organizations</option><option value="community_center">The Association of Jewish Communities (Test)</option><option value="advocacy_group">United Against Disparagement</option><option value="national_coalition">Jews for Social Justice</option><option value="org_1772215781435">Peace for All</option></select>
       </div>
       <button class="del-btn" onclick="removeStat(3)" style="align-self:flex-end;margin-bottom:2px">✕</button>
     </div></div>
@@ -484,7 +484,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
       <div class="ct">Identity</div>
       <div class="fr">
         <div class="fg"><label>Emoji / Icon</label><input type="text" value="🌐" oninput="updateOrg('community_center','icon',this.value)"></div>
-        <div class="fg"><label>Name</label><input type="text" value="The Association of Jewish Communities" oninput="updateOrg('community_center','name',this.value)"></div>
+        <div class="fg"><label>Name</label><input type="text" value="The Association of Jewish Communities (Test)" oninput="updateOrg('community_center','name',this.value)"></div>
       </div>
       <div class="fg"><label>Description</label><textarea oninput="updateOrg('community_center','desc',this.value)">A legacy organization and stalwart of the Jewish establishment, the Association of Jewish Communities helps a network of smaller organizations around the country set policy and raise money. Your priority is keeping big donors happy without alienating the millions of Jews you speak on behalf of or angering outside partners you rely on to support your agenda.</textarea></div>
       <div class="fg"><label>Tags (comma-separated)</label><input type="text" value="Establishment, National, Advocacy, Zionist" oninput="updateOrg('community_center','tags',this.value)"></div>
@@ -514,7 +514,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
   </div>
     </div>
     <button class="btn btn-danger" onclick="deleteOrg('community_center')">Delete This Org</button>
-  </div><div class="panel active" id="panel-org_advocacy_group">
+  </div><div class="panel" id="panel-org_advocacy_group">
     <div class="ph"><h1>Org: United Against Disparagement</h1><p>Configure this organization type's identity and starting bonuses.</p></div>
     <div class="card">
       <div class="ct">Identity</div>
@@ -550,6 +550,258 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
   </div>
     </div>
     <button class="btn btn-danger" onclick="deleteOrg('advocacy_group')">Delete This Org</button>
+  </div><div class="panel" id="panel-sc_s1">
+    <div class="ph"><h1>The Deportation Dilemma</h1><p>Any Round · social</p></div>
+    <div class="card">
+      <div class="ct">Scenario Info</div>
+      <div class="fr">
+        <div class="fg"><label>Round Assignment</label>
+          <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-top:.1rem">
+            <button onclick="setScenarioRoundMode('s1','fixed')" style="font-size:.75rem;padding:.28rem .7rem;border:1px solid var(--ink);background:white;color:var(--ink);cursor:pointer;font-family:'Merriweather',Georgia,serif;transition:all .13s">Fixed Round</button>
+            <button onclick="setScenarioRoundMode('s1','any')" style="font-size:.75rem;padding:.28rem .7rem;border:1px solid var(--ink);background:var(--navy);color:var(--paper);cursor:pointer;font-family:'Merriweather',Georgia,serif;transition:all .13s">Any Round</button>
+            <span style="font-size:.78rem;color:var(--muted);font-style:italic">Appears in any round</span>
+          </div>
+        </div>
+        <div class="fg"><label>Category Tag</label><input type="text" value="Politics" oninput="updateScenario('s1','tag',this.value)" placeholder="e.g. Fundraising"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Interaction Type</label>
+          <select onchange="updateScenario('s1','type',this.value)"><option value="email">✉️ Email</option><option value="phone">📞 Phone Call</option><option value="inperson">🤝 In-Person</option><option value="social" selected="">📱 Social Media</option></select>
+        </div>
+        <div class="fg"><label>Applies To (Ctrl+click for multiple)</label>
+          <select multiple="" onchange="updateScenarioOrgs('s1',this)" style="min-height:80px"><option value="all" selected="">All Organizations</option><option value="community_center">The Association of Jewish Communities (Test)</option><option value="advocacy_group">United Against Disparagement</option><option value="national_coalition">Jews for Social Justice</option><option value="org_1772215781435">Peace for All</option></select>
+        </div>
+      </div>
+      <div class="fg"><label>Scenario Title</label><input type="text" value="The Deportation Dilemma" oninput="updateScenario('s1','title',this.value)"></div>
+      <div class="fg"><label>Scenario Body</label><textarea style="min-height:100px" oninput="updateScenario('s1','body',this.value)">You see reports that the federal government has arrested a foreign student activist studying at an American university and is attempting to deport them for engaging in antisemitism.</textarea></div>
+    </div>
+    <div class="card"><div class="ct">Choices &amp; Outcomes</div><div class="choice-block" id="choice-block-s1-0">
+    <div class="choice-title">Choice A</div>
+    <div class="fg"><label>Choice Text</label><textarea oninput="updateChoice('s1',0,'text',this.value)">Quickly release a statement celebrating the arrest and praising the government for ensuring “accountability” for antisemites.</textarea></div>
+    <div style="margin-top:.5rem">
+    <div style="display:flex;gap:.6rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap">
+      <span style="font-size:.68rem;color:var(--muted);font-style:italic">Outcome mode:</span>
+      <button onclick="setOutcomeMode('s1',0,'weighted')" style="font-size:.7rem;padding:.18rem .5rem;border:1px solid var(--ink);background:white;color:var(--ink);cursor:pointer;font-family:'Merriweather',Georgia,serif">Weighted %</button>
+      <button onclick="setOutcomeMode('s1',0,'equal')" style="font-size:.7rem;padding:.18rem .5rem;border:1px solid var(--ink);background:var(--navy);color:var(--paper);cursor:pointer;font-family:'Merriweather',Georgia,serif">Equal chance</button>
+      <span id="weight-total-s1-0" style="font-size:.72rem;font-weight:700;color:var(--good);margin-left:.3rem">100%</span>
+    </div><div style="border:1px solid #d0c9b8;padding:.85rem;margin-bottom:.6rem;background:#faf8f3;position:relative">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem">
+        <span style="font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);font-family:'Merriweather',Georgia,serif">Outcome 1</span>
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <div style="display:flex;align-items:center;gap:.3rem">
+            <label style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Weight</label>
+            <input type="number" value="50" min="0" max="100" style="width:58px;border:1px solid var(--ink);padding:.2rem .35rem;font-size:.82rem;text-align:center;font-family:'Merriweather',Georgia,serif" oninput="updateOutcome('s1',0,0,'weight',this.value)">
+            <span style="font-size:.72rem;color:var(--muted)">%</span>
+          </div>
+          <button class="del-btn" onclick="removeOutcome('s1',0,0)">✕</button>
+        </div>
+      </div>
+      <div class="fg"><label>Outcome Text</label><textarea style="min-height:52px" oninput="updateOutcome('s1',0,0,'result',this.value)">Major donors love your swift action but you receive an angry call from the head of an immigration rights coalition that you’re part of.</textarea></div>
+      <div class="fg"><label>Stat Changes</label>
+        <div class="delta-row" style="grid-template-columns:repeat(auto-fit,minmax(100px,1fr))">
+      <div class="delta-field">
+        <label>Revenue</label>
+        <input type="number" value="0" min="-50" max="50" oninput="updateOutcomeDelta('s1',0,0,'revenue',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Community Support</label>
+        <input type="number" value="0" min="-50" max="50" oninput="updateOutcomeDelta('s1',0,0,'community',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Staff Morale</label>
+        <input type="number" value="0" min="-50" max="50" oninput="updateOutcomeDelta('s1',0,0,'morale',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Coalitions</label>
+        <input type="number" value="-5" min="-50" max="50" oninput="updateOutcomeDelta('s1',0,0,'coalition',this.value)">
+      </div></div>
+      </div>
+    </div><div style="border:1px solid #d0c9b8;padding:.85rem;margin-bottom:.6rem;background:#faf8f3;position:relative">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem">
+        <span style="font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);font-family:'Merriweather',Georgia,serif">Outcome 2</span>
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <div style="display:flex;align-items:center;gap:.3rem">
+            <label style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Weight</label>
+            <input type="number" value="50" min="0" max="100" style="width:58px;border:1px solid var(--ink);padding:.2rem .35rem;font-size:.82rem;text-align:center;font-family:'Merriweather',Georgia,serif" oninput="updateOutcome('s1',0,1,'weight',this.value)">
+            <span style="font-size:.72rem;color:var(--muted)">%</span>
+          </div>
+          <button class="del-btn" onclick="removeOutcome('s1',0,1)">✕</button>
+        </div>
+      </div>
+      <div class="fg"><label>Outcome Text</label><textarea style="min-height:52px" oninput="updateOutcome('s1',0,1,'result',this.value)">Whoops! After outcry from civil liberty groups, the government is forced to release the student and apologize. You look hasty and callous.</textarea></div>
+      <div class="fg"><label>Stat Changes</label>
+        <div class="delta-row" style="grid-template-columns:repeat(auto-fit,minmax(100px,1fr))">
+      <div class="delta-field">
+        <label>Revenue</label>
+        <input type="number" value="0" min="-50" max="50" oninput="updateOutcomeDelta('s1',0,1,'revenue',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Community Support</label>
+        <input type="number" value="-10" min="-50" max="50" oninput="updateOutcomeDelta('s1',0,1,'community',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Staff Morale</label>
+        <input type="number" value="-5" min="-50" max="50" oninput="updateOutcomeDelta('s1',0,1,'morale',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Coalitions</label>
+        <input type="number" value="0" min="-50" max="50" oninput="updateOutcomeDelta('s1',0,1,'coalition',this.value)">
+      </div></div>
+      </div>
+    </div></div>
+    <button onclick="addOutcome('s1',0)" style="font-size: 0.72rem; padding: 0.25rem 0.7rem; border-top-width: ; border-top-style: ; border-color: var(--muted); border-right-width: ; border-right-style: ; border-bottom-width: ; border-bottom-style: ; border-left-width: ; border-left-style: ; border-image-outset: ; border-image-repeat: ; border-image-slice: ; border-image-source: ; border-image-width: ; background: none; color: var(--muted); cursor: pointer; font-family: &quot;Merriweather&quot;, Georgia, serif; width: 100%; margin-top: 0.3rem; transition: 0.13s;" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--muted)';this.style.color='var(--muted)'">+ Add Outcome</button>
+  </div><div class="choice-block" id="choice-block-s1-1">
+    <div class="choice-title">Choice B</div>
+    <div class="fg"><label>Choice Text</label><textarea oninput="updateChoice('s1',1,'text',this.value)">Condemn the arrest — Jewish safety is being used as an excuse to violate the student’s civil rights!</textarea></div>
+    <div style="margin-top:.5rem">
+    <div style="display:flex;gap:.6rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap">
+      <span style="font-size:.68rem;color:var(--muted);font-style:italic">Outcome mode:</span>
+      <button onclick="setOutcomeMode('s1',1,'weighted')" style="font-size:.7rem;padding:.18rem .5rem;border:1px solid var(--ink);background:var(--navy);color:var(--paper);cursor:pointer;font-family:'Merriweather',Georgia,serif">Weighted %</button>
+      <button onclick="setOutcomeMode('s1',1,'equal')" style="font-size:.7rem;padding:.18rem .5rem;border:1px solid var(--ink);background:white;color:var(--ink);cursor:pointer;font-family:'Merriweather',Georgia,serif">Equal chance</button>
+      <span id="weight-total-s1-1" style="font-size:.72rem;font-weight:700;color:var(--good);margin-left:.3rem">100%</span>
+    </div><div style="border:1px solid #d0c9b8;padding:.85rem;margin-bottom:.6rem;background:#faf8f3;position:relative">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem">
+        <span style="font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);font-family:'Merriweather',Georgia,serif">Outcome 1</span>
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <div style="display:flex;align-items:center;gap:.3rem">
+            <label style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Weight</label>
+            <input type="number" value="70" min="0" max="100" style="width:58px;border:1px solid var(--ink);padding:.2rem .35rem;font-size:.82rem;text-align:center;font-family:'Merriweather',Georgia,serif" oninput="updateOutcome('s1',1,0,'weight',this.value)">
+            <span style="font-size:.72rem;color:var(--muted)">%</span>
+          </div>
+          <button class="del-btn" onclick="removeOutcome('s1',1,0)">✕</button>
+        </div>
+      </div>
+      <div class="fg"><label>Outcome Text</label><textarea style="min-height:52px" oninput="updateOutcome('s1',1,0,'result',this.value)">You look prescient and brave when it emerges that the student was arrested for writing a tame op-ed criticizing Israel, and a judge orders them released from custody. </textarea></div>
+      <div class="fg"><label>Stat Changes</label>
+        <div class="delta-row" style="grid-template-columns:repeat(auto-fit,minmax(100px,1fr))">
+      <div class="delta-field">
+        <label>Revenue</label>
+        <input type="number" value="0" min="-50" max="50" oninput="updateOutcomeDelta('s1',1,0,'revenue',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Community Support</label>
+        <input type="number" value="5" min="-50" max="50" oninput="updateOutcomeDelta('s1',1,0,'community',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Staff Morale</label>
+        <input type="number" value="5" min="-50" max="50" oninput="updateOutcomeDelta('s1',1,0,'morale',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Coalitions</label>
+        <input type="number" value="5" min="-50" max="50" oninput="updateOutcomeDelta('s1',1,0,'coalition',this.value)">
+      </div></div>
+      </div>
+    </div><div style="border:1px solid #d0c9b8;padding:.85rem;margin-bottom:.6rem;background:#faf8f3;position:relative">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem">
+        <span style="font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);font-family:'Merriweather',Georgia,serif">Outcome 2</span>
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <div style="display:flex;align-items:center;gap:.3rem">
+            <label style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Weight</label>
+            <input type="number" value="30" min="0" max="100" style="width:58px;border:1px solid var(--ink);padding:.2rem .35rem;font-size:.82rem;text-align:center;font-family:'Merriweather',Georgia,serif" oninput="updateOutcome('s1',1,1,'weight',this.value)">
+            <span style="font-size:.72rem;color:var(--muted)">%</span>
+          </div>
+          <button class="del-btn" onclick="removeOutcome('s1',1,1)">✕</button>
+        </div>
+      </div>
+      <div class="fg"><label>Outcome Text</label><textarea style="min-height:52px" oninput="updateOutcome('s1',1,1,'result',this.value)">The government shares video of the student assaulting the campus rabbi at a protest and you’re forced to walk back your initial statement.</textarea></div>
+      <div class="fg"><label>Stat Changes</label>
+        <div class="delta-row" style="grid-template-columns:repeat(auto-fit,minmax(100px,1fr))">
+      <div class="delta-field">
+        <label>Revenue</label>
+        <input type="number" value="0" min="-50" max="50" oninput="updateOutcomeDelta('s1',1,1,'revenue',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Community Support</label>
+        <input type="number" value="-10" min="-50" max="50" oninput="updateOutcomeDelta('s1',1,1,'community',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Staff Morale</label>
+        <input type="number" value="0" min="-50" max="50" oninput="updateOutcomeDelta('s1',1,1,'morale',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Coalitions</label>
+        <input type="number" value="0" min="-50" max="50" oninput="updateOutcomeDelta('s1',1,1,'coalition',this.value)">
+      </div></div>
+      </div>
+    </div></div>
+    <button onclick="addOutcome('s1',1)" style="font-size:.72rem;padding:.25rem .7rem;border:1px dashed var(--muted);background:none;color:var(--muted);cursor:pointer;font-family:'Merriweather',Georgia,serif;width:100%;margin-top:.3rem;transition:all .13s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--muted)';this.style.color='var(--muted)'">+ Add Outcome</button>
+  </div><div class="choice-block" id="choice-block-s1-2">
+    <div class="choice-title">Choice C</div>
+    <div class="fg"><label>Choice Text</label><textarea oninput="updateChoice('s1',2,'text',this.value)">Wait-and-see. The reports on social media are fuzzy and the government hasn’t confirmed anything.</textarea></div>
+    <div style="margin-top:.5rem">
+    <div style="display:flex;gap:.6rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap">
+      <span style="font-size:.68rem;color:var(--muted);font-style:italic">Outcome mode:</span>
+      <button onclick="setOutcomeMode('s1',2,'weighted')" style="font-size:.7rem;padding:.18rem .5rem;border:1px solid var(--ink);background:var(--navy);color:var(--paper);cursor:pointer;font-family:'Merriweather',Georgia,serif">Weighted %</button>
+      <button onclick="setOutcomeMode('s1',2,'equal')" style="font-size:.7rem;padding:.18rem .5rem;border:1px solid var(--ink);background:white;color:var(--ink);cursor:pointer;font-family:'Merriweather',Georgia,serif">Equal chance</button>
+      <span id="weight-total-s1-2" style="font-size:.72rem;font-weight:700;color:var(--good);margin-left:.3rem">100%</span>
+    </div><div style="border:1px solid #d0c9b8;padding:.85rem;margin-bottom:.6rem;background:#faf8f3;position:relative">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem">
+        <span style="font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);font-family:'Merriweather',Georgia,serif">Outcome 1</span>
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <div style="display:flex;align-items:center;gap:.3rem">
+            <label style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Weight</label>
+            <input type="number" value="30" min="0" max="100" style="width:58px;border:1px solid var(--ink);padding:.2rem .35rem;font-size:.82rem;text-align:center;font-family:'Merriweather',Georgia,serif" oninput="updateOutcome('s1',2,0,'weight',this.value)">
+            <span style="font-size:.72rem;color:var(--muted)">%</span>
+          </div>
+          <button class="del-btn" onclick="removeOutcome('s1',2,0)">✕</button>
+        </div>
+      </div>
+      <div class="fg"><label>Outcome Text</label><textarea style="min-height:52px" oninput="updateOutcome('s1',2,0,'result',this.value)">Smart. It turns out that initial news reports got it wrong. A student was briefly detained by local police, but he wasn’t arrested and nobody tried to deport him. The controversy quickly dies down.</textarea></div>
+      <div class="fg"><label>Stat Changes</label>
+        <div class="delta-row" style="grid-template-columns:repeat(auto-fit,minmax(100px,1fr))">
+      <div class="delta-field">
+        <label>Revenue</label>
+        <input type="number" value="0" min="-50" max="50" oninput="updateOutcomeDelta('s1',2,0,'revenue',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Community Support</label>
+        <input type="number" value="5" min="-50" max="50" oninput="updateOutcomeDelta('s1',2,0,'community',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Staff Morale</label>
+        <input type="number" value="0" min="-50" max="50" oninput="updateOutcomeDelta('s1',2,0,'morale',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Coalitions</label>
+        <input type="number" value="0" min="-50" max="50" oninput="updateOutcomeDelta('s1',2,0,'coalition',this.value)">
+      </div></div>
+      </div>
+    </div><div style="border:1px solid #d0c9b8;padding:.85rem;margin-bottom:.6rem;background:#faf8f3;position:relative">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem">
+        <span style="font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);font-family:'Merriweather',Georgia,serif">Outcome 2</span>
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <div style="display:flex;align-items:center;gap:.3rem">
+            <label style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Weight</label>
+            <input type="number" value="70" min="0" max="100" style="width:58px;border:1px solid var(--ink);padding:.2rem .35rem;font-size:.82rem;text-align:center;font-family:'Merriweather',Georgia,serif" oninput="updateOutcome('s1',2,1,'weight',this.value)">
+            <span style="font-size:.72rem;color:var(--muted)">%</span>
+          </div>
+          <button class="del-btn" onclick="removeOutcome('s1',2,1)">✕</button>
+        </div>
+      </div>
+      <div class="fg"><label>Outcome Text</label><textarea style="min-height:52px" oninput="updateOutcome('s1',2,1,'result',this.value)">Oh no — the government is silent for days but eventually it turns out social media got it right. Your late statement makes your organization look like it lacks conviction and isn’t keeping up with the news.</textarea></div>
+      <div class="fg"><label>Stat Changes</label>
+        <div class="delta-row" style="grid-template-columns:repeat(auto-fit,minmax(100px,1fr))">
+      <div class="delta-field">
+        <label>Revenue</label>
+        <input type="number" value="0" min="-50" max="50" oninput="updateOutcomeDelta('s1',2,1,'revenue',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Community Support</label>
+        <input type="number" value="-10" min="-50" max="50" oninput="updateOutcomeDelta('s1',2,1,'community',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Staff Morale</label>
+        <input type="number" value="-5" min="-50" max="50" oninput="updateOutcomeDelta('s1',2,1,'morale',this.value)">
+      </div>
+      <div class="delta-field">
+        <label>Coalitions</label>
+        <input type="number" value="0" min="-50" max="50" oninput="updateOutcomeDelta('s1',2,1,'coalition',this.value)">
+      </div></div>
+      </div>
+    </div></div>
+    <button onclick="addOutcome('s1',2)" style="font-size:.72rem;padding:.25rem .7rem;border:1px dashed var(--muted);background:none;color:var(--muted);cursor:pointer;font-family:'Merriweather',Georgia,serif;width:100%;margin-top:.3rem;transition:all .13s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--muted)';this.style.color='var(--muted)'">+ Add Outcome</button>
+  </div></div>
+    <button class="btn btn-danger" onclick="deleteScenario('s1')">Delete This Scenario</button>
   </div></div>
 
 <!-- EXPORT MODAL -->
@@ -2145,4 +2397,4 @@ init();
 </script>
 
 
-<div id="1p-live-region" role="status" aria-live="polite" aria-atomic="true" aria-relevant="all" style="clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; overflow: hidden; position: fixed; top: 0px; left: 0px; white-space: nowrap; width: 1px; overflow-wrap: normal;"></div><div id="publish-toast" style="position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 0.7rem 1.1rem; font-family: Merriweather Sans, sans-serif; font-size: 0.82rem; font-weight: 700; z-index: 9000; max-width: 340px; border: 2px solid rgb(121, 192, 255); transition: opacity 0.4s; background: rgb(31, 45, 61); color: rgb(121, 192, 255); opacity: 1;">Saving editor state to GitHub…</div></body></html>
+<div id="publish-toast" style="position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 0.7rem 1.1rem; font-family: Merriweather Sans, sans-serif; font-size: 0.82rem; font-weight: 700; z-index: 9000; max-width: 340px; border: 2px solid rgb(121, 192, 255); transition: opacity 0.4s; background: rgb(31, 45, 61); color: rgb(121, 192, 255); opacity: 1;">Saving editor state to GitHub…</div></body></html>
