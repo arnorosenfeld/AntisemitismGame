@@ -535,7 +535,7 @@ const ORG_TYPES = [
   {
     "id": "community_center",
     "icon": "🌐",
-    "name": "The Association of Jewish Communities (Test)",
+    "name": "The Association of Jewish Communities",
     "desc": "A legacy organization and stalwart of the Jewish establishment, the Association of Jewish Communities helps a network of smaller organizations around the country set policy and raise money. Your priority is keeping big donors happy without alienating the millions of Jews you speak on behalf of or angering outside partners you rely on to support your agenda.",
     "bonuses": {
       "revenue": 0,
@@ -1220,7 +1220,7 @@ function init() {
   // Landing
   const titleParts = CONFIG.gameTitle.split(CONFIG.gameTitleAccent);
   document.getElementById('landing-game-title').innerHTML =
-    titleParts[0] + `<span class="accent">${CONFIG.gameTitleAccent}</span>` + (titleParts[1]||'');
+    titleParts[0] + `<span class="accent" style="white-space:nowrap">${CONFIG.gameTitleAccent}</span>` + (titleParts[1]||'');
   document.getElementById('landing-tagline').textContent = CONFIG.tagline;
   document.getElementById('landing-intro-text').innerHTML = CONFIG.landingIntro;
   const stepsEl = document.getElementById('landing-steps');
@@ -1245,7 +1245,7 @@ function init() {
   // Header
   const h = CONFIG.gameTitle.split(CONFIG.gameTitleAccent);
   document.getElementById('header-title').innerHTML =
-    `${h[0]}<span class="accent">${CONFIG.gameTitleAccent}</span>${h[1]||''}`;
+    `${h[0]}<span class="accent" style="white-space:nowrap">${CONFIG.gameTitleAccent}</span>${h[1]||''}`;
   document.getElementById('header-tagline').textContent = CONFIG.tagline;
 
   // Count total playable scenarios
