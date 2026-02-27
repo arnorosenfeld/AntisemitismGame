@@ -151,6 +151,9 @@ body{
   color:var(--ink);outline:none;transition:border-color .15s;max-width:380px;
 }
 .form-group input:focus{border-color:var(--gold)}
+.form-group input.input-error{border-color:var(--danger);background:#fff5f5}
+.field-error-msg{font-family:'Merriweather Sans',sans-serif;font-size:.78rem;color:var(--danger);margin-top:.35rem;display:none;font-style:italic}
+.field-error-msg.show{display:block}
 
 /* ── SCENARIO BOX ── */
 .scenario-box{
@@ -205,7 +208,9 @@ body{
 }
 .choice-btn:hover{background:var(--navy);color:var(--paper)}
 .choice-btn:hover .choice-letter{color:var(--gold)}
-.choice-btn:disabled{opacity:.6;cursor:default}
+.choice-btn:disabled{opacity:.5;cursor:default}
+.choice-btn.chosen{background:var(--navy);color:var(--paper);border-color:var(--gold);box-shadow:3px 3px 0 var(--gold);opacity:1}
+.choice-btn.chosen .choice-letter{color:var(--gold)}
 .choice-letter{
   font-family:'Merriweather',Georgia,serif;font-size:1.05rem;font-weight:700;
   color:var(--gold);min-width:18px;margin-top:-1px;
@@ -383,6 +388,7 @@ footer{font-family:'Merriweather Sans',sans-serif;
     <div class="form-group">
       <label id="char-name-label">Your Name</label>
       <input type="text" id="char-name-input" placeholder="Enter your name…" oninput="checkCharReady()">
+      <div class="field-error-msg" id="name-error">Please enter your name before continuing.</div>
     </div>
 
     <div id="char-traits-section">
@@ -391,7 +397,7 @@ footer{font-family:'Merriweather Sans',sans-serif;
       <div class="trait-grid" id="trait-grid"></div>
     </div>
 
-    <button class="btn" id="char-next-btn" disabled onclick="confirmChar()">Start Game →</button>
+    <button class="btn" id="char-next-btn" onclick="confirmChar()">Start Game →</button>
   </div>
 
   <!-- TYPE SELECT (per scenario) -->
@@ -976,12 +982,21 @@ function toggleTrait(id) {
 }
 function checkCharReady() {
   const name = document.getElementById('char-name-input').value.trim();
-  document.getElementById('char-next-btn').disabled = !name;
   state.charName = name;
+  // Clear error state once they start typing
+  if (name) {
+    document.getElementById('char-name-input').classList.remove('input-error');
+    document.getElementById('name-error').classList.remove('show');
+  }
 }
 function confirmChar() {
   state.charName = document.getElementById('char-name-input').value.trim();
-  if (!state.charName) return;
+  if (!state.charName) {
+    document.getElementById('char-name-input').classList.add('input-error');
+    document.getElementById('name-error').classList.add('show');
+    document.getElementById('char-name-input').focus();
+    return;
+  }
   startGame();
 }
 
@@ -1202,10 +1217,15 @@ function makeChoice(idx) {
   state.roundScenariosLeft--;
   state.totalScenariosDone++;
 
+  // Mark the chosen button; dim (but don't fully grey) the others
+  document.querySelectorAll('.choice-btn').forEach((b, i) => {
+    b.disabled = true;
+    if (i === idx) b.classList.add('chosen');
+  });
+
   const fb = document.getElementById('feedback-box');
   fb.innerHTML = `<strong>Outcome:</strong> ${outcome.result}<div class="deltas">${deltas.join('')}</div>`;
   fb.classList.add('show');
-  document.querySelectorAll('.choice-btn').forEach(b=>b.disabled=true);
   renderStats();
 
   // Check loss
@@ -1315,7 +1335,6 @@ function restartGame() {
   document.querySelectorAll('.sel-card').forEach(c=>c.classList.remove('selected'));
   document.querySelectorAll('.trait-card').forEach(c=>{c.classList.remove('selected','dimmed')});
   document.getElementById('org-next-btn').disabled=true;
-  document.getElementById('char-next-btn').disabled=true;
   showGameUI('pregame');
   showScreen('screen-landing');
 }
