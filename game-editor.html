@@ -203,7 +203,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     <button class="sb-btn" onclick="nav('interaction-types',this)">🗂 Manage Types</button>
   </div>
   <div class="sb-foot">
-    <button class="export-btn" onclick="publishToGitHub()" id="publish-btn" disabled="">⏳ Publishing…</button>
+    <button class="export-btn" onclick="publishToGitHub()" id="publish-btn">🚀 Publish to GitHub</button>
     <button class="export-btn" onclick="openExport()" style="background:rgba(255,255,255,.08);color:#ccc;margin-top:.4rem;font-size:.75rem;padding:.45rem">⬇ Export Code Only</button>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.7rem">
       <span id="save-status" style="font-size:.65rem;color:#8899bb;font-style:italic;line-height:1.4">Published: 02:25 PM</span>
@@ -2452,6 +2452,13 @@ function buildEditorSnapshot() {
 
   // Take snapshot with clean DOM state
   let html = document.documentElement.outerHTML;
+
+  // Belt-and-suspenders: also fix the button in the HTML string directly,
+  // in case any disabled/text state slipped through the DOM manipulation above
+  html = html.replace(/<button([^>]+id="publish-btn")[^>]*>[^<]*<\/button>/,
+    '<button$1>🚀 Publish to GitHub</button>');
+  html = html.replace(/<button([^>]+id="publish-cancel-btn")[^>]*>[\s\S]*?<\/button>/g, '');
+  html = html.replace(/<div([^>]+id="publish-toast")[^>]*>[\s\S]*?<\/div>/g, '');
 
   // Restore live DOM to its actual state
   if (pubBtn) { pubBtn.disabled = pubBtnWasDisabled; pubBtn.textContent = pubBtnText; }
