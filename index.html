@@ -1078,6 +1078,40 @@ const SCENARIOS = [
 
 // ██ EDITOR_DATA_END ██ — do not remove this comment
 
+// ── STATE ──
+// NOTE: state and helpers live OUTSIDE the editor data block so publishes never overwrite them
+let state = {
+  org: null,
+  charName: '',
+  traits: [],
+  stats: {},
+  round: 1,
+  roundScenariosLeft: 0,
+  roundStatsStart: {},
+  scenarioPool: [],
+  usedScenarios: new Set(),
+  currentScenario: null,
+  selectedType: null,
+  totalScenariosDone: 0,
+  totalScenariosInGame: 0,
+  sessionId: null,
+  startTime: null,
+};
+
+// ── HELPERS ──
+function statLabel(key) {
+  const s = CONFIG.stats.find(s => s.key === key);
+  return s ? s.label : key;
+}
+function clamp(v) { return Math.min(100, Math.max(0, v)); }
+function getStatColor(val) {
+  if (val < 25)  return '#c0392b';
+  if (val < 40)  return '#e07b39';
+  if (val < 60)  return '#1b2a4a';
+  if (val < 80)  return '#2d6a4f';
+  return '#c9a227';
+}
+
 // ══════════════════════════════════════════
 //  AIRTABLE CONFIG  — fill in to enable cross-player analytics
 // ══════════════════════════════════════════
