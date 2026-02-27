@@ -449,300 +449,631 @@ footer{font-family:'Merriweather Sans',sans-serif;
 <script>
 // ██ EDITOR_DATA_START ██ — do not remove this comment
 const CONFIG = {
-  gameTitle: "Mission Critical",
-  gameTitleAccent: "Critical",
-  tagline: "A nonprofit leadership simulation",
-  landingIntro: "<p>You've just been named Executive Director of a struggling nonprofit. The board is watching. Your staff is hopeful. The community is counting on you.</p><p>Over the course of several rounds, you'll face real decisions that leaders like you make every day — managing staff, courting donors, navigating crises, and fighting for your mission. Every choice has consequences.</p><p>Can you keep your organization alive and thriving?</p>",
-  howToPlaySteps: [
-    { num: "1", label: "Choose your organization type" },
-    { num: "2", label: "Build your character & pick traits" },
-    { num: "3", label: "Select what type of situation to handle" },
-    { num: "4", label: "Make decisions and manage your stats" },
-    { num: "5", label: "Survive each round & reach the end" },
+  "gameTitle": "Antisemitism Decoded: The Game",
+  "gameTitleAccent": "The Game",
+  "tagline": "A Jewish leadership simulator",
+  "landingIntro": "<p>You're a rising leader in the Jewish community. Search firms keep calling and the world is your oyster. Pick the type of organization you want to run. Then get ready. Your staff is hopeful and The community is counting on you.</p><p>Over the course of several rounds, you'll face real decisions that leaders like you make every day — managing staff, courting donors, navigating crises, and fighting for your mission. Every choice has consequences.</p><p>Can you keep your organization alive and thriving?</p>",
+  "howToPlaySteps": [
+    {
+      "num": "1",
+      "label": "Choose your organization type"
+    },
+    {
+      "num": "2",
+      "label": "Build your character & pick traits"
+    },
+    {
+      "num": "3",
+      "label": "Select what type of situation to handle"
+    },
+    {
+      "num": "4",
+      "label": "Make decisions and manage your stats"
+    },
+    {
+      "num": "5",
+      "label": "Survive each round & reach the end"
+    }
   ],
-  orgSelectTitle: "Choose Your Organization",
-  orgSelectSub: "Each org type comes with different strengths and challenges that shape your starting stats.",
-  charBuildTitle: "Meet Your Director",
-  charBuildSub: "Give yourself a name, then choose up to 2 traits that reflect your leadership style. Each trait gives you a small stat boost.",
-  charNameLabel: "Your name",
-  traitSelectTitle: "Choose Your Leadership Traits",
-  traitSelectSub: "Pick up to 2 traits. Each one gives you a starting advantage in a particular area.",
-  typeSelectTitle: "What's on your desk?",
-  typeSelectSub: "Choose the type of situation you want to handle next. You'll be presented with a scenario that matches your choice.",
-  numRounds: 4,
-  scenariosPerRound: 4,
-  lossThreshold: 20,
-  avgLossThreshold: 0,
-  footerText: "Mission Critical · A nonprofit leadership simulation",
-  stats: [
-    { key: "revenue",   label: "Revenue",          color: "#2d6a4f", orgs: ["all"] },
-    { key: "community", label: "Community Support", color: "#1b2a4a", orgs: ["all"] },
-    { key: "morale",    label: "Staff Morale",      color: "#c9a227", orgs: ["all"] },
-    { key: "coalition", label: "Coalitions",        color: "#6b5b00", orgs: ["all"] },
+  "orgSelectTitle": "Choose Your Organization",
+  "orgSelectSub": "Each org type comes with different strengths and challenges that shape your starting stats.",
+  "charBuildTitle": "Meet Your Director",
+  "charBuildSub": "Give yourself a name, then choose up to 2 traits that reflect your leadership style. Each trait gives you a small stat boost.",
+  "charNameLabel": "Your name",
+  "traitSelectTitle": "Choose Your Leadership Traits",
+  "traitSelectSub": "Pick up to 2 traits. Each one gives you a starting advantage in a particular area.",
+  "typeSelectTitle": "What's on your desk?",
+  "typeSelectSub": "Choose the type of situation you want to handle next. You'll be presented with a scenario that matches your choice.",
+  "numRounds": 1,
+  "scenariosPerRound": 4,
+  "lossThreshold": 20,
+  "avgLossThreshold": 0,
+  "footerText": "What would you do?",
+  "stats": [
+    {
+      "key": "revenue",
+      "label": "Revenue",
+      "color": "#2d6a4f",
+      "orgs": [
+        "all"
+      ]
+    },
+    {
+      "key": "community",
+      "label": "Community Support",
+      "color": "#1b2a4a",
+      "orgs": [
+        "all"
+      ]
+    },
+    {
+      "key": "morale",
+      "label": "Staff Morale",
+      "color": "#c9a227",
+      "orgs": [
+        "all"
+      ]
+    },
+    {
+      "key": "coalition",
+      "label": "Coalitions",
+      "color": "#6b5b00",
+      "orgs": [
+        "all"
+      ]
+    }
   ],
-  startingStats: { revenue: 50, community: 50, morale: 50, coalition: 50 },
+  "startingStats": {
+    "revenue": 50,
+    "community": 50,
+    "morale": 50,
+    "coalition": 50
+  }
 };
 
 const ORG_TYPES = [
   {
-    id: "community_center",
-    icon: "🏘️",
-    name: "Community Center",
-    desc: "Deep roots, loyal constituents, and a permanent home. But funding is always tight.",
-    bonuses: { community: 15, morale: 10, revenue: -10, coalition: 0 },
-    tags: ["Local", "Service-Oriented"],
+    "id": "community_center",
+    "icon": "🌐",
+    "name": "The Association of Jewish Communities",
+    "desc": "A legacy organization and stalwart of the Jewish establishment, the Association of Jewish Communities helps a network of smaller organizations around the country set policy and raise money. Your priority is keeping big donors happy without alienating the millions of Jews you speak on behalf of or angering outside partners you rely on to support your agenda.",
+    "bonuses": {
+      "revenue": 0,
+      "community": 0,
+      "morale": 0,
+      "coalition": -10
+    },
+    "tags": [
+      "Establishment",
+      "National",
+      "Advocacy",
+      "Zionist"
+    ]
   },
   {
-    id: "advocacy_group",
-    icon: "📣",
-    name: "Local Advocacy Group",
-    desc: "Scrappy and passionate. You punch above your weight on policy but struggle to diversify funding.",
-    bonuses: { coalition: 15, community: 10, revenue: -10, morale: 0 },
-    tags: ["Grassroots", "Issue-Focused"],
+    "id": "advocacy_group",
+    "icon": "🏛️",
+    "name": "United Against Disparagement",
+    "desc": "A century-old institution with a sterling reputation among American Jews, your mission is to counter antisemitism and other forms of hate. You’re trying to balance maintaining support from American Jews and non-Jewish allies while raising enough money to expand as threats to Jewish safety increase.",
+    "bonuses": {
+      "revenue": 0,
+      "community": 0,
+      "morale": 0,
+      "coalition": 0
+    },
+    "tags": [
+      "Establishment",
+      "National",
+      "Advocacy",
+      "Zionist"
+    ]
   },
   {
-    id: "national_coalition",
-    icon: "🌐",
-    name: "National Coalition",
-    desc: "High visibility and major donors. But distance from community can breed distrust.",
-    bonuses: { revenue: 20, coalition: 10, community: -15, morale: 0 },
-    tags: ["National", "Policy-Focused"],
+    "id": "national_coalition",
+    "icon": "✊",
+    "name": "Jews for Social Justice",
+    "desc": "A smaller, progressive organization that traces its roots to the 1980s. It was created to serve as a more liberal counterweight to larger national Jewish organizations that were starting to move away from lobbying on domestic issues like abortion, immigration and racial justice. But now young staff and some members are pushing it to move further to the left while other members — including some on your board — want you to remain more moderate.",
+    "bonuses": {
+      "revenue": -5,
+      "community": 0,
+      "morale": 0,
+      "coalition": 0
+    },
+    "tags": [
+      "Progressive",
+      "National",
+      "Advocacy"
+    ]
   },
+  {
+    "id": "org_1772215781435",
+    "icon": "🕊️",
+    "name": "Peace for All",
+    "desc": "An anti-Zionist Jewish group that is growing in popularity. It maintains close ties with non-Jewish organizations advocating for Palestinian rights, but also aims to maintain credibility with the Jewish community and raise money from Jewish donors.",
+    "bonuses": {
+      "revenue": -10,
+      "community": -10,
+      "morale": 0,
+      "coalition": 0
+    },
+    "tags": [
+      "Progressive",
+      "National",
+      "Advocacy",
+      "Anti-Zionist"
+    ]
+  }
 ];
 
 const TRAITS = [
-  { id: "connector",   name: "The Connector",   effect: "+10 Coalition",      bonus: { coalition: 10 } },
-  { id: "storyteller", name: "The Storyteller",  effect: "+10 Community",      bonus: { community: 10 } },
-  { id: "numbers",     name: "The Analyst",      effect: "+10 Revenue",        bonus: { revenue: 10 } },
-  { id: "coach",       name: "The Coach",        effect: "+10 Staff Morale",   bonus: { morale: 10 } },
-  { id: "visionary",   name: "The Visionary",    effect: "+6 Community, +6 Coalition", bonus: { community: 6, coalition: 6 } },
-  { id: "operator",    name: "The Operator",     effect: "+6 Revenue, +6 Morale",      bonus: { revenue: 6, morale: 6 } },
+  {
+    "id": "connector",
+    "name": "Macher",
+    "effect": "+5 Community Support, +5 Revenue",
+    "bonus": {
+      "coalition": 10,
+      "revenue": 0,
+      "community": 0
+    }
+  },
+  {
+    "id": "storyteller",
+    "name": "Rabbi",
+    "effect": "+5 Community Support, +5 Staff Morale",
+    "bonus": {
+      "community": 0,
+      "morale": 0
+    }
+  },
+  {
+    "id": "numbers",
+    "name": "Disruptor",
+    "effect": "+15 Revenue, -5 Staff Morale",
+    "bonus": {
+      "revenue": 0,
+      "morale": -5
+    }
+  },
+  {
+    "id": "coach",
+    "name": "Activist",
+    "effect": "+10 Coalitions, +5 Staff Morale, -5 Revenue",
+    "bonus": {
+      "morale": 0,
+      "revenue": -5,
+      "coalition": 0
+    }
+  },
+  {
+    "id": "visionary",
+    "name": "Executive",
+    "effect": "+10 Revenue",
+    "bonus": {
+      "community": 6,
+      "coalition": 6,
+      "revenue": 0
+    }
+  },
+  {
+    "id": "operator",
+    "name": "Visionary",
+    "effect": "+5 Community Support, +5 Staff Morale",
+    "bonus": {
+      "revenue": 0,
+      "morale": 0,
+      "community": 0
+    }
+  }
 ];
 
 const SCENARIO_TYPES = [
-  { id: "email",     icon: "✉️",  label: "Email" },
-  { id: "phone",     icon: "📞", label: "Phone Call" },
-  { id: "inperson",  icon: "🤝", label: "In-Person" },
-  { id: "social",    icon: "📱", label: "Social Media" },
+  {
+    "id": "email",
+    "icon": "✉️",
+    "label": "Email"
+  },
+  {
+    "id": "phone",
+    "icon": "📞",
+    "label": "Phone Call"
+  },
+  {
+    "id": "inperson",
+    "icon": "🤝",
+    "label": "In-Person"
+  },
+  {
+    "id": "social",
+    "icon": "📱",
+    "label": "Social Media"
+  }
 ];
 
 const SCENARIOS = [
-  // ─── EMAIL ───
   {
-    id:"s1", round:1, type:"email", tag:"Fundraising",
-    orgs:["all"],
-    title:"The Donor Email",
-    body:"A major donor emails asking why your overhead costs are so high compared to peer organizations. They hint they may redirect their gift.",
-    choices:[
-      {text:"Send a detailed breakdown defending your overhead as mission-critical investment.",delta:{revenue:10,community:0,morale:5,coalition:0},result:"The donor appreciates the transparency and keeps their gift. Staff feel seen."},
-      {text:"Apologize and promise to cut overhead — including staff training.",delta:{revenue:5,morale:-15,community:0,coalition:0},result:"The donor stays, but morale takes a hit when staff hear about the promised cuts."},
-      {text:"Invite them to a site visit to see the work in action before making a decision.",delta:{revenue:5,community:10,morale:5,coalition:0},result:"The visit changes their perspective. They increase their gift. Slow but effective."},
+    "id": "s1",
+    "round": "any",
+    "type": "social",
+    "tag": "Politics",
+    "orgs": [
+      "all"
+    ],
+    "title": "The Deportation Dilemma",
+    "body": "You see reports that the federal government has arrested a foreign student activist studying at an American university and is attempting to deport them for engaging in antisemitism.",
+    "choices": [
+      {
+        "text": "Quickly release a statement celebrating the arrest and praising the government for ensuring “accountability” for antisemites.",
+        "outcomes": [
+          {
+            "result": "Major donors love your swift action but you receive an angry call from the head of an immigration rights coalition that you’re part of.",
+            "delta": {
+              "morale": 0,
+              "coalition": -5
+            },
+            "weight": 50
+          },
+          {
+            "result": "Whoops! After outcry from civil liberty groups, the government is forced to release the student and apologize. You look hasty and callous.",
+            "delta": {
+              "community": -10,
+              "morale": -5
+            },
+            "weight": 50
+          }
+        ]
+      },
+      {
+        "text": "Condemn the arrest — Jewish safety is being used as an excuse to violate the student’s civil rights!",
+        "outcomes": [
+          {
+            "result": "You look prescient and brave when it emerges that the student was arrested for writing a tame op-ed criticizing Israel, and a judge orders them released from custody. ",
+            "delta": {
+              "revenue": 0,
+              "community": 5,
+              "morale": 5,
+              "coalition": 5
+            },
+            "weight": 70
+          },
+          {
+            "result": "The government shares video of the student assaulting the campus rabbi at a protest and you’re forced to walk back your initial statement.",
+            "delta": {
+              "community": -10
+            },
+            "weight": 30
+          }
+        ]
+      },
+      {
+        "text": "Wait-and-see. The reports on social media are fuzzy and the government hasn’t confirmed anything.",
+        "outcomes": [
+          {
+            "result": "Smart. It turns out that initial news reports got it wrong. A student was briefly detained by local police, but he wasn’t arrested and nobody tried to deport him. The controversy quickly dies down.",
+            "delta": {
+              "revenue": 0,
+              "community": 5
+            },
+            "weight": 30
+          },
+          {
+            "result": "Oh no — the government is silent for days but eventually it turns out social media got it right. Your late statement makes your organization look like it lacks conviction and isn’t keeping up with the news.",
+            "delta": {
+              "community": -10,
+              "morale": -5
+            },
+            "weight": 70
+          }
+        ]
+      }
     ]
   },
   {
-    id:"s2", round:1, type:"email", tag:"Staffing",
-    orgs:["all"],
-    title:"The Resignation Email",
-    body:"Your communications director sends a terse resignation email with two weeks notice. No explanation. The rest of the team is rattled.",
-    choices:[
-      {text:"Reply immediately asking to meet and understand the reason.",delta:{morale:10,revenue:0,community:0,coalition:0},result:"They meet with you. It's a fixable issue — compensation. You can't match the offer but you offer flexibility. They stay."},
-      {text:"Accept gracefully, announce the search process promptly to staff.",delta:{morale:5,community:0,revenue:0,coalition:0},result:"Staff respect the transparency. A reasonable transition begins."},
-      {text:"Forward the email to the board without responding first.",delta:{morale:-15,coalition:-5,revenue:0,community:0},result:"Staff find out. They're furious about the breach of trust. Resentment spreads."},
+    "id": "sc_1772216143596",
+    "round": "any",
+    "type": "social",
+    "tag": "Antisemitism",
+    "orgs": [
+      "community_center",
+      "advocacy_group"
+    ],
+    "title": "Ms. Sophie",
+    "body": "JewBite, a controversial antisemitism watchdog group, names a popular children’s YouTube celebrity as its “Jew Hater of the Month” after she accuses Israel of harming children in Gaza.",
+    "choices": [
+      {
+        "text": "Ignore it. JewBite is an unreliable source, and there’s no reason to give them more attention.",
+        "outcomes": [
+          {
+            "result": "Good call. People mock them for going after a beloved figure like Ms. Sophie and you keep your hands clean.",
+            "delta": {
+              "morale": 0
+            },
+            "weight": 60
+          },
+          {
+            "result": "Big mistake. Your largest donor calls JewBite courageous and is furious you wouldn’t back them up — he pulls a major gift.",
+            "delta": {
+              "revenue": -10
+            },
+            "weight": 40
+          }
+        ]
+      },
+      {
+        "text": "Share JewBite’s post about Ms. Sarah with a message of unity: We can all agree children everywhere deserve safety — including the Jewish kids who rely on Ms. Sophie for spelling lessons, not divisive politics.",
+        "outcomes": [
+          {
+            "result": "Everyone is happy. The statement placates your donors who also support JewBite, without giving your progressive critics ammunition to say you attacked a popular educator.",
+            "delta": {
+              "revenue": 0,
+              "community": 5,
+              "morale": 5
+            },
+            "weight": 50
+          },
+          {
+            "result": "Weak! The donors you share with JewBite thought the statement was equivocal nonsense and pull support, while your staff wonder why you decided to weigh in at all.",
+            "delta": {
+              "revenue": -15,
+              "morale": -5
+            },
+            "weight": 50
+          }
+        ]
+      },
+      {
+        "text": "You go all in, sharing JewBite’s announcement and calling on YouTube to ban Ms. Sophie.",
+        "outcomes": [
+          {
+            "result": "It’s a win! Your largest donor, who also supports JewBite, appreciates the forceful response and agrees to fund a new center to monitor antisemitism on social media.",
+            "delta": {
+              "revenue": 20,
+              "community": 0,
+              "morale": -5
+            },
+            "weight": 50
+          },
+          {
+            "result": "Your staff are appalled and when YouTube ignores your demand to ban Ms. Sophie, several of your largest donors are unimpressed and defect to JewBite.",
+            "delta": {
+              "revenue": -10,
+              "morale": -5
+            },
+            "weight": 50
+          }
+        ]
+      }
     ]
   },
   {
-    id:"s3", round:2, type:"email", tag:"Coalition",
-    orgs:["advocacy_group","national_coalition"],
-    title:"The Ally's Ultimatum",
-    body:"A key coalition partner emails demanding you take a public stance on a contentious ballot measure, or they'll remove you from the coalition.",
-    choices:[
-      {text:"Take the stance they want. The coalition matters too much.",delta:{coalition:15,community:-10,revenue:-5,morale:0},result:"Coalition intact. But your community members feel you caved to outside pressure."},
-      {text:"Decline and explain your org needs to remain officially neutral.",delta:{coalition:-15,morale:5,community:5,revenue:0},result:"You're removed from the coalition. It stings, but your community respects the principle."},
-      {text:"Propose a joint educational event instead of a formal endorsement.",delta:{coalition:5,community:5,morale:5,revenue:0},result:"Creative compromise. The partner accepts. Not ideal for either side, but workable."},
+    "id": "sc_1772216425544",
+    "round": "any",
+    "type": "social",
+    "tag": "Antisemitism",
+    "orgs": [
+      "national_coalition",
+      "org_1772215781435"
+    ],
+    "title": "Ms. Sophie",
+    "body": "JewBite, a controversial antisemitism watchdog group, names a popular children’s YouTube celebrity as its “Jew Hater of the Month” after she accuses Israel of harming children in Gaza.",
+    "choices": [
+      {
+        "text": "Ignore it. JewBite is an obnoxious group and there’s no reason to give them more attention.",
+        "outcomes": [
+          {
+            "result": "Good call. Everyone ignores their “award” for Ms. Sophie.",
+            "delta": {
+              "morale": 5
+            },
+            "weight": 60
+          },
+          {
+            "result": "Big mistake. It turns out your largest donor’s grandchildren love watching Ms. Sophie and is appalled you didn’t defend her.",
+            "delta": {
+              "revenue": -10,
+              "morale": -5
+            },
+            "weight": 40
+          }
+        ]
+      },
+      {
+        "text": "Defend Ms. Sophie. She was standing up for vulnerable children and JewBite is weaponizing claims of antisemitism to go after critics of Israel.",
+        "outcomes": [
+          {
+            "result": "Smart move. JewBite’s “award” goes viral as an example of offensive overreach, and your organization is hailed as the leading Jewish voice calling it out.",
+            "delta": {
+              "revenue": 5,
+              "community": 5,
+              "morale": 5
+            },
+            "weight": 70
+          },
+          {
+            "result": "Oops. It turns out Ms. Sophie wasn’t just raising money for humanitarian relief, she was sharing posts on Instagram about how she can always tell which kids are “Zionist” because they smell bad. You look out-of-touch.",
+            "delta": {
+              "community": -15
+            },
+            "weight": 30
+          }
+        ]
+      },
+      {
+        "text": "You ask some trusted allies what they think of Ms. Sophie before deciding how to respond.",
+        "outcomes": [
+          {
+            "result": "Savvy move. Another leader tells you they had to cancel a Gaza fundraiser with Ms. Sophie after she made offensive comments about Jews on a planning call. You stay quiet and are validated when Ms. Sophie responds to JewBite’s “award” by claiming the Rothchilds are after her.",
+            "delta": {
+              "community": 10,
+              "coalition": 5
+            },
+            "weight": 30
+          },
+          {
+            "result": "Bad call. Of course Ms. Sophie isn’t antisemitic! The leader you called for advice is offended that you even asked and, by the time you defend Ms. Sophie publicly, it’s too late.",
+            "delta": {
+              "morale": -5
+            },
+            "weight": 70
+          }
+        ]
+      }
     ]
   },
   {
-    id:"s4", round:3, type:"email", tag:"Fundraising",
-    orgs:["all"],
-    title:"The Foundation Decline",
-    body:"A foundation emails to decline your renewal grant — citing 'shifting priorities.' This was 30% of your operating budget.",
-    choices:[
-      {text:"Send a detailed response asking for feedback and requesting a call.",delta:{revenue:5,coalition:5,morale:0,community:0},result:"They agree to a call. The feedback is useful. They hint at a smaller bridge grant."},
-      {text:"Launch an emergency individual donor campaign immediately.",delta:{revenue:10,morale:-5,community:10,coalition:0},result:"The campaign raises enough to partially cover the gap. Community engagement spikes."},
-      {text:"Email your board chair immediately to convene an emergency finance meeting.",delta:{morale:5,revenue:0,coalition:0,community:0},result:"Smart move. The board mobilizes quickly. Not a fix, but a solid crisis response."},
+    "id": "sc_1772216588786",
+    "round": "any",
+    "type": "phone",
+    "tag": "Israel",
+    "orgs": [
+      "all"
+    ],
+    "title": "Assasination, antisemitism — or something else?",
+    "body": "A high-ranking Israeli government official is gunned down on the streets of New York City.",
+    "choices": [
+      {
+        "text": "You immediately condemn the attack as a case of blatant antisemitism and proof that anti-Zionism poses a violent threat to Jews. Your organization demands that the NYPD investigate a strident anti-Zionist organization that has been hosting raucous protests near the site of the shooting.",
+        "outcomes": [
+          {
+            "result": "It’s a prescient move. The attacker claims he acted alone, but the investigation proves a connection and your organization gets the credit.",
+            "delta": {
+              "community": 10,
+              "morale": 10
+            },
+            "weight": 70
+          },
+          {
+            "result": "Oh no. It turns out the official was targeted by a far-right Israeli who was furious that he’d been secretly meeting with the anti-Zionist organization to establish a dialogue. You look foolish and your political opponents pounce.",
+            "delta": {
+              "community": -15,
+              "morale": -10
+            },
+            "weight": 30
+          }
+        ]
+      },
+      {
+        "text": "You decry violence but caution that the shooting must be understood in the context of the Israeli-Palestinian conflict, and not as a threat to American Jews.",
+        "outcomes": [
+          {
+            "result": "It turns out the killer was Jewish, and blamed the Israeli official for violence in Gaza. You get credit for not jumping to conclusions.",
+            "delta": {
+              "community": 5,
+              "morale": 5,
+              "coalition": 5
+            },
+            "weight": 70
+          },
+          {
+            "result": "It turns out the killer was a neo-Nazi who shot the first person he could find wearing a kippah. Donors flee as you lose credibility with the community and your staff.",
+            "delta": {
+              "revenue": -10,
+              "community": -10,
+              "morale": -5
+            },
+            "weight": 30
+          }
+        ]
+      },
+      {
+        "text": "You release a statement condemning the violence and mourning the official’s death, without mentioning antisemitism or weighing in on the political dynamics.",
+        "outcomes": [
+          {
+            "result": "The shooting turns out to be a mugging gone wrong. Organizations that jumped to conclusions about the politics involved look foolish, while you managed to stay above the fray.",
+            "delta": {
+              "community": 10,
+              "morale": 5,
+              "coalition": 5
+            },
+            "weight": 50
+          },
+          {
+            "result": "When the shooter’s manifesto emerges calling for more killings against any Jew who isn’t fighting against Israel, you look oblivious at best — and complicit at worst.",
+            "delta": {
+              "community": -10,
+              "morale": -10
+            },
+            "weight": 50
+          }
+        ]
+      }
     ]
   },
   {
-    id:"s5", round:2, type:"email", tag:"Community",
-    orgs:["community_center","advocacy_group"],
-    title:"The Complaint Email",
-    body:"A longtime community member sends a long email accusing your org of ignoring the needs of elderly residents in favor of younger demographics.",
-    choices:[
-      {text:"Reply with a detailed email outlining all programs serving seniors.",delta:{community:-5,morale:0,revenue:0,coalition:0},result:"They're unimpressed. Data without listening feels dismissive. The complaint circulates."},
-      {text:"Call them directly to listen fully before responding.",delta:{community:15,morale:5,revenue:0,coalition:0},result:"They're disarmed by the personal outreach. They become an unexpected advocate."},
-      {text:"Invite them to join an advisory committee on senior programming.",delta:{community:20,coalition:5,morale:5,revenue:0},result:"They accept and bring five friends. A community asset is born from a complaint."},
+    "id": "sc_1772216779456",
+    "round": null,
+    "type": "email",
+    "tag": "Politics",
+    "orgs": [
+      "all"
+    ],
+    "title": "Tax the Jews",
+    "body": "You receive an email from a community member in San Francisco who says a protesters at a demonstration calling for a tax on billionaires broke out into chants of “tax the Jews!”",
+    "choices": [
+      {
+        "text": "This is outrageous, and more proof of antisemitism on the left. You condemn both the protesters and call for a response from the Democratic Socialists of America chapter that organized the demonstration.",
+        "outcomes": [
+          {
+            "result": "More footage of the protest emerges showing antisemitic caricatures on signs, and your pressure works — the local DSA group apologizes and kicks out the members who participated.",
+            "delta": {
+              "community": 10,
+              "morale": 5,
+              "coalition": 5
+            },
+            "weight": 50
+          },
+          {
+            "result": "Unfortunately, the community member you heard from was passing along rumors. Video of the event doesn’t show the cheer — and eyewitnesses say maybe they misheard. It looks like you cried wolf and antagonized a powerful political opponent.",
+            "delta": {
+              "community": -10,
+              "coalition": -10
+            },
+            "weight": 50
+          }
+        ]
+      },
+      {
+        "text": "Really? The report sounds a little difficult to believe. You ignore the note and move on with your day.",
+        "outcomes": [
+          {
+            "result": "Smart. The community member was just passing on rumors and it turns out he was mistaken anyway. You avoid the controversy.",
+            "delta": {
+              "morale": 5,
+              "coalition": 5
+            },
+            "weight": 100
+          },
+          {
+            "result": "Whoops. The community member is friends with your board chair, and he has video to back up his claim — now a major donor is mad and it looks like you’re afraid to stand up against antisemitism.",
+            "delta": {
+              "revenue": -10
+            },
+            "weight": 0
+          }
+        ]
+      },
+      {
+        "text": "You ask whether the community member has proof before deciding how to respond.",
+        "outcomes": [
+          {
+            "result": "Wise. He sends a video that shows a single person on the edge of the crowd yelling about yells, while other demonstrators shout her down. You’re able to tailor a statement condemning the incident as unacceptable but isolated.",
+            "delta": {
+              "community": 5,
+              "coalition": 5
+            },
+            "weight": 50
+          },
+          {
+            "result": "Why didn’t you do your own research? The video is all over social media — and it’s as bad as the community member described it. Now you look clueless and like you don’t trust your own supporters.",
+            "delta": {
+              "community": -10,
+              "morale": -10
+            },
+            "weight": 50
+          }
+        ]
+      }
     ]
-  },
-
-  // ─── PHONE ───
-  {
-    id:"s6", round:1, type:"phone", tag:"Fundraising",
-    orgs:["all"],
-    title:"The Cold Call Donor",
-    body:"A prospective major donor calls out of nowhere. They love your mission but want to know your 'exit strategy' — they want to fund work that eventually makes itself unnecessary.",
-    choices:[
-      {text:"Explain your theory of change and how success would look in 10 years.",delta:{revenue:15,coalition:5,morale:5,community:0},result:"They're impressed by the clarity. They schedule a follow-up. A promising lead."},
-      {text:"Push back gently — your work addresses structural issues that won't disappear.",delta:{revenue:-5,morale:10,community:5,coalition:0},result:"They respect the pushback. No gift yet, but they say they'll think about it."},
-      {text:"Agree enthusiastically with their framing to keep the conversation warm.",delta:{revenue:5,morale:-10,community:0,coalition:0},result:"Staff overhear and are troubled by the 'make ourselves obsolete' framing. Trust dips."},
-    ]
-  },
-  {
-    id:"s7", round:2, type:"phone", tag:"Staffing",
-    orgs:["all"],
-    title:"The Late-Night Call",
-    body:"A program manager calls you at 9pm in tears. A staff member made a discriminatory comment to a client today, and leadership didn't address it. She's thinking of leaving.",
-    choices:[
-      {text:"Listen fully, validate her experience, and commit to action by end of week.",delta:{morale:15,community:5,revenue:0,coalition:0},result:"She feels heard. She stays. The incident becomes a catalyst for a real HR review."},
-      {text:"Tell her you'll look into it and follow up — but don't set a timeline.",delta:{morale:-10,community:-5,revenue:0,coalition:0},result:"The vagueness reads as dismissal. She updates her résumé. Two others follow."},
-      {text:"Ask her to document the incident in writing and send it to HR.",delta:{morale:-5,community:0,revenue:0,coalition:0},result:"Technically correct but emotionally cold. She complies but disengages. A loss of trust."},
-    ]
-  },
-  {
-    id:"s8", round:1, type:"phone", tag:"Coalition",
-    orgs:["advocacy_group","national_coalition"],
-    title:"The Press Call",
-    body:"A reporter calls for comment on a controversial statement made by your board chair at a fundraiser last night. You're caught off guard.",
-    choices:[
-      {text:"Say 'no comment' and hang up.",delta:{community:-10,coalition:-10,morale:0,revenue:0},result:"The story runs without your voice. The void is filled by critics. Damage amplified."},
-      {text:"Ask for 30 minutes and call back with a prepared statement.",delta:{community:5,coalition:5,morale:5,revenue:0},result:"Smart. The statement is quoted fairly. The story is smaller than it could have been."},
-      {text:"Answer candidly, distancing yourself from the board chair's remarks.",delta:{community:10,coalition:-5,morale:5,revenue:-5},result:"Community applauds the candor. But the board chair is furious. Internal tension spikes."},
-    ]
-  },
-  {
-    id:"s9", round:3, type:"phone", tag:"Funding",
-    orgs:["all"],
-    title:"The Government Grant Call",
-    body:"A program officer from a government agency calls to say your grant application advanced, but they want you to remove an advocacy component to be eligible for funding.",
-    choices:[
-      {text:"Agree to remove the advocacy component. The funding is critical.",delta:{revenue:20,coalition:-10,morale:-10,community:-5},result:"The money comes through. But staff who joined for the advocacy work feel betrayed."},
-      {text:"Decline the funding and keep the program intact.",delta:{revenue:-15,morale:15,coalition:10,community:10},result:"Hard financially. But staff morale soars. Peer orgs take notice of your principled stand."},
-      {text:"Ask if the advocacy work can be funded separately through private dollars.",delta:{revenue:10,morale:5,coalition:5,community:5},result:"They agree to a workaround. More complex administratively, but mission stays intact."},
-    ]
-  },
-
-  // ─── IN-PERSON ───
-  {
-    id:"s10", round:1, type:"inperson", tag:"Community",
-    orgs:["community_center","advocacy_group"],
-    title:"The Town Hall",
-    body:"You show up to a packed community town hall. Residents are angry about a proposed development that will displace families your org serves. They want you to lead a fight.",
-    choices:[
-      {text:"Step to the mic and commit your org to leading the opposition.",delta:{community:20,coalition:10,revenue:-10,morale:5},result:"The crowd erupts. You've just become the face of the fight. Funding risk is real, but trust soars."},
-      {text:"Listen all night, then announce a community working group rather than a commitment.",delta:{community:10,morale:5,coalition:5,revenue:0},result:"Measured but credible. Residents feel heard. The working group gets real traction."},
-      {text:"Sit in the back. This isn't your org's lane.",delta:{community:-15,morale:-5,coalition:0,revenue:0},result:"Community members notice your absence from the front. A key partner calls to ask why you stayed silent."},
-    ]
-  },
-  {
-    id:"s11", round:2, type:"inperson", tag:"Staffing",
-    orgs:["all"],
-    title:"The All-Staff Meeting",
-    body:"At your all-staff meeting, an employee asks directly: 'Are layoffs coming?' The room goes silent. You have been quietly exploring budget scenarios that include staff reductions.",
-    choices:[
-      {text:"Be fully transparent: yes, you're exploring scenarios, no decisions made yet.",delta:{morale:15,revenue:0,community:0,coalition:0},result:"Staff respect the honesty. Some are anxious, but trust in leadership grows."},
-      {text:"Deflect: 'Our focus is on the mission. Let's stay positive.'",delta:{morale:-20,community:0,revenue:5,coalition:0},result:"Everyone in the room knows you dodged. The rumor mill goes into overdrive by noon."},
-      {text:"Answer privately after the meeting rather than in front of everyone.",delta:{morale:5,revenue:0,community:0,coalition:0},result:"The individual feels heard. But the room is left in suspense. Anxiety lingers."},
-    ]
-  },
-  {
-    id:"s12", round:1, type:"inperson", tag:"Fundraising",
-    orgs:["national_coalition","community_center"],
-    title:"The Gala Table",
-    body:"At your annual gala, you're seated next to a billionaire philanthropist who knows nothing about your work. You have 90 minutes.",
-    choices:[
-      {text:"Tell your most compelling story about a community member you've served.",delta:{revenue:15,community:10,coalition:5,morale:5},result:"They're moved. They ask for a follow-up meeting. Staff at your table beam with pride."},
-      {text:"Walk them through your impact data and outcomes reports.",delta:{revenue:10,coalition:5,morale:0,community:0},result:"They're impressed by the numbers but didn't feel an emotional connection. A lukewarm lead."},
-      {text:"Spend most of the time asking about their interests and listening.",delta:{revenue:10,coalition:10,morale:0,community:0},result:"They leave feeling understood. The follow-up meeting is warm. A relationship begins."},
-    ]
-  },
-  {
-    id:"s13", round:3, type:"inperson", tag:"Coalition",
-    orgs:["all"],
-    title:"The Coalition Meeting",
-    body:"At a multi-org coalition meeting, a peer organization publicly challenges your strategy in front of everyone, implying your approach is harmful to the community.",
-    choices:[
-      {text:"Respond calmly and directly in the room, disagreeing with evidence.",delta:{coalition:10,community:5,morale:10,revenue:0},result:"Other partners respect the composure. The challenger backs down. You earn credibility."},
-      {text:"Stay quiet and address it one-on-one after the meeting.",delta:{coalition:5,morale:-5,community:0,revenue:0},result:"The moment passes, but others wonder if you agree with the critique. Perception damage lingers."},
-      {text:"Escalate — demand the facilitator intervene.",delta:{coalition:-15,morale:0,community:-5,revenue:0},result:"It reads as defensive and fragile. Several partners reach out after to express concern."},
-    ]
-  },
-  {
-    id:"s14", round:4, type:"inperson", tag:"Community",
-    orgs:["all"],
-    title:"The Listening Session",
-    body:"You host a community listening session and hear consistent, pointed criticism of a program your board loves and funders have praised.",
-    choices:[
-      {text:"Commit publicly on the spot to redesigning the program with community input.",delta:{community:20,coalition:10,revenue:-5,morale:10},result:"The room shifts. You've just earned enormous trust. The redesign process generates real energy."},
-      {text:"Thank everyone and promise to 'take it back to the team.'",delta:{community:-5,morale:0,revenue:0,coalition:0},result:"'Take it back to the team' lands as a brush-off. Attendance at the next session is half."},
-      {text:"Explain the program's origins and defend it with data.",delta:{community:-15,morale:-5,revenue:5,coalition:-5},result:"You've just told the community their experience is wrong. It goes badly."},
-    ]
-  },
-
-  // ─── SOCIAL MEDIA ───
-  {
-    id:"s15", round:1, type:"social", tag:"Communications",
-    orgs:["all"],
-    title:"The Viral Criticism",
-    body:"A community member posts a thread criticizing your org for 'performative' programming that centers donor optics over real need. It has 8,000 shares.",
-    choices:[
-      {text:"Post a sincere public acknowledgment and announce a community listening tour.",delta:{community:15,morale:10,coalition:5,revenue:-5},result:"The response is praised. The poster shares it approvingly. A crisis becomes a credibility moment."},
-      {text:"Reply with a list of your impact stats and program awards.",delta:{community:-15,morale:-10,coalition:-5,revenue:0},result:"The defensive response goes viral. Staff of color at your org quietly agree with the critique."},
-      {text:"Reach out privately to the poster before responding publicly.",delta:{community:20,morale:5,coalition:5,revenue:0},result:"The poster is disarmed. They post a follow-up praising your response. A surprising turnaround."},
-    ]
-  },
-  {
-    id:"s16", round:2, type:"social", tag:"Fundraising",
-    orgs:["all"],
-    title:"The Fundraising Campaign",
-    body:"Your year-end social media fundraising campaign is underperforming by 40%. You have 5 days left. Staff are demoralized.",
-    choices:[
-      {text:"Launch a bold, honest '5 days left' campaign with real stakes — if we don't hit it, we cut a program.",delta:{revenue:15,community:10,morale:-5,coalition:0},result:"The honesty works. Donations flood in. Community rallies. You hit 110% of the goal."},
-      {text:"Ask board members to personally match donations and post on their networks.",delta:{revenue:15,coalition:10,morale:5,community:0},result:"Board engagement lifts the campaign. Staff feel the board is finally pulling their weight."},
-      {text:"Run paid social ads targeting prior donors.",delta:{revenue:10,morale:0,community:0,coalition:0},result:"The ads help but it's an expensive solution. You hit 85% of goal. Acceptable, not great."},
-    ]
-  },
-  {
-    id:"s17", round:3, type:"social", tag:"Community",
-    orgs:["community_center","advocacy_group"],
-    title:"The Staff Post",
-    body:"A staff member posts about workplace burnout — without naming your org, but followers quickly identify it. It gets significant traction.",
-    choices:[
-      {text:"Reach out privately and compassionately. Don't ask them to take it down.",delta:{morale:15,community:5,revenue:0,coalition:0},result:"The staff member feels supported. They post a brief follow-up noting the situation is being addressed."},
-      {text:"Ask them quietly to delete the post before it spreads further.",delta:{morale:-15,community:-5,revenue:0,coalition:0},result:"They refuse. The request leaks. Two more staff members post in solidarity."},
-      {text:"Address burnout publicly in an org-wide post acknowledging the challenge.",delta:{morale:10,community:10,coalition:5,revenue:-5},result:"A bold move. It resonates widely. Donors actually respond positively to the transparency."},
-    ]
-  },
-  {
-    id:"s18", round:4, type:"social", tag:"Coalition",
-    orgs:["national_coalition","advocacy_group"],
-    title:"The Repost Dilemma",
-    body:"A peer org shares a contentious policy statement on social media and tags you, implicitly asking for your amplification. Your community is split on the issue.",
-    choices:[
-      {text:"Repost with a note of support — solidarity with coalition partners matters.",delta:{coalition:15,community:-10,revenue:-5,morale:0},result:"Some community members are upset. But coalition partners rally around you. A trade-off."},
-      {text:"Reply publicly: 'We're listening and learning on this issue.'",delta:{coalition:-5,community:5,morale:5,revenue:0},result:"Soft, but honest. Some partners are frustrated. Community members appreciate the nuance."},
-      {text:"Ignore it entirely.",delta:{coalition:-10,community:0,morale:0,revenue:0},result:"The org that tagged you reaches out to ask why you went silent. A relationship strains."},
-    ]
-  },
-  {
-    id:"s19", round:2, type:"social", tag:"Community",
-    orgs:["community_center"],
-    title:"The Photo Policy Backlash",
-    body:"A community member posts that a photo in your newsletter shows their child without consent, violating trust. The post is spreading among parents in the community.",
-    choices:[
-      {text:"Immediately remove the photo, apologize publicly, and audit your consent processes.",delta:{community:15,morale:5,revenue:0,coalition:0},result:"Swift accountability. The community appreciates the response. A policy overhaul follows."},
-      {text:"Post that all photos are taken with consent, defending your process.",delta:{community:-20,morale:-10,revenue:0,coalition:-5},result:"The parent posts the consent form — it's vague and outdated. The situation worsens significantly."},
-      {text:"Reach out privately to the parent before making any public statement.",delta:{community:10,morale:5,revenue:0,coalition:0},result:"The parent feels respected. They accept the apology privately. The public post comes down."},
-    ]
-  },
+  }
 ];
 // ══════════════════════════════════════════════════════
 //  END CONFIG
