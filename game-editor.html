@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mission Critical — Content Editor</title>
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Merriweather+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&amp;family=Merriweather+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400&amp;display=swap" rel="stylesheet">
 <style>
 :root{
   --ink:#1c1c1e;--paper:#f7f3eb;--aged:#ede7d4;
@@ -161,7 +159,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
 </head>
 <body>
 <!-- PASSWORD GATE -->
-<div id="pw-gate">
+<div id="pw-gate" class="hidden">
   <div class="pw-box">
     <h2>Mission <span>Critical</span></h2>
     <p>Content Editor — restricted access</p>
@@ -181,23 +179,23 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Game Settings</div>
-    <button class="sb-btn" onclick="nav('branding',this)">🎨 Branding & Text</button>
-    <button class="sb-btn" onclick="nav('stats',this)">📊 Stats & Scoring</button>
+    <button class="sb-btn" onclick="nav('branding',this)">🎨 Branding &amp; Text</button>
+    <button class="sb-btn" onclick="nav('stats',this)">📊 Stats &amp; Scoring</button>
     <button class="sb-btn" onclick="nav('howtoplay',this)">❓ How to Play Steps</button>
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Organizations</div>
-    <div id="org-nav"></div>
+    <div id="org-nav"><button class="sb-btn sub " onclick="showOrgPanel('community_center',this)">🌐 The Association of Jewish Communities</button><button class="sb-btn sub " onclick="showOrgPanel('advocacy_group',this)">🏛️ United Against Disparagement</button><button class="sb-btn sub " onclick="showOrgPanel('national_coalition',this)">✊ Jews for Social Justice</button><button class="sb-btn sub " onclick="showOrgPanel('org_1772215781435',this)">🕊️ Peace for All</button></div>
     <button class="sb-add" onclick="addOrg()">+ Add Org Type</button>
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Traits</div>
-    <div id="trait-nav"></div>
+    <div id="trait-nav"><button class="sb-btn sub " onclick="showTraitPanel('connector',this)">Macher</button><button class="sb-btn sub " onclick="showTraitPanel('storyteller',this)">Rabbi</button><button class="sb-btn sub " onclick="showTraitPanel('numbers',this)">Disruptor</button><button class="sb-btn sub " onclick="showTraitPanel('coach',this)">Activist</button><button class="sb-btn sub " onclick="showTraitPanel('visionary',this)">Executive</button><button class="sb-btn sub " onclick="showTraitPanel('operator',this)">Visionary</button></div>
     <button class="sb-add" onclick="addTrait()">+ Add Trait</button>
   </div>
   <div class="sb-sec">
     <div class="sb-sec-lbl">Scenarios</div>
-    <div id="scenario-nav"></div>
+    <div id="scenario-nav"><div style="padding:.25rem 1.1rem;font-size:.62rem;text-transform:uppercase;letter-spacing:1.5px;color:#556;margin-top:.35rem">Round null</div><button class="sb-btn sub " onclick="showScenarioPanel('sc_1772216779456',this)">Tax the Jews</button><div style="padding:.25rem 1.1rem;font-size:.62rem;text-transform:uppercase;letter-spacing:1.5px;color:#556;margin-top:.35rem">Any Round</div><button class="sb-btn sub " onclick="showScenarioPanel('s1',this)">The Deportation Dilemma</button><button class="sb-btn sub " onclick="showScenarioPanel('sc_1772216143596',this)">Ms. Sophie</button><button class="sb-btn sub " onclick="showScenarioPanel('sc_1772216425544',this)">Ms. Sophie</button><button class="sb-btn sub " onclick="showScenarioPanel('sc_1772216588786',this)">Assasination, antisemiti…</button></div>
     <button class="sb-add" onclick="addScenario()">+ Add Scenario</button>
   </div>
   <div class="sb-sec">
@@ -205,13 +203,13 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     <button class="sb-btn" onclick="nav('interaction-types',this)">🗂 Manage Types</button>
   </div>
   <div class="sb-foot">
-    <button class="export-btn" onclick="publishToGitHub()" id="publish-btn">🚀 Publish to GitHub</button>
+    <button class="export-btn" onclick="publishToGitHub()" id="publish-btn" disabled="">⏳ Publishing…</button>
     <button class="export-btn" onclick="openExport()" style="background:rgba(255,255,255,.08);color:#ccc;margin-top:.4rem;font-size:.75rem;padding:.45rem">⬇ Export Code Only</button>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.7rem">
-      <span id="save-status" style="font-size:.65rem;color:#8899bb;font-style:italic;line-height:1.4">No saved data yet</span>
-      <span id="save-indicator" style="font-size:.68rem;color:var(--gold);opacity:0;transition:opacity .3s;white-space:nowrap;margin-left:.5rem"></span>
+      <span id="save-status" style="font-size:.65rem;color:#8899bb;font-style:italic;line-height:1.4">Restored: Feb 27 01:37 PM</span>
+      <span id="save-indicator" style="font-size: 0.68rem; color: var(--gold); opacity: 0; transition: opacity 0.3s; white-space: nowrap; margin-left: 0.5rem;">✓ Saved</span>
     </div>
-    <button onclick="toggleGHPanel()" style="margin-top:.5rem;width:100%;background:none;border:1px solid rgba(255,255,255,.15);color:#8899bb;font-size:.68rem;padding:.3rem;cursor:pointer;font-family:Merriweather,serif;text-align:center;transition:all .15s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#8899bb'">⚙ GitHub Settings</button>
+    <button onclick="toggleGHPanel()" style="margin-top: 0.5rem; width: 100%; background: none; border: 1px solid rgba(255, 255, 255, 0.15); color: rgb(136, 153, 187); font-size: 0.68rem; padding: 0.3rem; cursor: pointer; font-family: Merriweather, serif; text-align: center; transition: 0.15s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#8899bb'">⚙ GitHub Settings</button>
     <button onclick="clearSaved()" style="margin-top:.35rem;width:100%;background:none;border:1px solid rgba(255,255,255,.15);color:#8899bb;font-size:.68rem;padding:.3rem;cursor:pointer;font-family:Merriweather,serif;text-align:center;transition:all .15s" onmouseover="this.style.color='white'" onmouseout="this.style.color='#8899bb'">↺ Reset to defaults</button>
   </div>
 </div>
@@ -220,7 +218,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
 <div id="main">
 
   <!-- GITHUB PANEL (shown/hidden via toggle) -->
-  <div class="gh-panel" id="gh-panel" style="display:none">
+  <div class="gh-panel" id="gh-panel" style="display: block;">
     <h3>⚙ GitHub Publish Settings</h3>
     <div class="gh-grid">
       <div class="gh-field"><label>GitHub Username</label><input type="text" id="gh-owner" placeholder="your-username"></div>
@@ -231,7 +229,7 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
       <button class="gh-btn gh-btn-publish" onclick="saveGHConfig()">Save Settings</button>
       <button class="gh-btn gh-btn-clear" onclick="clearGHConfig()">Clear</button>
     </div>
-    <div id="gh-save-status" class="gh-status"></div>
+    <div id="gh-save-status" class="gh-status ok" style="display: block;">✓ Settings saved.</div>
     <hr style="border:none;border-top:1px solid #30363d;margin:.9rem 0">
     <h3 style="margin-bottom:.7rem">🔑 Change Editor Password</h3>
     <div class="gh-grid" style="grid-template-columns:1fr 1fr">
@@ -254,27 +252,27 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
   <div class="panel active" id="panel-overview">
     <div class="ph"><h1>Content Dashboard</h1><p>Build your game by filling out each section, then export when ready.</p></div>
     <div class="ov-grid">
-      <div class="ov-card"><div class="ov-num" id="cnt-orgs">0</div><div class="ov-lbl">Org Types</div></div>
-      <div class="ov-card"><div class="ov-num" id="cnt-traits">0</div><div class="ov-lbl">Traits</div></div>
-      <div class="ov-card"><div class="ov-num" id="cnt-scenarios">0</div><div class="ov-lbl">Scenarios</div></div>
+      <div class="ov-card"><div class="ov-num" id="cnt-orgs">4</div><div class="ov-lbl">Org Types</div></div>
+      <div class="ov-card"><div class="ov-num" id="cnt-traits">6</div><div class="ov-lbl">Traits</div></div>
+      <div class="ov-card"><div class="ov-num" id="cnt-scenarios">5</div><div class="ov-lbl">Scenarios</div></div>
       <div class="ov-card"><div class="ov-num" id="cnt-rounds">0</div><div class="ov-lbl">Rounds</div></div>
-      <div class="ov-card"><div class="ov-num" id="cnt-stats">0</div><div class="ov-lbl">Stats</div></div>
+      <div class="ov-card"><div class="ov-num" id="cnt-stats">4</div><div class="ov-lbl">Stats</div></div>
     </div>
-    <div class="tip"><strong>Workflow:</strong> Fill out Branding & Text, then Stats & Scoring, then add your Org Types, Traits, and Scenarios. When done, click <em>Export Game Code</em> to get the code to paste into your game file.</div>
+    <div class="tip"><strong>Workflow:</strong> Fill out Branding &amp; Text, then Stats &amp; Scoring, then add your Org Types, Traits, and Scenarios. When done, click <em>Export Game Code</em> to get the code to paste into your game file.</div>
     <div class="tip navy"><strong>Scenario types:</strong> Each scenario must be tagged with a type (Email, Phone Call, In-Person, Social Media) and which org types it applies to. Players pick a type each turn and get a random matching scenario.</div>
   </div>
 
   <!-- BRANDING -->
   <div class="panel" id="panel-branding">
-    <div class="ph"><h1>Branding & Text</h1><p>All text that appears in the game interface.</p></div>
+    <div class="ph"><h1>Branding &amp; Text</h1><p>All text that appears in the game interface.</p></div>
     <div class="card">
       <div class="ct">Game Identity</div>
       <div class="fr">
-        <div class="fg"><label>Game Title (full)</label><input type="text" id="b-title" value="Mission Critical"></div>
-        <div class="fg"><label>Title Accent Word (colored part)</label><input type="text" id="b-accent" value="Critical" placeholder="Which word gets the gold color?"></div>
+        <div class="fg"><label>Game Title (full)</label><input type="text" id="b-title" value="Antisemitism Decoded: The Game"></div>
+        <div class="fg"><label>Title Accent Word (colored part)</label><input type="text" id="b-accent" value="The Game" placeholder="Which word gets the gold color?"></div>
       </div>
-      <div class="fg"><label>Tagline (shown under title)</label><input type="text" id="b-tagline" value="A nonprofit leadership simulation"></div>
-      <div class="fg"><label>Footer Text</label><input type="text" id="b-footer" value="Mission Critical · A nonprofit leadership simulation"></div>
+      <div class="fg"><label>Tagline (shown under title)</label><input type="text" id="b-tagline" value="A Jewish leadership simulator"></div>
+      <div class="fg"><label>Footer Text</label><input type="text" id="b-footer" value="What would you do?"></div>
     </div>
     <div class="card">
       <div class="ct">Landing Page</div>
@@ -300,11 +298,11 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
 
   <!-- STATS -->
   <div class="panel" id="panel-stats">
-    <div class="ph"><h1>Stats & Scoring</h1><p>Configure which stats exist and how the game is scored.</p></div>
+    <div class="ph"><h1>Stats &amp; Scoring</h1><p>Configure which stats exist and how the game is scored.</p></div>
     <div class="card">
-      <div class="ct">Starting Values & Rules</div>
+      <div class="ct">Starting Values &amp; Rules</div>
       <div class="fr" style="grid-template-columns:1fr 1fr 1fr 1fr;gap:.9rem">
-        <div class="fg"><label>Number of Rounds</label><input type="number" id="s-num-rounds" value="4" min="1" max="20"></div>
+        <div class="fg"><label>Number of Rounds</label><input type="number" id="s-num-rounds" value="1" min="1" max="20"></div>
         <div class="fg"><label>Scenarios Per Round</label><input type="number" id="s-per-round" value="4" min="1" max="20"></div>
         <div class="fg"><label>Hard Loss Threshold <span style="font-size:.65rem;font-style:italic;text-transform:none;letter-spacing:0">(per stat)</span></label><input type="number" id="s-loss" value="20" min="0" max="100" placeholder="e.g. 20"></div>
         <div class="fg"><label>Avg Loss Threshold <span style="font-size:.65rem;font-style:italic;text-transform:none;letter-spacing:0">(all stats avg)</span></label><input type="number" id="s-avg-loss" value="0" min="0" max="100" placeholder="e.g. 35"></div>
@@ -318,7 +316,47 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     </div>
     <div class="card">
       <div class="ct">Stats <span>Add or remove stats. Each stat needs a key (no spaces), a label, and a color.</span></div>
-      <div id="stats-editor"></div>
+      <div id="stats-editor">
+    <div class="stat-row" style="flex-wrap:wrap;gap:.5rem">
+      <div class="fg" style="margin:0;min-width:100px"><label>Key</label><input type="text" value="revenue" oninput="STATS[0].key=this.value" placeholder="no spaces, e.g. revenue"></div>
+      <div class="fg" style="margin:0;min-width:120px"><label>Label</label><input type="text" value="Revenue" oninput="STATS[0].label=this.value" placeholder="e.g. Revenue"></div>
+      <div class="fg" style="margin:0;width:80px"><label>Color</label><input type="text" value="#2d6a4f" oninput="STATS[0].color=this.value" placeholder="#2d6a4f"></div>
+      <div class="fg" style="margin:0;width:64px"><label>Start</label><input type="number" value="50" min="0" max="100" oninput="STATS[0].start=parseInt(this.value)||50"></div>
+      <div class="fg" style="margin:0;min-width:160px"><label>Applies To <span style="font-size:.6rem;font-style:italic;text-transform:none;letter-spacing:0">(Ctrl+click for multiple)</span></label>
+        <select multiple="" onchange="updateStatOrgs(0,this)" style="min-height:56px;font-size:.8rem"><option value="all" selected="">All Organizations</option><option value="community_center">The Association of Jewish Communities</option><option value="advocacy_group">United Against Disparagement</option><option value="national_coalition">Jews for Social Justice</option><option value="org_1772215781435">Peace for All</option></select>
+      </div>
+      <button class="del-btn" onclick="removeStat(0)" style="align-self:flex-end;margin-bottom:2px">✕</button>
+    </div>
+    <div class="stat-row" style="flex-wrap:wrap;gap:.5rem">
+      <div class="fg" style="margin:0;min-width:100px"><label>Key</label><input type="text" value="community" oninput="STATS[1].key=this.value" placeholder="no spaces, e.g. revenue"></div>
+      <div class="fg" style="margin:0;min-width:120px"><label>Label</label><input type="text" value="Community Support" oninput="STATS[1].label=this.value" placeholder="e.g. Revenue"></div>
+      <div class="fg" style="margin:0;width:80px"><label>Color</label><input type="text" value="#1b2a4a" oninput="STATS[1].color=this.value" placeholder="#2d6a4f"></div>
+      <div class="fg" style="margin:0;width:64px"><label>Start</label><input type="number" value="50" min="0" max="100" oninput="STATS[1].start=parseInt(this.value)||50"></div>
+      <div class="fg" style="margin:0;min-width:160px"><label>Applies To <span style="font-size:.6rem;font-style:italic;text-transform:none;letter-spacing:0">(Ctrl+click for multiple)</span></label>
+        <select multiple="" onchange="updateStatOrgs(1,this)" style="min-height:56px;font-size:.8rem"><option value="all" selected="">All Organizations</option><option value="community_center">The Association of Jewish Communities</option><option value="advocacy_group">United Against Disparagement</option><option value="national_coalition">Jews for Social Justice</option><option value="org_1772215781435">Peace for All</option></select>
+      </div>
+      <button class="del-btn" onclick="removeStat(1)" style="align-self:flex-end;margin-bottom:2px">✕</button>
+    </div>
+    <div class="stat-row" style="flex-wrap:wrap;gap:.5rem">
+      <div class="fg" style="margin:0;min-width:100px"><label>Key</label><input type="text" value="morale" oninput="STATS[2].key=this.value" placeholder="no spaces, e.g. revenue"></div>
+      <div class="fg" style="margin:0;min-width:120px"><label>Label</label><input type="text" value="Staff Morale" oninput="STATS[2].label=this.value" placeholder="e.g. Revenue"></div>
+      <div class="fg" style="margin:0;width:80px"><label>Color</label><input type="text" value="#c9a227" oninput="STATS[2].color=this.value" placeholder="#2d6a4f"></div>
+      <div class="fg" style="margin:0;width:64px"><label>Start</label><input type="number" value="50" min="0" max="100" oninput="STATS[2].start=parseInt(this.value)||50"></div>
+      <div class="fg" style="margin:0;min-width:160px"><label>Applies To <span style="font-size:.6rem;font-style:italic;text-transform:none;letter-spacing:0">(Ctrl+click for multiple)</span></label>
+        <select multiple="" onchange="updateStatOrgs(2,this)" style="min-height:56px;font-size:.8rem"><option value="all" selected="">All Organizations</option><option value="community_center">The Association of Jewish Communities</option><option value="advocacy_group">United Against Disparagement</option><option value="national_coalition">Jews for Social Justice</option><option value="org_1772215781435">Peace for All</option></select>
+      </div>
+      <button class="del-btn" onclick="removeStat(2)" style="align-self:flex-end;margin-bottom:2px">✕</button>
+    </div>
+    <div class="stat-row" style="flex-wrap:wrap;gap:.5rem">
+      <div class="fg" style="margin:0;min-width:100px"><label>Key</label><input type="text" value="coalition" oninput="STATS[3].key=this.value" placeholder="no spaces, e.g. revenue"></div>
+      <div class="fg" style="margin:0;min-width:120px"><label>Label</label><input type="text" value="Coalitions" oninput="STATS[3].label=this.value" placeholder="e.g. Revenue"></div>
+      <div class="fg" style="margin:0;width:80px"><label>Color</label><input type="text" value="#6b5b00" oninput="STATS[3].color=this.value" placeholder="#2d6a4f"></div>
+      <div class="fg" style="margin:0;width:64px"><label>Start</label><input type="number" value="50" min="0" max="100" oninput="STATS[3].start=parseInt(this.value)||50"></div>
+      <div class="fg" style="margin:0;min-width:160px"><label>Applies To <span style="font-size:.6rem;font-style:italic;text-transform:none;letter-spacing:0">(Ctrl+click for multiple)</span></label>
+        <select multiple="" onchange="updateStatOrgs(3,this)" style="min-height:56px;font-size:.8rem"><option value="all" selected="">All Organizations</option><option value="community_center">The Association of Jewish Communities</option><option value="advocacy_group">United Against Disparagement</option><option value="national_coalition">Jews for Social Justice</option><option value="org_1772215781435">Peace for All</option></select>
+      </div>
+      <button class="del-btn" onclick="removeStat(3)" style="align-self:flex-end;margin-bottom:2px">✕</button>
+    </div></div>
       <button class="btn btn-sm" style="margin-top:.5rem" onclick="addStat()">+ Add Stat</button>
     </div>
   </div>
@@ -328,7 +366,37 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     <div class="ph"><h1>How to Play Steps</h1><p>These appear on the landing page as numbered steps.</p></div>
     <div class="card">
       <div class="ct">Steps <span>Shown as a row of numbered cards on the landing page</span></div>
-      <div id="htp-editor"></div>
+      <div id="htp-editor">
+    <div style="display:grid;grid-template-columns:60px 1fr auto;gap:.6rem;align-items:center;margin-bottom:.6rem">
+      <div class="fg" style="margin:0"><label>Number</label><input type="text" value="1" oninput="HTP_STEPS[0].num=this.value" style="text-align:center"></div>
+      <div class="fg" style="margin:0"><label>Description</label><input type="text" value="Choose your organization type" oninput="HTP_STEPS[0].label=this.value"></div>
+      <button class="del-btn" onclick="HTP_STEPS.splice(0,1);renderHTPEditor()" style="margin-top:1rem">✕</button>
+    </div>
+  
+    <div style="display:grid;grid-template-columns:60px 1fr auto;gap:.6rem;align-items:center;margin-bottom:.6rem">
+      <div class="fg" style="margin:0"><label>Number</label><input type="text" value="2" oninput="HTP_STEPS[1].num=this.value" style="text-align:center"></div>
+      <div class="fg" style="margin:0"><label>Description</label><input type="text" value="Build your character &amp; pick traits" oninput="HTP_STEPS[1].label=this.value"></div>
+      <button class="del-btn" onclick="HTP_STEPS.splice(1,1);renderHTPEditor()" style="margin-top:1rem">✕</button>
+    </div>
+  
+    <div style="display:grid;grid-template-columns:60px 1fr auto;gap:.6rem;align-items:center;margin-bottom:.6rem">
+      <div class="fg" style="margin:0"><label>Number</label><input type="text" value="3" oninput="HTP_STEPS[2].num=this.value" style="text-align:center"></div>
+      <div class="fg" style="margin:0"><label>Description</label><input type="text" value="Select what type of situation to handle" oninput="HTP_STEPS[2].label=this.value"></div>
+      <button class="del-btn" onclick="HTP_STEPS.splice(2,1);renderHTPEditor()" style="margin-top:1rem">✕</button>
+    </div>
+  
+    <div style="display:grid;grid-template-columns:60px 1fr auto;gap:.6rem;align-items:center;margin-bottom:.6rem">
+      <div class="fg" style="margin:0"><label>Number</label><input type="text" value="4" oninput="HTP_STEPS[3].num=this.value" style="text-align:center"></div>
+      <div class="fg" style="margin:0"><label>Description</label><input type="text" value="Make decisions and manage your stats" oninput="HTP_STEPS[3].label=this.value"></div>
+      <button class="del-btn" onclick="HTP_STEPS.splice(3,1);renderHTPEditor()" style="margin-top:1rem">✕</button>
+    </div>
+  
+    <div style="display:grid;grid-template-columns:60px 1fr auto;gap:.6rem;align-items:center;margin-bottom:.6rem">
+      <div class="fg" style="margin:0"><label>Number</label><input type="text" value="5" oninput="HTP_STEPS[4].num=this.value" style="text-align:center"></div>
+      <div class="fg" style="margin:0"><label>Description</label><input type="text" value="Survive each round &amp; reach the end" oninput="HTP_STEPS[4].label=this.value"></div>
+      <button class="del-btn" onclick="HTP_STEPS.splice(4,1);renderHTPEditor()" style="margin-top:1rem">✕</button>
+    </div>
+  </div>
       <button class="btn btn-sm" style="margin-top:.5rem" onclick="addHTPStep()">+ Add Step</button>
     </div>
   </div>
@@ -341,7 +409,71 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
     <div class="tip">The <strong>ID</strong> is used internally to match scenarios to types — changing an existing ID will break any scenarios already assigned to it. Safe to change labels and icons freely.</div>
     <div class="card">
       <div class="ct">Types <span>Shown to players as cards on the "What's on your desk?" screen</span></div>
-      <div id="interaction-types-editor"></div>
+      <div id="interaction-types-editor">
+    <div style="display:grid;grid-template-columns:70px 70px 1fr auto;gap:.65rem;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--aged)">
+      <div class="fg" style="margin:0">
+        <label>Icon</label>
+        <input type="text" value="✉️" placeholder="✉️" oninput="SCENARIO_TYPES[0].icon=this.value;debouncedSave()" style="text-align:center;font-size:1.2rem">
+      </div>
+      <div class="fg" style="margin:0">
+        <label>ID <span style="font-size:.6rem;font-style:italic;text-transform:none;letter-spacing:0">(no spaces)</span></label>
+        <input type="text" value="email" placeholder="email" oninput="SCENARIO_TYPES[0].id=this.value.replace(/\s+/g,'');debouncedSave();refreshScenarioTypeDropdowns()">
+      </div>
+      <div class="fg" style="margin:0">
+        <label>Label</label>
+        <input type="text" value="Email" placeholder="Email" oninput="SCENARIO_TYPES[0].label=this.value;debouncedSave();refreshScenarioTypeDropdowns()">
+      </div>
+      <button class="del-btn" onclick="removeInteractionType(0)" style="margin-top:1.1rem" title="Delete type">✕</button>
+    </div>
+  
+    <div style="display:grid;grid-template-columns:70px 70px 1fr auto;gap:.65rem;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--aged)">
+      <div class="fg" style="margin:0">
+        <label>Icon</label>
+        <input type="text" value="📞" placeholder="✉️" oninput="SCENARIO_TYPES[1].icon=this.value;debouncedSave()" style="text-align:center;font-size:1.2rem">
+      </div>
+      <div class="fg" style="margin:0">
+        <label>ID <span style="font-size:.6rem;font-style:italic;text-transform:none;letter-spacing:0">(no spaces)</span></label>
+        <input type="text" value="phone" placeholder="email" oninput="SCENARIO_TYPES[1].id=this.value.replace(/\s+/g,'');debouncedSave();refreshScenarioTypeDropdowns()">
+      </div>
+      <div class="fg" style="margin:0">
+        <label>Label</label>
+        <input type="text" value="Phone Call" placeholder="Email" oninput="SCENARIO_TYPES[1].label=this.value;debouncedSave();refreshScenarioTypeDropdowns()">
+      </div>
+      <button class="del-btn" onclick="removeInteractionType(1)" style="margin-top:1.1rem" title="Delete type">✕</button>
+    </div>
+  
+    <div style="display:grid;grid-template-columns:70px 70px 1fr auto;gap:.65rem;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--aged)">
+      <div class="fg" style="margin:0">
+        <label>Icon</label>
+        <input type="text" value="🤝" placeholder="✉️" oninput="SCENARIO_TYPES[2].icon=this.value;debouncedSave()" style="text-align:center;font-size:1.2rem">
+      </div>
+      <div class="fg" style="margin:0">
+        <label>ID <span style="font-size:.6rem;font-style:italic;text-transform:none;letter-spacing:0">(no spaces)</span></label>
+        <input type="text" value="inperson" placeholder="email" oninput="SCENARIO_TYPES[2].id=this.value.replace(/\s+/g,'');debouncedSave();refreshScenarioTypeDropdowns()">
+      </div>
+      <div class="fg" style="margin:0">
+        <label>Label</label>
+        <input type="text" value="In-Person" placeholder="Email" oninput="SCENARIO_TYPES[2].label=this.value;debouncedSave();refreshScenarioTypeDropdowns()">
+      </div>
+      <button class="del-btn" onclick="removeInteractionType(2)" style="margin-top:1.1rem" title="Delete type">✕</button>
+    </div>
+  
+    <div style="display:grid;grid-template-columns:70px 70px 1fr auto;gap:.65rem;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--aged)">
+      <div class="fg" style="margin:0">
+        <label>Icon</label>
+        <input type="text" value="📱" placeholder="✉️" oninput="SCENARIO_TYPES[3].icon=this.value;debouncedSave()" style="text-align:center;font-size:1.2rem">
+      </div>
+      <div class="fg" style="margin:0">
+        <label>ID <span style="font-size:.6rem;font-style:italic;text-transform:none;letter-spacing:0">(no spaces)</span></label>
+        <input type="text" value="social" placeholder="email" oninput="SCENARIO_TYPES[3].id=this.value.replace(/\s+/g,'');debouncedSave();refreshScenarioTypeDropdowns()">
+      </div>
+      <div class="fg" style="margin:0">
+        <label>Label</label>
+        <input type="text" value="Social Media" placeholder="Email" oninput="SCENARIO_TYPES[3].label=this.value;debouncedSave();refreshScenarioTypeDropdowns()">
+      </div>
+      <button class="del-btn" onclick="removeInteractionType(3)" style="margin-top:1.1rem" title="Delete type">✕</button>
+    </div>
+  </div>
       <button class="btn btn-sm" style="margin-top:.7rem" onclick="addInteractionType()">+ Add Type</button>
     </div>
   </div>
@@ -377,44 +509,654 @@ textarea{resize:vertical;min-height:78px;line-height:1.6}
 //  EDITOR STATE
 // ══════════════════════════════════════════
 let STATS = [
-  {key:'revenue',  label:'Revenue',          color:'#2d6a4f', start:50, orgs:['all']},
-  {key:'community',label:'Community Support', color:'#1b2a4a', start:50, orgs:['all']},
-  {key:'morale',   label:'Staff Morale',      color:'#c9a227', start:50, orgs:['all']},
-  {key:'coalition',label:'Coalitions',        color:'#6b5b00', start:50, orgs:['all']},
+  {
+    "key": "revenue",
+    "label": "Revenue",
+    "color": "#2d6a4f",
+    "start": 50,
+    "orgs": [
+      "all"
+    ]
+  },
+  {
+    "key": "community",
+    "label": "Community Support",
+    "color": "#1b2a4a",
+    "start": 50,
+    "orgs": [
+      "all"
+    ]
+  },
+  {
+    "key": "morale",
+    "label": "Staff Morale",
+    "color": "#c9a227",
+    "start": 50,
+    "orgs": [
+      "all"
+    ]
+  },
+  {
+    "key": "coalition",
+    "label": "Coalitions",
+    "color": "#6b5b00",
+    "start": 50,
+    "orgs": [
+      "all"
+    ]
+  }
 ];
 let ORGS = [
-  {id:'community_center',icon:'🏘️',name:'Community Center',desc:'Deep roots, loyal constituents, and a permanent home. But funding is always tight.',bonuses:{revenue:-10,community:15,morale:10,coalition:0},tags:['Local','Service-Oriented']},
-  {id:'advocacy_group',icon:'📣',name:'Local Advocacy Group',desc:'Scrappy and passionate. You punch above your weight on policy but struggle to diversify funding.',bonuses:{revenue:-10,community:10,morale:0,coalition:15},tags:['Grassroots','Issue-Focused']},
-  {id:'national_coalition',icon:'🌐',name:'National Coalition',desc:'High visibility and major donors. But distance from community can breed distrust.',bonuses:{revenue:20,community:-15,morale:0,coalition:10},tags:['National','Policy-Focused']},
+  {
+    "id": "community_center",
+    "icon": "🌐",
+    "name": "The Association of Jewish Communities",
+    "desc": "A legacy organization and stalwart of the Jewish establishment, the Association of Jewish Communities helps a network of smaller organizations around the country set policy and raise money. Your priority is keeping big donors happy without alienating the millions of Jews you speak on behalf of or angering outside partners you rely on to support your agenda.",
+    "bonuses": {
+      "revenue": 0,
+      "community": 0,
+      "morale": 0,
+      "coalition": -10
+    },
+    "tags": [
+      "Establishment",
+      "National",
+      "Advocacy",
+      "Zionist"
+    ]
+  },
+  {
+    "id": "advocacy_group",
+    "icon": "🏛️",
+    "name": "United Against Disparagement",
+    "desc": "A century-old institution with a sterling reputation among American Jews, your mission is to counter antisemitism and other forms of hate. You’re trying to balance maintaining support from American Jews and non-Jewish allies while raising enough money to expand as threats to Jewish safety increase.",
+    "bonuses": {
+      "revenue": 0,
+      "community": 15,
+      "morale": 5,
+      "coalition": 10
+    },
+    "tags": [
+      "Establishment",
+      "National",
+      "Advocacy",
+      "Zionist"
+    ]
+  },
+  {
+    "id": "national_coalition",
+    "icon": "✊",
+    "name": "Jews for Social Justice",
+    "desc": "A smaller, progressive organization that traces its roots to the 1980s. It was created to serve as a more liberal counterweight to larger national Jewish organizations that were starting to move away from lobbying on domestic issues like abortion, immigration and racial justice. But now young staff and some members are pushing it to move further to the left while other members — including some on your board — want you to remain more moderate.",
+    "bonuses": {
+      "revenue": -5,
+      "community": 0,
+      "morale": 0,
+      "coalition": 0
+    },
+    "tags": [
+      "Progressive",
+      "National",
+      "Advocacy"
+    ]
+  },
+  {
+    "id": "org_1772215781435",
+    "icon": "🕊️",
+    "name": "Peace for All",
+    "desc": "An anti-Zionist Jewish group that is growing in popularity. It maintains close ties with non-Jewish organizations advocating for Palestinian rights, but also aims to maintain credibility with the Jewish community and raise money from Jewish donors.",
+    "bonuses": {
+      "revenue": -10,
+      "community": -10,
+      "morale": 0,
+      "coalition": 0
+    },
+    "tags": [
+      "Progressive",
+      "National",
+      "Advocacy",
+      "Anti-Zionist"
+    ]
+  }
 ];
 let TRAITS = [
-  {id:'connector',  name:'The Connector',  effect:'+10 Coalition',           bonus:{coalition:10}},
-  {id:'storyteller',name:'The Storyteller',effect:'+10 Community Support',   bonus:{community:10}},
-  {id:'numbers',    name:'The Analyst',    effect:'+10 Revenue',             bonus:{revenue:10}},
-  {id:'coach',      name:'The Coach',      effect:'+10 Staff Morale',        bonus:{morale:10}},
-  {id:'visionary',  name:'The Visionary',  effect:'+6 Community, +6 Coalition',bonus:{community:6,coalition:6}},
-  {id:'operator',   name:'The Operator',   effect:'+6 Revenue, +6 Morale',   bonus:{revenue:6,morale:6}},
+  {
+    "id": "connector",
+    "name": "Macher",
+    "effect": "+5 Community Support, +5 Revenue",
+    "bonus": {
+      "coalition": 10,
+      "revenue": 0,
+      "community": 0
+    }
+  },
+  {
+    "id": "storyteller",
+    "name": "Rabbi",
+    "effect": "+5 Community Support, +5 Staff Morale",
+    "bonus": {
+      "community": 0,
+      "morale": 0
+    }
+  },
+  {
+    "id": "numbers",
+    "name": "Disruptor",
+    "effect": "+15 Revenue, -5 Staff Morale",
+    "bonus": {
+      "revenue": 0,
+      "morale": -5
+    }
+  },
+  {
+    "id": "coach",
+    "name": "Activist",
+    "effect": "+10 Coalitions, +5 Staff Morale, -5 Revenue",
+    "bonus": {
+      "morale": 0,
+      "revenue": -5,
+      "coalition": 0
+    }
+  },
+  {
+    "id": "visionary",
+    "name": "Executive",
+    "effect": "+10 Revenue",
+    "bonus": {
+      "community": 6,
+      "coalition": 6,
+      "revenue": 0
+    }
+  },
+  {
+    "id": "operator",
+    "name": "Visionary",
+    "effect": "+5 Community Support, +5 Staff Morale",
+    "bonus": {
+      "revenue": 0,
+      "morale": 0,
+      "community": 0
+    }
+  }
 ];
 let SCENARIOS = [
-  {id:'s1',round:1,type:'email',tag:'Fundraising',orgs:['all'],title:'The Donor Email',body:'A major donor emails asking why your overhead costs are so high...',choices:[
-    {text:'Send a detailed breakdown defending your overhead.',delta:{revenue:10,morale:5},result:'The donor appreciates the transparency.'},
-    {text:'Apologize and promise to cut overhead.',delta:{revenue:5,morale:-15},result:'The donor stays, but morale takes a hit.'},
-    {text:'Invite them to a site visit.',delta:{revenue:5,community:10,morale:5},result:'The visit changes their perspective.'},
-  ]},
+  {
+    "id": "s1",
+    "round": "any",
+    "type": "social",
+    "tag": "Politics",
+    "orgs": [
+      "all"
+    ],
+    "title": "The Deportation Dilemma",
+    "body": "You see reports that the federal government has arrested a foreign student activist studying at an American university and is attempting to deport them for engaging in antisemitism.",
+    "choices": [
+      {
+        "text": "Quickly release a statement celebrating the arrest and praising the government for ensuring “accountability” for antisemites.",
+        "delta": {
+          "revenue": 10,
+          "morale": 5
+        },
+        "result": "The donor appreciates the transparency.",
+        "outcomes": [
+          {
+            "result": "Major donors love your swift action but you receive an angry call from the head of an immigration rights coalition that you’re part of.",
+            "delta": {
+              "morale": 0,
+              "coalition": -5
+            },
+            "weight": 50
+          },
+          {
+            "result": "Whoops! After outcry from civil liberty groups, the government is forced to release the student and apologize. You look hasty and callous.",
+            "delta": {
+              "community": -10,
+              "morale": -5
+            },
+            "weight": 50
+          }
+        ],
+        "_outcomeMode": "equal"
+      },
+      {
+        "text": "Condemn the arrest — Jewish safety is being used as an excuse to violate the student’s civil rights!",
+        "delta": {
+          "revenue": 5,
+          "morale": -15
+        },
+        "result": "The donor stays, but morale takes a hit.",
+        "outcomes": [
+          {
+            "result": "You look prescient and brave when it emerges that the student was arrested for writing a tame op-ed criticizing Israel, and a judge orders them released from custody. ",
+            "delta": {
+              "revenue": 0,
+              "community": 5,
+              "morale": 5,
+              "coalition": 5
+            },
+            "weight": 70
+          },
+          {
+            "result": "The government shares video of the student assaulting the campus rabbi at a protest and you’re forced to walk back your initial statement.",
+            "delta": {
+              "community": -10
+            },
+            "weight": 30
+          }
+        ]
+      },
+      {
+        "text": "Wait-and-see. The reports on social media are fuzzy and the government hasn’t confirmed anything.",
+        "delta": {
+          "revenue": 5,
+          "community": 10,
+          "morale": 5
+        },
+        "result": "The visit changes their perspective.",
+        "outcomes": [
+          {
+            "result": "Smart. It turns out that initial news reports got it wrong. A student was briefly detained by local police, but he wasn’t arrested and nobody tried to deport him. The controversy quickly dies down.",
+            "delta": {
+              "revenue": 0,
+              "community": 5
+            },
+            "weight": 30
+          },
+          {
+            "result": "Oh no — the government is silent for days but eventually it turns out social media got it right. Your late statement makes your organization look like it lacks conviction and isn’t keeping up with the news.",
+            "delta": {
+              "community": -10,
+              "morale": -5
+            },
+            "weight": 70
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sc_1772216143596",
+    "round": "any",
+    "type": "social",
+    "tag": "Antisemitism",
+    "title": "Ms. Sophie",
+    "body": "JewBite, a controversial antisemitism watchdog group, names a popular children’s YouTube celebrity as its “Jew Hater of the Month” after she accuses Israel of harming children in Gaza.",
+    "orgs": [
+      "community_center",
+      "advocacy_group"
+    ],
+    "choices": [
+      {
+        "text": "Ignore it. JewBite is an unreliable source, and there’s no reason to give them more attention.",
+        "delta": {},
+        "result": "",
+        "outcomes": [
+          {
+            "result": "Good call. People mock them for going after a beloved figure like Ms. Sophie and you keep your hands clean.",
+            "delta": {
+              "morale": 0
+            },
+            "weight": 60
+          },
+          {
+            "result": "Big mistake. Your largest donor calls JewBite courageous and is furious you wouldn’t back them up — he pulls a major gift.",
+            "delta": {
+              "revenue": -10
+            },
+            "weight": 40
+          }
+        ]
+      },
+      {
+        "text": "Share JewBite’s post about Ms. Sarah with a message of unity: We can all agree children everywhere deserve safety — including the Jewish kids who rely on Ms. Sophie for spelling lessons, not divisive politics.",
+        "delta": {},
+        "result": "",
+        "outcomes": [
+          {
+            "result": "Everyone is happy. The statement placates your donors who also support JewBite, without giving your progressive critics ammunition to say you attacked a popular educator.",
+            "delta": {
+              "revenue": 0,
+              "community": 5,
+              "morale": 5
+            },
+            "weight": 50
+          },
+          {
+            "result": "Weak! The donors you share with JewBite thought the statement was equivocal nonsense and pull support, while your staff wonder why you decided to weigh in at all.",
+            "delta": {
+              "revenue": -15,
+              "morale": -5
+            },
+            "weight": 50
+          }
+        ],
+        "_outcomeMode": "equal"
+      },
+      {
+        "text": "You go all in, sharing JewBite’s announcement and calling on YouTube to ban Ms. Sophie.",
+        "delta": {},
+        "result": "",
+        "outcomes": [
+          {
+            "result": "It’s a win! Your largest donor, who also supports JewBite, appreciates the forceful response and agrees to fund a new center to monitor antisemitism on social media.",
+            "delta": {
+              "revenue": 20,
+              "community": 0,
+              "morale": -5
+            },
+            "weight": 50
+          },
+          {
+            "result": "Your staff are appalled and when YouTube ignores your demand to ban Ms. Sophie, several of your largest donors are unimpressed and defect to JewBite.",
+            "delta": {
+              "revenue": -10,
+              "morale": -5
+            },
+            "weight": 50
+          }
+        ],
+        "_outcomeMode": "equal"
+      }
+    ]
+  },
+  {
+    "id": "sc_1772216425544",
+    "round": "any",
+    "type": "social",
+    "tag": "Antisemitism",
+    "title": "Ms. Sophie",
+    "body": "JewBite, a controversial antisemitism watchdog group, names a popular children’s YouTube celebrity as its “Jew Hater of the Month” after she accuses Israel of harming children in Gaza.",
+    "orgs": [
+      "national_coalition",
+      "org_1772215781435"
+    ],
+    "choices": [
+      {
+        "text": "Ignore it. JewBite is an obnoxious group and there’s no reason to give them more attention.",
+        "delta": {},
+        "result": "",
+        "outcomes": [
+          {
+            "result": "Good call. Everyone ignores their “award” for Ms. Sophie.",
+            "delta": {
+              "morale": 5
+            },
+            "weight": 60
+          },
+          {
+            "result": "Big mistake. It turns out your largest donor’s grandchildren love watching Ms. Sophie and is appalled you didn’t defend her.",
+            "delta": {
+              "revenue": -10,
+              "morale": -5
+            },
+            "weight": 40
+          }
+        ],
+        "_outcomeMode": "weighted"
+      },
+      {
+        "text": "Defend Ms. Sophie. She was standing up for vulnerable children and JewBite is weaponizing claims of antisemitism to go after critics of Israel.",
+        "delta": {},
+        "result": "",
+        "outcomes": [
+          {
+            "result": "Smart move. JewBite’s “award” goes viral as an example of offensive overreach, and your organization is hailed as the leading Jewish voice calling it out.",
+            "delta": {
+              "revenue": 5,
+              "community": 5,
+              "morale": 5
+            },
+            "weight": 70
+          },
+          {
+            "result": "Oops. It turns out Ms. Sophie wasn’t just raising money for humanitarian relief, she was sharing posts on Instagram about how she can always tell which kids are “Zionist” because they smell bad. You look out-of-touch.",
+            "delta": {
+              "community": -15
+            },
+            "weight": 30
+          }
+        ]
+      },
+      {
+        "text": "You ask some trusted allies what they think of Ms. Sophie before deciding how to respond.",
+        "delta": {},
+        "result": "",
+        "outcomes": [
+          {
+            "result": "Savvy move. Another leader tells you they had to cancel a Gaza fundraiser with Ms. Sophie after she made offensive comments about Jews on a planning call. You stay quiet and are validated when Ms. Sophie responds to JewBite’s “award” by claiming the Rothchilds are after her.",
+            "delta": {
+              "community": 10,
+              "coalition": 5
+            },
+            "weight": 30
+          },
+          {
+            "result": "Bad call. Of course Ms. Sophie isn’t antisemitic! The leader you called for advice is offended that you even asked and, by the time you defend Ms. Sophie publicly, it’s too late.",
+            "delta": {
+              "morale": -5
+            },
+            "weight": 70
+          }
+        ],
+        "_outcomeMode": "equal"
+      }
+    ]
+  },
+  {
+    "id": "sc_1772216588786",
+    "round": "any",
+    "type": "phone",
+    "tag": "Israel",
+    "title": "Assasination, antisemitism — or something else?",
+    "body": "A high-ranking Israeli government official is gunned down on the streets of New York City.",
+    "orgs": [
+      "all"
+    ],
+    "choices": [
+      {
+        "text": "You immediately condemn the attack as a case of blatant antisemitism and proof that anti-Zionism poses a violent threat to Jews. Your organization demands that the NYPD investigate a strident anti-Zionist organization that has been hosting raucous protests near the site of the shooting.",
+        "delta": {},
+        "result": "",
+        "outcomes": [
+          {
+            "result": "It’s a prescient move. The attacker claims he acted alone, but the investigation proves a connection and your organization gets the credit.",
+            "delta": {
+              "community": 10,
+              "morale": 10
+            },
+            "weight": 70
+          },
+          {
+            "result": "Oh no. It turns out the official was targeted by a far-right Israeli who was furious that he’d been secretly meeting with the anti-Zionist organization to establish a dialogue. You look foolish and your political opponents pounce.",
+            "delta": {
+              "community": -15,
+              "morale": -10
+            },
+            "weight": 30
+          }
+        ]
+      },
+      {
+        "text": "You decry violence but caution that the shooting must be understood in the context of the Israeli-Palestinian conflict, and not as a threat to American Jews.",
+        "delta": {},
+        "result": "",
+        "outcomes": [
+          {
+            "result": "It turns out the killer was Jewish, and blamed the Israeli official for violence in Gaza. You get credit for not jumping to conclusions.",
+            "delta": {
+              "community": 5,
+              "morale": 5,
+              "coalition": 5
+            },
+            "weight": 70
+          },
+          {
+            "result": "It turns out the killer was a neo-Nazi who shot the first person he could find wearing a kippah. Donors flee as you lose credibility with the community and your staff.",
+            "delta": {
+              "revenue": -10,
+              "community": -10,
+              "morale": -5
+            },
+            "weight": 30
+          }
+        ]
+      },
+      {
+        "text": "You release a statement condemning the violence and mourning the official’s death, without mentioning antisemitism or weighing in on the political dynamics.",
+        "delta": {},
+        "result": "",
+        "outcomes": [
+          {
+            "result": "The shooting turns out to be a mugging gone wrong. Organizations that jumped to conclusions about the politics involved look foolish, while you managed to stay above the fray.",
+            "delta": {
+              "community": 10,
+              "morale": 5,
+              "coalition": 5
+            },
+            "weight": 50
+          },
+          {
+            "result": "When the shooter’s manifesto emerges calling for more killings against any Jew who isn’t fighting against Israel, you look oblivious at best — and complicit at worst.",
+            "delta": {
+              "community": -10,
+              "morale": -10
+            },
+            "weight": 50
+          }
+        ],
+        "_outcomeMode": "equal"
+      }
+    ]
+  },
+  {
+    "id": "sc_1772216779456",
+    "round": null,
+    "type": "email",
+    "tag": "Politics",
+    "title": "Tax the Jews",
+    "body": "You receive an email from a community member in San Francisco who says a protesters at a demonstration calling for a tax on billionaires broke out into chants of “tax the Jews!”",
+    "orgs": [
+      "all"
+    ],
+    "choices": [
+      {
+        "text": "This is outrageous, and more proof of antisemitism on the left. You condemn both the protesters and call for a response from the Democratic Socialists of America chapter that organized the demonstration.",
+        "delta": {},
+        "result": "",
+        "outcomes": [
+          {
+            "result": "More footage of the protest emerges showing antisemitic caricatures on signs, and your pressure works — the local DSA group apologizes and kicks out the members who participated.",
+            "delta": {
+              "community": 10,
+              "morale": 5,
+              "coalition": 5
+            },
+            "weight": 50
+          },
+          {
+            "result": "Unfortunately, the community member you heard from was passing along rumors. Video of the event doesn’t show the cheer — and eyewitnesses say maybe they misheard. It looks like you cried wolf and antagonized a powerful political opponent.",
+            "delta": {
+              "community": -10,
+              "coalition": -10
+            },
+            "weight": 50
+          }
+        ],
+        "_outcomeMode": "equal"
+      },
+      {
+        "text": "Really? The report sounds a little difficult to believe. You ignore the note and move on with your day.",
+        "delta": {},
+        "result": "",
+        "outcomes": [
+          {
+            "result": "Smart. The community member was just passing on rumors and it turns out he was mistaken anyway. You avoid the controversy.",
+            "delta": {
+              "morale": 5,
+              "coalition": 5
+            },
+            "weight": 100
+          },
+          {
+            "result": "Whoops. The community member is friends with your board chair, and he has video to back up his claim — now a major donor is mad and it looks like you’re afraid to stand up against antisemitism.",
+            "delta": {
+              "revenue": -10
+            },
+            "weight": 0
+          }
+        ]
+      },
+      {
+        "text": "You ask whether the community member has proof before deciding how to respond.",
+        "delta": {},
+        "result": "",
+        "outcomes": [
+          {
+            "result": "Wise. He sends a video that shows a single person on the edge of the crowd yelling about yells, while other demonstrators shout her down. You’re able to tailor a statement condemning the incident as unacceptable but isolated.",
+            "delta": {
+              "community": 5,
+              "coalition": 5
+            },
+            "weight": 50
+          },
+          {
+            "result": "Why didn’t you do your own research? The video is all over social media — and it’s as bad as the community member described it. Now you look clueless and like you don’t trust your own supporters.",
+            "delta": {
+              "community": -10,
+              "morale": -10
+            },
+            "weight": 50
+          }
+        ],
+        "_outcomeMode": "equal"
+      }
+    ]
+  }
 ];
 let HTP_STEPS = [
-  {num:'1',label:'Choose your organization type'},
-  {num:'2',label:'Build your character & pick traits'},
-  {num:'3',label:'Select what type of situation to handle'},
-  {num:'4',label:'Make decisions and manage your stats'},
-  {num:'5',label:'Survive each round & reach the end'},
+  {
+    "num": "1",
+    "label": "Choose your organization type"
+  },
+  {
+    "num": "2",
+    "label": "Build your character & pick traits"
+  },
+  {
+    "num": "3",
+    "label": "Select what type of situation to handle"
+  },
+  {
+    "num": "4",
+    "label": "Make decisions and manage your stats"
+  },
+  {
+    "num": "5",
+    "label": "Survive each round & reach the end"
+  }
 ];
 
 let SCENARIO_TYPES = [
-  {id:'email',  icon:'✉️',  label:'Email'},
-  {id:'phone',  icon:'📞', label:'Phone Call'},
-  {id:'inperson',icon:'🤝', label:'In-Person'},
-  {id:'social', icon:'📱', label:'Social Media'},
+  {
+    "id": "email",
+    "icon": "✉️",
+    "label": "Email"
+  },
+  {
+    "id": "phone",
+    "icon": "📞",
+    "label": "Phone Call"
+  },
+  {
+    "id": "inperson",
+    "icon": "🤝",
+    "label": "In-Person"
+  },
+  {
+    "id": "social",
+    "icon": "📱",
+    "label": "Social Media"
+  }
 ];
 
 let activePanel = 'overview';
@@ -1329,5 +2071,6 @@ function init() {
 }
 init();
 </script>
-</body>
-</html>
+
+
+<div id="1p-live-region" role="status" aria-live="polite" aria-atomic="true" aria-relevant="all" style="clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; overflow: hidden; position: fixed; top: 0px; left: 0px; white-space: nowrap; width: 1px; overflow-wrap: normal;"></div><div id="publish-toast" style="position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 0.7rem 1.1rem; font-family: Merriweather Sans, sans-serif; font-size: 0.82rem; font-weight: 700; z-index: 9000; max-width: 340px; border: 2px solid rgb(121, 192, 255); transition: opacity 0.4s; background: rgb(31, 45, 61); color: rgb(121, 192, 255); opacity: 1;">Saving editor state to GitHub…</div></body></html>
