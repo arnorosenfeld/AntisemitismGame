@@ -2167,14 +2167,14 @@ document.addEventListener('change', e => { debouncedSave(); });
 // ══════════════════════════════════════════
 const PW_KEY      = 'missioncritical_editor_auth';
 const PW_STORE_KEY = 'missioncritical_editor_pw';
-const DEFAULT_PW   = 'missioncritical2024'; // Change via GitHub Settings panel after deploying
+const DEFAULT_PW   = 'jyu-JWK0zgh7nxj*uhj';
 
 function checkPw() {
   const input = document.getElementById('pw-input').value;
   const errEl = document.getElementById('pw-err');
   errEl.textContent = '';
   if (!input) { errEl.textContent = 'Please enter the password.'; return; }
-  const correct = localStorage.getItem(PW_STORE_KEY) || DEFAULT_PW;
+  const correct = DEFAULT_PW; // Always use hardcoded password — consistent across all browsers
   if (input === correct) {
     sessionStorage.setItem(PW_KEY, '1');
     document.getElementById('pw-gate').classList.add('hidden');
@@ -2238,18 +2238,47 @@ function toggleGHPanel() {
   }
 }
 
-function changePassword() {
+async function changePassword() {
   const np = document.getElementById('gh-new-pw').value;
   const cp = document.getElementById('gh-confirm-pw').value;
   const st = document.getElementById('gh-pw-status');
   st.style.display = 'block';
   if (!np) { st.className='gh-status err'; st.textContent='Please enter a new password.'; return; }
   if (np !== cp) { st.className='gh-status err'; st.textContent='Passwords do not match.'; return; }
-  localStorage.setItem(PW_STORE_KEY, np);
-  st.className='gh-status ok'; st.textContent='✓ Password updated. Takes effect on next login.';
-  document.getElementById('gh-new-pw').value = '';
-  document.getElementById('gh-confirm-pw').value = '';
+
+  const cfg = loadGHConfig();
+  if (!cfg.owner || !cfg.repo || !cfg.token) {
+    st.className='gh-status err';
+    st.textContent='GitHub settings not configured — save your GitHub credentials above first.';
+    return;
+  }
+
+  st.className='gh-status info'; st.textContent='Updating password in GitHub…';
+
+  try {
+    const editorFile = await githubGetFile(cfg, 'game-editor.html');
+    let html = decodeURIComponent(escape(atob(editorFile.content.replace(/\n/g,''))));
+
+    // Use a split/join to replace the DEFAULT_PW line — avoids any regex special char issues
+    const lines = html.split('\n');
+    const pwLineIdx = lines.findIndex(l => l.includes('const DEFAULT_PW'));
+    if (pwLineIdx === -1) throw new Error('Could not find DEFAULT_PW in game-editor.html');
+    lines[pwLineIdx] = "const DEFAULT_PW   = '" + np.replace(/\\/g,'\\\\').replace(/'/g,"\\'") + "';";
+    html = lines.join('\n');
+
+    await githubPutFile(cfg, 'game-editor.html', html, editorFile.sha,
+      'Update editor password [' + new Date().toISOString().slice(0,16) + ']');
+
+    st.className='gh-status ok';
+    st.textContent='✓ Password updated in GitHub. Reload the editor from GitHub Pages to use the new password.';
+    document.getElementById('gh-new-pw').value = '';
+    document.getElementById('gh-confirm-pw').value = '';
+  } catch(e) {
+    st.className='gh-status err';
+    st.textContent='Failed to update password: ' + e.message;
+  }
 }
+
 
 // ══════════════════════════════════════════
 //  GITHUB PUBLISH
@@ -2502,6 +2531,8 @@ function init() {
   const savedAt = loadSaved();
   renderOrgNav(); renderTraitNav(); renderScenarioNav(); updateCounts();
   renderStatsEditor(); renderHTPEditor(); renderInteractionTypesEditor();
+  // Always land on the dashboard panel
+  nav('overview', document.querySelector('.sb-btn'));
   const statusEl = document.getElementById('save-status');
   if (statusEl && savedAt) {
     const d = new Date(savedAt);
