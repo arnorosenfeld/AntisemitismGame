@@ -2254,8 +2254,34 @@ function changePassword() {
 // ══════════════════════════════════════════
 //  GITHUB PUBLISH
 // ══════════════════════════════════════════
+// Active AbortController for the current publish operation (null when idle)
+let _publishAbortController = null;
+const PUBLISH_TIMEOUT_MS = 30000; // 30 s per request before auto-abort
+
+// Wraps fetch with a per-request AbortController that respects both a timeout
+// and the global cancel signal so either one can stop the request.
+async function fetchWithTimeout(url, options = {}) {
+  const timeoutCtrl = new AbortController();
+  const timer = setTimeout(() => timeoutCtrl.abort(), PUBLISH_TIMEOUT_MS);
+
+  // Combine the timeout signal with the global cancel signal
+  const signals = [timeoutCtrl.signal];
+  if (_publishAbortController) signals.push(_publishAbortController.signal);
+
+  // AbortSignal.any() is broadly supported; fall back gracefully if not
+  const combinedSignal = typeof AbortSignal.any === 'function'
+    ? AbortSignal.any(signals)
+    : timeoutCtrl.signal;
+
+  try {
+    return await fetch(url, { ...options, signal: combinedSignal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function githubGetFile(cfg, path) {
-  const res = await fetch(
+  const res = await fetchWithTimeout(
     `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`,
     { headers: { Authorization: `Bearer ${cfg.token}`, Accept: 'application/vnd.github+json' } }
   );
@@ -2264,7 +2290,7 @@ async function githubGetFile(cfg, path) {
 }
 
 async function githubPutFile(cfg, path, content, sha, message) {
-  const res = await fetch(
+  const res = await fetchWithTimeout(
     `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`,
     {
       method: 'PUT',
@@ -2297,7 +2323,25 @@ function setPublishStatus(msg, type='info') {
   if (type !== 'info') toast._t = setTimeout(()=>{ toast.style.opacity='0'; }, 5000);
 }
 
+function cancelPublish() {
+  if (_publishAbortController) {
+    _publishAbortController.abort();
+    _publishAbortController = null;
+  }
+}
+
+function _resetPublishBtn() {
+  const btn = document.getElementById('publish-btn');
+  const cancelBtn = document.getElementById('publish-cancel-btn');
+  if (btn) { btn.disabled = false; btn.textContent = '🚀 Publish to GitHub'; }
+  if (cancelBtn) cancelBtn.remove();
+  _publishAbortController = null;
+}
+
 async function publishToGitHub() {
+  // Prevent double-clicks if somehow already running
+  if (_publishAbortController) return;
+
   const cfg = loadGHConfig();
   if (!cfg.owner || !cfg.repo || !cfg.token) {
     toggleGHPanel();
@@ -2308,13 +2352,42 @@ async function publishToGitHub() {
   const btn = document.getElementById('publish-btn');
   btn.disabled = true;
   btn.textContent = '⏳ Publishing…';
-  setPublishStatus('Fetching current files from GitHub…', 'info');
+
+  // Inject a Cancel button right below the publish button
+  let cancelBtn = document.getElementById('publish-cancel-btn');
+  if (!cancelBtn) {
+    cancelBtn = document.createElement('button');
+    cancelBtn.id = 'publish-cancel-btn';
+    cancelBtn.textContent = '✕ Cancel';
+    cancelBtn.style.cssText = 'margin-top:.35rem;width:100%;background:none;border:1px solid rgba(255,255,255,.3);color:#f85149;font-size:.72rem;padding:.3rem;cursor:pointer;font-family:Merriweather,serif;text-align:center;transition:all .15s';
+    cancelBtn.onmouseover = () => { cancelBtn.style.borderColor='#f85149'; };
+    cancelBtn.onmouseout  = () => { cancelBtn.style.borderColor='rgba(255,255,255,.3)'; };
+    cancelBtn.onclick = () => {
+      cancelPublish();
+      setPublishStatus('Publish cancelled.', 'err');
+      _resetPublishBtn();
+    };
+    btn.insertAdjacentElement('afterend', cancelBtn);
+  }
+
+  // Create a fresh abort controller for this operation
+  _publishAbortController = new AbortController();
+
+  // Safety-net: forcibly reset UI after 3 minutes no matter what
+  const hardResetTimer = setTimeout(() => {
+    if (_publishAbortController) {
+      _publishAbortController.abort();
+      _publishAbortController = null;
+      setPublishStatus('Publish timed out after 3 minutes. Please try again.', 'err');
+      _resetPublishBtn();
+    }
+  }, 180000);
 
   try {
     // ── Step 1: Get current index.html from GitHub (need its SHA) ──
     setPublishStatus('Reading index.html from GitHub…', 'info');
     const gameFile = await githubGetFile(cfg, 'index.html');
-    
+
     // ── Step 2: Decode current game content ──
     const currentGame = decodeURIComponent(escape(atob(gameFile.content.replace(/\n/g,''))));
 
@@ -2346,28 +2419,42 @@ async function publishToGitHub() {
       const editorFile = await githubGetFile(cfg, 'game-editor.html');
       editorSha = editorFile.sha;
     } catch(e) { /* file might not exist yet */ }
-    
-    // Serialize current editor state into the editor's STATS/ORGS/TRAITS/SCENARIOS defaults
+
     const editorContent = buildEditorSnapshot();
     await githubPutFile(cfg, 'game-editor.html', editorContent, editorSha,
       `Editor publish: save editor snapshot [${new Date().toISOString().slice(0,16)}]`);
 
     setPublishStatus('✓ Published! GitHub Pages will update in ~1 minute.', 'ok');
-    // Update save status
     const statusEl = document.getElementById('save-status');
     if (statusEl) statusEl.textContent = 'Published: ' + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
 
   } catch(e) {
     console.error('Publish failed:', e);
-    setPublishStatus('Publish failed: ' + e.message, 'err');
+    // Distinguish user-initiated cancel from errors
+    if (e.name === 'AbortError') {
+      // Message already set by the cancel button handler or timeout; only set here
+      // if it wasn't a manual cancel (i.e. the abort controller is still set, meaning
+      // it was the per-request timeout that fired, not the cancel button).
+      if (_publishAbortController) {
+        setPublishStatus('A request timed out (30 s). Check your connection and try again.', 'err');
+      }
+    } else {
+      setPublishStatus('Publish failed: ' + e.message, 'err');
+    }
   } finally {
-    btn.disabled = false;
-    btn.textContent = '🚀 Publish to GitHub';
+    clearTimeout(hardResetTimer);
+    _resetPublishBtn();
   }
 }
 
 // Builds a version of the editor HTML with current data baked into the JS defaults
 function buildEditorSnapshot() {
+  // Strip transient publish UI before serializing so a mid-publish snapshot
+  // doesn't bake a stuck button or toast into the saved file.
+  _resetPublishBtn();
+  const toast = document.getElementById('publish-toast');
+  if (toast) toast.remove();
+
   // Get the current editor HTML
   const currentHTML = document.documentElement.outerHTML;
   
@@ -2433,4 +2520,4 @@ init();
 </script>
 
 
-<div id="publish-toast" style="position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 0.7rem 1.1rem; font-family: Merriweather Sans, sans-serif; font-size: 0.82rem; font-weight: 700; z-index: 9000; max-width: 340px; border: 2px solid rgb(121, 192, 255); transition: opacity 0.4s; background: rgb(31, 45, 61); color: rgb(121, 192, 255); opacity: 1;">Saving editor state to GitHub…</div></body></html>
+</body></html>
